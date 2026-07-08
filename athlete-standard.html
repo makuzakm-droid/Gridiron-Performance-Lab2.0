@@ -1,0 +1,2377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>The Athlete Standard — Train Like an Athlete</title>
+<meta name="description" content="Performance-first training platform: structured programs, workout logging, RPE autoregulation, readiness tracking and performance testing.">
+<meta name="theme-color" content="#08090B">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%225%22 fill=%22%230A0C0E%22/><path d=%22M7 24 L16 7 L25 24 L20.5 24 L16 15 L11.5 24 Z%22 fill=%22%23BFFF3C%22/></svg>">
+<style>
+/* ==========================================================
+   THE ATHLETE STANDARD — performance lab design system
+   Surfaces: carbon near-black · graphite panels
+   Accent:   volt #BFFF3C (single strong accent)
+   Type:     condensed uppercase display · system body ·
+             tabular numerals for loads & timers
+   ========================================================== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08090B;
+  --srf:#0F1114;
+  --srf-2:#14171B;
+  --srf-3:#1A1E23;
+  --line:#22272D;
+  --line-2:#2F363E;
+  --ink:#EDF1F2;
+  --ink-2:#9AA3AB;
+  --ink-3:#5F6871;
+  --volt:#BFFF3C;
+  --volt-dim:#8FBF2D;
+  --volt-ink:#0A0C0E;
+  --volt-glow:rgba(191,255,60,.14);
+  --warn:#FFB020;
+  --danger:#FF5C47;
+  --info:#5CC8FF;
+  --r:10px;
+  --r-sm:7px;
+  --disp:'Arial Narrow','Helvetica Neue',Helvetica,Arial,sans-serif;
+  --body:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,'SF Mono','Cascadia Mono',Menlo,Consolas,monospace;
+  --nav-h:60px;
+  --hdr-h:52px;
+  --sab:env(safe-area-inset-bottom,0px);
+}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--bg);color:var(--ink);font-family:var(--body);
+  font-size:15px;line-height:1.5;min-height:100vh;
+  -webkit-font-smoothing:antialiased;overscroll-behavior-y:none;
+}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+input,select,textarea{font:inherit;color:var(--ink)}
+::selection{background:var(--volt);color:var(--volt-ink)}
+:focus-visible{outline:2px solid var(--volt);outline-offset:2px;border-radius:4px}
+h1,h2,h3,h4,.disp{
+  font-family:var(--disp);font-stretch:condensed;text-transform:uppercase;
+  letter-spacing:.05em;font-weight:700;line-height:1.15;
+}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+a{color:var(--volt)}
+/* ---------- scaffold ---------- */
+#topbar{
+  position:fixed;top:0;left:0;right:0;height:var(--hdr-h);z-index:60;
+  display:flex;align-items:center;gap:10px;padding:0 14px;
+  background:rgba(8,9,11,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.brand{display:flex;align-items:center;gap:9px;min-width:0;overflow:hidden}
+.brand-mark{width:26px;height:26px;flex:none;background:var(--volt);border-radius:6px;display:grid;place-items:center}
+.brand-mark svg{display:block}
+.brand-name{font-family:var(--disp);font-stretch:condensed;text-transform:uppercase;font-weight:700;font-size:12.5px;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:430px){.brand-the{display:none}}
+.brand-name b{color:var(--volt);font-weight:700}
+.hdr-spacer{flex:1}
+.chip-readiness{
+  display:flex;align-items:center;gap:6px;padding:6px 9px;border-radius:99px;
+  border:1px solid var(--line-2);background:var(--srf-2);
+  font-family:var(--disp);font-stretch:condensed;text-transform:uppercase;
+  font-size:11px;letter-spacing:.05em;font-weight:700;white-space:nowrap;flex:none;
+}
+.chip-readiness .dot{width:8px;height:8px;border-radius:50%;flex:none}
+.chip-readiness .num{font-size:13px}
+.icon-btn{
+  width:34px;height:34px;flex:none;display:grid;place-items:center;border-radius:9px;
+  border:1px solid transparent;color:var(--ink-2);
+}
+.icon-btn:active{background:var(--srf-2)}
+#main{
+  padding:calc(var(--hdr-h) + 14px) 14px calc(var(--nav-h) + var(--sab) + 26px);
+  max-width:760px;margin:0 auto;
+}
+/* ---------- bottom nav ---------- */
+#tabbar{
+  position:fixed;bottom:0;left:0;right:0;z-index:60;height:calc(var(--nav-h) + var(--sab));
+  padding-bottom:var(--sab);
+  background:rgba(10,12,14,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-top:1px solid var(--line);
+  display:flex;justify-content:space-around;
+}
+.tab{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  color:var(--ink-3);font-family:var(--disp);font-stretch:condensed;text-transform:uppercase;
+  font-size:10px;letter-spacing:.08em;font-weight:700;
+  border-top:2px solid transparent;transition:color .15s;
+}
+.tab svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tab.on{color:var(--volt);border-top-color:var(--volt)}
+/* ---------- shared blocks ---------- */
+.view-title{font-size:24px;letter-spacing:.06em;margin:2px 0 3px}
+.view-sub{color:var(--ink-2);font-size:13.5px;margin-bottom:16px}
+.card{
+  background:var(--srf);border:1px solid var(--line);border-radius:var(--r);
+  padding:15px 15px 16px;margin-bottom:12px;
+}
+.card.pad-0{padding:0;overflow:hidden}
+.card-kicker{
+  font-family:var(--disp);font-stretch:condensed;text-transform:uppercase;font-weight:700;
+  font-size:11px;letter-spacing:.14em;color:var(--ink-3);margin-bottom:6px;display:flex;align-items:center;gap:8px;
+}
+.card-kicker .rule{flex:1;height:1px;background:var(--line)}
+.card h3{font-size:17px;margin-bottom:4px}
+.sec-head{
+  display:flex;align-items:baseline;gap:10px;margin:22px 0 10px;
+}
+.sec-head h2{font-size:15px;letter-spacing:.12em;color:var(--ink-2)}
+.sec-head .rule{flex:1;height:1px;background:var(--line)}
+.sec-head .aux{font-size:12px;color:var(--ink-3)}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font-family:var(--disp);font-stretch:condensed;text-transform:uppercase;font-weight:700;
+  letter-spacing:.09em;font-size:14px;border-radius:var(--r-sm);
+  padding:12px 18px;border:1px solid var(--line-2);background:var(--srf-2);color:var(--ink);
+  transition:transform .06s,filter .15s;user-select:none;
+}
+.btn:active{transform:scale(.985)}
+.btn.primary{background:var(--volt);border-color:var(--volt);color:var(--volt-ink)}
+.btn.primary:active{filter:brightness(.92)}
+.btn.ghost{background:transparent}
+.btn.danger{color:var(--danger);border-color:rgba(255,92,71,.4)}
+.btn.block{display:flex;width:100%}
+.btn.sm{padding:8px 12px;font-size:12px;letter-spacing:.08em}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.tag{
+  display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:5px;
+  font-family:var(--disp);font-stretch:condensed;text-transform:uppercase;
+  font-size:10.5px;letter-spacing:.09em;font-weight:700;
+  background:var(--srf-3);border:1px solid var(--line);color:var(--ink-2);white-space:nowrap;
+}
+.tag.volt{background:var(--volt-glow);border-color:rgba(191,255,60,.35);color:var(--volt)}
+.tag.warn{background:rgba(255,176,32,.1);border-color:rgba(255,176,32,.35);color:var(--warn)}
+.tag.danger{background:rgba(255,92,71,.1);border-color:rgba(255,92,71,.35);color:var(--danger)}
+.tag.info{background:rgba(92,200,255,.08);border-color:rgba(92,200,255,.3);color:var(--info)}
+.banner{
+  display:flex;gap:11px;align-items:flex-start;border-radius:var(--r-sm);
+  padding:11px 13px;font-size:13.5px;line-height:1.45;margin-bottom:12px;
+  border:1px solid var(--line-2);background:var(--srf-2);
+}
+.banner .b-ic{flex:none;margin-top:1px}
+.banner.volt{border-color:rgba(191,255,60,.4);background:var(--volt-glow)}
+.banner.warn{border-color:rgba(255,176,32,.4);background:rgba(255,176,32,.08)}
+.banner.danger{border-color:rgba(255,92,71,.4);background:rgba(255,92,71,.07)}
+.banner b{font-weight:600}
+.banner .banner-title{font-family:var(--disp);font-stretch:condensed;text-transform:uppercase;letter-spacing:.08em;font-size:12px;font-weight:700;display:block;margin-bottom:2px}
+.banner.volt .banner-title{color:var(--volt)}
+.banner.warn .banner-title{color:var(--warn)}
+.banner.danger .banner-title{color:var(--danger)}
+/* ---------- stat tiles ---------- */
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:9px;margin-bottom:12px}
+.stat{
+  background:var(--srf);border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:11px 12px 10px;
+}
+.stat .s-label{font-family:var(--disp);font-stretch:condensed;text-transform:uppercase;font-size:10px;letter-spacing:.12em;color:var(--ink-3);font-weight:700}
+.stat .s-value{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:23px;font-weight:700;line-height:1.25;margin-top:2px}
+.stat .s-value small{font-size:12px;color:var(--ink-3);font-weight:400;margin-left:2px}
+.stat .s-delta{font-size:11px;font-family:var(--mono)}
+.d-up{color:var(--volt)} .d-down{color:var(--danger)} .d-flat{color:var(--ink-3)}
+/* ---------- filters / chips ---------- */
+.searchbar{position:relative;margin-bottom:10px}
+.searchbar svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;stroke:var(--ink-3);fill:none;stroke-width:2;stroke-linecap:round}
+.searchbar input{
+  width:100%;background:var(--srf);border:1px solid var(--line-2);border-radius:var(--r-sm);
+  padding:11px 12px 11px 36px;font-size:15px;color:var(--ink);
+}
+.searchbar input::placeholder{color:var(--ink-3)}
+.chiprow{display:flex;gap:7px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:none}
+.chiprow::-webkit-scrollbar{display:none}
+.fchip{
+  flex:none;padding:7px 12px;border-radius:99px;border:1px solid var(--line-2);
+  background:var(--srf);color:var(--ink-2);
+  font-family:var(--disp);font-stretch:condensed;text-transform:uppercase;
+  font-size:11.5px;letter-spacing:.07em;font-weight:700;white-space:nowrap;
+}
+.fchip.on{background:var(--volt);border-color:var(--volt);color:var(--volt-ink)}
+.fgroup-label{font-size:10px;letter-spacing:.14em;color:var(--ink-3);font-family:var(--disp);font-stretch:condensed;text-transform:uppercase;font-weight:700;margin:4px 0 4px}
+/* ---------- exercise rows ---------- */
+.exrow{
+  width:100%;text-align:left;display:block;background:var(--srf);border:1px solid var(--line);
+  border-radius:var(--r-sm);padding:12px 13px;margin-bottom:8px;
+}
+.exrow .ex-top{display:flex;align-items:center;gap:8px}
+.exrow .ex-name{font-weight:600;font-size:15px;flex:1;min-width:0}
+.exrow .ex-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.ex-detail{border-top:1px dashed var(--line-2);margin-top:11px;padding-top:11px;font-size:13.5px}
+.ex-detail h5{font-family:var(--disp);font-stretch:condensed;text-transform:uppercase;font-size:11px;letter-spacing:.12em;color:var(--volt);margin:9px 0 4px;font-weight:700}
+.ex-detail h5.neg{color:var(--warn)}
+.ex-detail ul{list-style:none}
+.ex-detail li{padding-left:16px;position:relative;color:var(--ink-2);margin-bottom:3px}
+.ex-detail li::before{content:'';position:absolute;left:2px;top:8px;width:6px;height:2px;background:var(--volt)}
+.ex-detail li.neg::before{background:var(--warn)}
+.ex-muscles{color:var(--ink-2)}
+.diff-b{color:#8BD98B}.diff-i{color:var(--warn)}.diff-a{color:var(--danger)}
+/* ---------- program cards ---------- */
+.prog-card{
+  width:100%;text-align:left;background:var(--srf);border:1px solid var(--line);border-radius:var(--r);
+  padding:15px;margin-bottom:11px;display:block;position:relative;overflow:hidden;
+}
+.prog-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--line-2)}
+.prog-card.active-prog::before{background:var(--volt)}
+.prog-card .p-tag{font-family:var(--mono);font-size:10.5px;color:var(--volt);letter-spacing:.1em;text-transform:uppercase}
+.prog-card h3{font-size:18px;margin:3px 0 5px}
+.prog-card .p-goal{color:var(--ink-2);font-size:13px;line-height:1.45}
+.prog-card .p-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.prog-bar{height:4px;background:var(--srf-3);border-radius:2px;margin-top:11px;overflow:hidden}
+.prog-bar i{display:block;height:100%;background:var(--volt);border-radius:2px}
+/* ---------- program detail ---------- */
+.pd-hero{padding:4px 0 12px}
+.pd-hero h1{font-size:26px;margin:6px 0 8px}
+.pd-hero .p-tag{font-family:var(--mono);font-size:11px;color:var(--volt);letter-spacing:.12em;text-transform:uppercase}
+.pd-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.week-picker{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none}
+.week-picker::-webkit-scrollbar{display:none}
+.wk-btn{
+  flex:none;min-width:44px;padding:8px 10px;border-radius:var(--r-sm);border:1px solid var(--line-2);
+  background:var(--srf);font-family:var(--disp);font-stretch:condensed;font-weight:700;font-size:12px;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);
+}
+.wk-btn.on{background:var(--volt);border-color:var(--volt);color:var(--volt-ink)}
+.day-block{background:var(--srf);border:1px solid var(--line);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
+.day-block .db-head{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.day-block .db-head h4{font-size:14px;flex:1;letter-spacing:.07em}
+.day-block .db-done{color:var(--volt)}
+.day-block table{width:100%;border-collapse:collapse;font-size:13px}
+.day-block td{padding:8px 14px;border-top:1px solid var(--line);vertical-align:top}
+.day-block td:first-child{color:var(--ink);font-weight:500;width:52%}
+.day-block td:last-child{text-align:right;font-family:var(--mono);color:var(--ink-2);white-space:nowrap}
+.day-block tr:first-child td{border-top:0}
+.block-note{display:block;color:var(--ink-3);font-size:11.5px;font-weight:400;margin-top:2px}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--ink-2);font-family:var(--disp);font-stretch:condensed;text-transform:uppercase;font-size:12px;letter-spacing:.1em;font-weight:700;padding:6px 0;margin-bottom:4px}
+.back-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+/* ---------- session (logger) ---------- */
+#session-root{
+  position:fixed;inset:0;z-index:80;background:var(--bg);display:none;flex-direction:column;
+}
+#session-root.open{display:flex}
+.sess-head{
+  flex:none;display:flex;align-items:center;gap:10px;padding:12px 14px;
+  border-bottom:1px solid var(--line);background:var(--srf);
+}
+.sess-head .sh-title{flex:1;min-width:0}
+.sess-head h2{font-size:15px;letter-spacing:.06em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sess-head .sh-sub{font-size:11px;color:var(--ink-3);font-family:var(--mono)}
+.sess-clock{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:17px;font-weight:700;color:var(--volt)}
+.sess-body{flex:1;overflow-y:auto;padding:14px 14px 120px;max-width:760px;margin:0 auto;width:100%}
+.sblock{background:var(--srf);border:1px solid var(--line);border-radius:var(--r);margin-bottom:12px;overflow:hidden}
+.sblock-head{padding:12px 14px 10px;border-bottom:1px solid var(--line)}
+.sblock-head .sb-name{font-weight:600;font-size:15.5px}
+.sblock-head .sb-rx{font-family:var(--mono);font-size:12px;color:var(--volt);margin-top:2px}
+.sblock-head .sb-note{font-size:12px;color:var(--ink-3);margin-top:3px}
+.setgrid{width:100%;border-collapse:collapse}
+.setgrid th{
+  font-family:var(--disp);font-stretch:condensed;text-transform:uppercase;font-size:10px;
+  letter-spacing:.1em;color:var(--ink-3);font-weight:700;text-align:center;padding:7px 4px 5px;
+}
+.setgrid td{padding:5px 4px;text-align:center;border-top:1px solid var(--line)}
+.setgrid td:first-child,.setgrid th:first-child{padding-left:12px;width:36px}
+.setgrid td:last-child,.setgrid th:last-child{padding-right:12px;width:46px}
+.set-idx{font-family:var(--mono);font-size:13px;color:var(--ink-3);font-weight:700}
+.set-in{
+  width:100%;max-width:74px;background:var(--srf-3);border:1px solid var(--line-2);border-radius:6px;
+  padding:9px 4px;text-align:center;font-family:var(--mono);font-variant-numeric:tabular-nums;
+  font-size:16px;font-weight:600;color:var(--ink);-moz-appearance:textfield;
+}
+.set-in::-webkit-outer-spin-button,.set-in::-webkit-inner-spin-button{-webkit-appearance:none}
+.set-in:focus{border-color:var(--volt);outline:none}
+.set-in::placeholder{color:var(--ink-3);font-weight:400}
+select.set-in{max-width:64px;appearance:none;-webkit-appearance:none;text-align:center;text-align-last:center}
+.set-check{
+  width:34px;height:34px;border-radius:8px;border:1.5px solid var(--line-2);background:var(--srf-3);
+  display:inline-grid;place-items:center;vertical-align:middle;
+}
+.set-check svg{width:17px;height:17px;stroke:var(--volt-ink);fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:0}
+.set-check.done{background:var(--volt);border-color:var(--volt)}
+.set-check.done svg{opacity:1}
+tr.row-done .set-in{opacity:.55}
+.sess-foot{
+  position:absolute;bottom:0;left:0;right:0;padding:12px 14px calc(12px + var(--sab));
+  background:linear-gradient(to top,var(--bg) 65%,transparent);
+  display:flex;gap:10px;max-width:760px;margin:0 auto;
+}
+/* rest timer */
+#rest-timer{
+  position:fixed;left:12px;right:12px;bottom:calc(84px + var(--sab));z-index:85;
+  max-width:520px;margin:0 auto;display:none;align-items:center;gap:12px;
+  background:var(--srf-2);border:1px solid var(--volt);border-radius:12px;
+  padding:10px 14px;box-shadow:0 10px 34px -8px rgba(0,0,0,.7),0 0 0 4px var(--volt-glow);
+}
+#rest-timer.open{display:flex}
+#rest-timer .rt-label{font-family:var(--disp);font-stretch:condensed;text-transform:uppercase;font-size:10px;letter-spacing:.13em;color:var(--ink-3);font-weight:700}
+#rest-timer .rt-time{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:30px;font-weight:700;color:var(--volt);line-height:1;min-width:104px}
+#rest-timer .rt-bar{position:absolute;left:0;bottom:0;height:3px;background:var(--volt);border-radius:0 0 0 12px;transition:width 1s linear}
+#rest-timer .rt-btns{margin-left:auto;display:flex;gap:7px}
+/* ---------- planner ---------- */
+.plan-day{background:var(--srf);border:1px solid var(--line);border-radius:var(--r-sm);margin-bottom:9px;overflow:hidden}
+.plan-day.today{border-color:var(--line-2);box-shadow:inset 3px 0 0 var(--volt)}
+.plan-day .pdy-head{display:flex;align-items:center;gap:9px;padding:10px 12px}
+.plan-day .pdy-head h4{font-size:13px;letter-spacing:.1em;width:44px;color:var(--ink-2)}
+.plan-day.today .pdy-head h4{color:var(--volt)}
+.pdy-stress{display:flex;gap:4px;flex:1}
+.stress-pip{height:6px;border-radius:3px;flex:none}
+.pdy-add{width:30px;height:30px;border-radius:7px;border:1px dashed var(--line-2);color:var(--ink-3);display:grid;place-items:center;font-size:18px;line-height:1}
+.plan-item{
+  display:flex;align-items:center;gap:9px;padding:9px 12px;border-top:1px solid var(--line);
+  width:100%;text-align:left;
+}
+.plan-item .pi-bar{width:3px;align-self:stretch;border-radius:2px;flex:none}
+.plan-item .pi-name{flex:1;font-size:13.5px;min-width:0}
+.plan-item .pi-sub{font-size:11px;color:var(--ink-3);font-family:var(--mono)}
+.plan-item.selected{background:var(--volt-glow)}
+.s-high{background:var(--danger)} .s-mod{background:var(--warn)} .s-low{background:var(--volt)} .s-rest{background:var(--line-2)}
+.plan-empty{padding:9px 12px;border-top:1px solid var(--line);color:var(--ink-3);font-size:12px;font-style:italic}
+/* ---------- charts ---------- */
+.chart-card{padding:14px 10px 8px 6px}
+.chart-card .ch-head{display:flex;align-items:baseline;gap:8px;padding:0 8px 4px 10px}
+.chart-card h3{font-size:13px;letter-spacing:.1em;color:var(--ink-2);flex:1}
+.chart-card .ch-aux{font-size:11px;color:var(--ink-3);font-family:var(--mono)}
+.chart-svg{width:100%;height:auto;display:block}
+.chart-svg text{font-family:var(--mono);font-size:9.5px;fill:var(--ink-3)}
+.chart-svg .axis-line{stroke:var(--line);stroke-width:1}
+.chart-svg .grid-line{stroke:var(--line);stroke-width:1;stroke-dasharray:1 4}
+.chart-empty{padding:26px 14px;text-align:center;color:var(--ink-3);font-size:13px}
+.lift-chips{display:flex;gap:6px;overflow-x:auto;padding:2px 8px 10px;scrollbar-width:none}
+.lift-chips::-webkit-scrollbar{display:none}
+/* ---------- PR board ---------- */
+.pr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:9px}
+.pr-cell{background:var(--srf);border:1px solid var(--line);border-radius:var(--r-sm);padding:11px 12px}
+.pr-cell .pr-lift{font-family:var(--disp);font-stretch:condensed;text-transform:uppercase;font-size:11px;letter-spacing:.1em;color:var(--ink-2);font-weight:700}
+.pr-cell .pr-val{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:24px;font-weight:700;margin-top:1px}
+.pr-cell .pr-val small{font-size:12px;color:var(--ink-3);font-weight:400}
+.pr-cell .pr-date{font-size:10.5px;color:var(--ink-3);font-family:var(--mono);margin-top:2px}
+.pr-cell.is-pr{border-color:rgba(191,255,60,.4)}
+/* ---------- readiness ---------- */
+.ready-q{margin-bottom:16px}
+.ready-q .rq-label{font-size:14px;font-weight:600;margin-bottom:8px}
+.ready-q .rq-hint{color:var(--ink-3);font-size:12px;font-weight:400}
+.rq-scale{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.rq-opt{
+  padding:12px 0;border-radius:var(--r-sm);border:1px solid var(--line-2);background:var(--srf-2);
+  font-family:var(--mono);font-size:17px;font-weight:700;color:var(--ink-2);text-align:center;
+}
+.rq-opt.on{background:var(--volt);border-color:var(--volt);color:var(--volt-ink)}
+.ready-score-big{text-align:center;padding:10px 0 4px}
+.ready-score-big .num{font-size:44px;font-weight:700}
+/* ---------- modal ---------- */
+#modal-root{position:fixed;inset:0;z-index:100;display:none}
+#modal-root.open{display:block}
+.modal-scrim{position:absolute;inset:0;background:rgba(0,0,0,.66);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.modal-sheet{
+  position:absolute;left:0;right:0;bottom:0;max-height:88vh;overflow-y:auto;
+  background:var(--srf);border:1px solid var(--line-2);border-bottom:0;border-radius:16px 16px 0 0;
+  padding:10px 16px calc(20px + var(--sab));max-width:640px;margin:0 auto;
+  animation:sheetUp .22s cubic-bezier(.2,.8,.3,1);
+}
+@keyframes sheetUp{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
+.modal-grip{width:38px;height:4px;border-radius:2px;background:var(--line-2);margin:4px auto 14px}
+.modal-sheet h2{font-size:17px;margin-bottom:12px;letter-spacing:.07em}
+.modal-actions{display:flex;gap:9px;margin-top:16px}
+/* ---------- toast ---------- */
+#toast-root{position:fixed;top:calc(var(--hdr-h) + 10px);left:14px;right:14px;z-index:120;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{
+  margin:0 auto;max-width:480px;width:100%;display:flex;gap:10px;align-items:flex-start;
+  background:var(--srf-2);border:1px solid var(--line-2);border-radius:10px;padding:11px 14px;
+  box-shadow:0 12px 34px -8px rgba(0,0,0,.7);font-size:13.5px;
+  animation:toastIn .25s cubic-bezier(.2,.8,.3,1);
+}
+.toast.volt{border-color:rgba(191,255,60,.5)}
+.toast.pr-toast{border-color:var(--volt);box-shadow:0 12px 34px -8px rgba(0,0,0,.7),0 0 0 4px var(--volt-glow)}
+.toast .t-title{font-family:var(--disp);font-stretch:condensed;text-transform:uppercase;letter-spacing:.09em;font-size:12px;font-weight:700;color:var(--volt);display:block}
+@keyframes toastIn{from{transform:translateY(-8px);opacity:0}to{transform:none;opacity:1}}
+.toast.out{transition:opacity .3s,transform .3s;opacity:0;transform:translateY(-8px)}
+/* ---------- forms ---------- */
+.frow{display:flex;gap:9px;margin-bottom:10px}
+.fcol{flex:1}
+.flabel{font-family:var(--disp);font-stretch:condensed;text-transform:uppercase;font-size:10.5px;letter-spacing:.12em;color:var(--ink-3);font-weight:700;display:block;margin-bottom:5px}
+.fin{
+  width:100%;background:var(--srf-2);border:1px solid var(--line-2);border-radius:var(--r-sm);
+  padding:11px 12px;font-size:15px;color:var(--ink);
+}
+.fin:focus{border-color:var(--volt);outline:none}
+select.fin{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239AA3AB' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.seg{display:flex;background:var(--srf-2);border:1px solid var(--line-2);border-radius:var(--r-sm);overflow:hidden}
+.seg button{flex:1;padding:10px 0;font-family:var(--disp);font-stretch:condensed;text-transform:uppercase;font-size:12px;letter-spacing:.08em;font-weight:700;color:var(--ink-2)}
+.seg button.on{background:var(--volt);color:var(--volt-ink)}
+/* ---------- history ---------- */
+.hist-row{display:flex;gap:11px;align-items:center;background:var(--srf);border:1px solid var(--line);border-radius:var(--r-sm);padding:11px 13px;margin-bottom:8px;width:100%;text-align:left}
+.hist-row .h-date{font-family:var(--mono);font-size:11px;color:var(--ink-3);width:56px;flex:none;line-height:1.3}
+.hist-row .h-name{flex:1;min-width:0;font-size:14px;font-weight:500}
+.hist-row .h-sub{font-size:11.5px;color:var(--ink-3);font-family:var(--mono)}
+.hist-row .h-rpe{font-family:var(--mono);font-size:13px;color:var(--ink-2);flex:none}
+/* ---------- test tracker ---------- */
+.test-row{display:flex;align-items:center;gap:10px;padding:12px 13px;border-top:1px solid var(--line)}
+.test-row:first-child{border-top:0}
+.test-row .tt-name{flex:1;min-width:0}
+.test-row .tt-name b{font-size:14px;font-weight:600;display:block}
+.test-row .tt-name span{font-size:11px;color:var(--ink-3)}
+.test-row .tt-val{text-align:right}
+.test-row .tt-val .num{font-size:19px;font-weight:700}
+.test-row .tt-val small{color:var(--ink-3);font-size:11px}
+.test-row .tt-delta{font-size:11px;font-family:var(--mono);display:block}
+/* ---------- misc ---------- */
+.empty-state{text-align:center;padding:34px 18px;color:var(--ink-3)}
+.empty-state svg{width:40px;height:40px;stroke:var(--line-2);fill:none;stroke-width:1.5;margin-bottom:10px}
+.empty-state p{font-size:13.5px;max-width:300px;margin:0 auto 14px}
+.hr{height:1px;background:var(--line);border:0;margin:14px 0}
+.mut{color:var(--ink-2)} .mut2{color:var(--ink-3)}
+.small{font-size:12.5px}
+.mb0{margin-bottom:0}.mb6{margin-bottom:6px}.mb12{margin-bottom:12px}.mt12{margin-top:12px}
+.flex{display:flex;align-items:center;gap:9px}.flex1{flex:1;min-width:0}
+@media (min-width:700px){
+  .view-title{font-size:28px}
+  .pr-grid{grid-template-columns:repeat(4,1fr)}
+  .prog-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+  .prog-grid .prog-card{margin-bottom:0}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important;transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+
+<header id="topbar">
+  <div class="brand">
+    <span class="brand-mark"><svg width="16" height="16" viewBox="0 0 32 32"><path d="M7 25 L16 7 L25 25 L20.5 25 L16 15.5 L11.5 25 Z" fill="#0A0C0E"/></svg></span>
+    <span class="brand-name"><span class="brand-the">The </span>Athlete <b>Standard</b></span>
+  </div>
+  <div class="hdr-spacer"></div>
+  <button class="chip-readiness" id="readiness-chip" aria-label="Readiness check-in"></button>
+  <button class="icon-btn" id="settings-btn" aria-label="Settings">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+  </button>
+</header>
+
+<main id="main"></main>
+
+<nav id="tabbar">
+  <button class="tab" data-tab="train" aria-label="Train">
+    <svg viewBox="0 0 24 24"><path d="M6.5 6.5v11M17.5 6.5v11M2.5 9.5v5M21.5 9.5v5M6.5 12h11"/></svg>
+    Train
+  </button>
+  <button class="tab" data-tab="programs" aria-label="Programs">
+    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2.5v3M16 2.5v3M3 9.5h18M8 14h3M8 17.5h6"/></svg>
+    Programs
+  </button>
+  <button class="tab" data-tab="library" aria-label="Library">
+    <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5v14z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/><path d="M9 7.5h7"/></svg>
+    Library
+  </button>
+  <button class="tab" data-tab="planner" aria-label="Planner">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg>
+    Planner
+  </button>
+  <button class="tab" data-tab="progress" aria-label="Progress">
+    <svg viewBox="0 0 24 24"><path d="M3.5 20.5v-7M9.2 20.5V9M14.8 20.5v-9.5M20.5 20.5V3.5"/></svg>
+    Progress
+  </button>
+</nav>
+
+<div id="session-root"></div>
+<div id="rest-timer" role="status">
+  <div>
+    <div class="rt-label">Rest</div>
+    <div class="rt-time" id="rt-time">1:30</div>
+  </div>
+  <div class="rt-btns">
+    <button class="btn sm" id="rt-add">+30s</button>
+    <button class="btn sm primary" id="rt-skip">Skip</button>
+  </div>
+  <div class="rt-bar" id="rt-bar"></div>
+</div>
+<div id="modal-root"></div>
+<div id="toast-root"></div>
+
+<script>
+'use strict';
+/* ============================================================
+   DATA LAYER — plain objects, framework-liftable.
+   EXERCISES · PROGRAMS · STANDALONE_WORKOUTS · TESTS · LIFTS
+   ============================================================ */
+
+const EXERCISES = [
+// ---------------- STRENGTH ----------------
+{id:"back-squat",n:"Back Squat",cat:"Strength",eq:"Barbell",dif:"Intermediate",mus:["Quads","Glutes","Spinal erectors"],
+ cues:["Brace hard before you unrack — big air into the belt line","Sit down between your hips, knees tracking over toes","Drive the floor apart out of the hole"],
+ mist:["Knees caving in as you stand","Chest collapsing forward under load"]},
+{id:"front-squat",n:"Front Squat",cat:"Strength",eq:"Barbell",dif:"Advanced",mus:["Quads","Upper back","Core"],
+ cues:["Elbows high, bar resting on shoulders not wrists","Stay tall — torso vertical the whole rep","Big brace; let the upper back do its job"],
+ mist:["Elbows dropping and dumping the bar forward"]},
+{id:"box-squat",n:"Box Squat",cat:"Strength",eq:"Barbell",dif:"Intermediate",mus:["Glutes","Hamstrings","Quads"],
+ cues:["Sit back to the box under control — no crashing","Pause dead on the box, stay braced","Explode up without rocking"],
+ mist:["Relaxing on the box and losing the brace","Plopping down instead of controlling the descent"]},
+{id:"goblet-squat",n:"Goblet Squat",cat:"Strength",eq:"Dumbbell",dif:"Beginner",mus:["Quads","Glutes","Core"],
+ cues:["Hold the bell tight to your sternum","Elbows track inside the knees at the bottom","Stand up through the mid-foot"],
+ mist:["Letting the weight pull you onto your toes"]},
+{id:"bulgarian-split-squat",n:"Bulgarian Split Squat",cat:"Strength",eq:"Dumbbell",dif:"Intermediate",mus:["Quads","Glutes"],
+ cues:["Long stance; rear foot is a kickstand, not a driver","Drop the back knee straight down","Push through the whole front foot"],
+ mist:["Bouncing out of the bottom","Front knee diving inward"]},
+{id:"walking-lunge",n:"Walking Lunge",cat:"Strength",eq:"Dumbbell",dif:"Beginner",mus:["Quads","Glutes"],
+ cues:["Step long enough that the front shin stays near vertical","Lower the back knee to an inch off the floor","Drive up and through — no dragging the rear foot"],
+ mist:["Short choppy steps that turn it into a knee-dominant bounce"]},
+{id:"reverse-lunge",n:"Reverse Lunge",cat:"Strength",eq:"Bodyweight",dif:"Beginner",mus:["Glutes","Quads"],
+ cues:["Step back, not down — keep weight on the front leg","Front knee stacked over the ankle","Squeeze the front glute to return"],
+ mist:["Pushing off the back foot instead of pulling with the front leg"]},
+{id:"step-up",n:"Step-Up",cat:"Strength",eq:"Dumbbell",dif:"Beginner",mus:["Quads","Glutes"],
+ cues:["Whole foot on the box","Drive through the top leg only — no bounce off the floor","Control the way down; that is half the exercise"],
+ mist:["Kicking off the bottom leg to cheat the rep"]},
+{id:"deadlift",n:"Deadlift",cat:"Strength",eq:"Barbell",dif:"Intermediate",mus:["Hamstrings","Glutes","Spinal erectors","Lats"],
+ cues:["Wedge in: hips down, chest up, bar against the shins","Push the floor away rather than yanking the bar","Finish tall with glutes — no lean-back"],
+ mist:["Bar drifting away from the body","Hips shooting up first and turning it into a stiff-leg pull"]},
+{id:"trap-bar-deadlift",n:"Trap Bar Deadlift",cat:"Strength",eq:"Barbell",dif:"Beginner",mus:["Quads","Glutes","Hamstrings"],
+ cues:["Stand in the middle of the bar, hands at your sides","Big chest, flat back, push the floor","Lock out hips and knees together"],
+ mist:["Squatting it too much and letting the knees slam forward"]},
+{id:"rdl",n:"Romanian Deadlift",cat:"Strength",eq:"Barbell",dif:"Intermediate",mus:["Hamstrings","Glutes"],
+ cues:["Soft knees; hinge by pushing the hips straight back","Bar stays glued to the thighs","Stop where the hamstrings end the range — no lower"],
+ mist:["Bending the knees more as you descend and losing hamstring tension"]},
+{id:"single-leg-rdl",n:"Single-Leg RDL",cat:"Strength",eq:"Dumbbell",dif:"Intermediate",mus:["Hamstrings","Glutes","Ankle stabilizers"],
+ cues:["Hips square to the floor — imagine headlights on your pelvis","Reach the free leg long behind you","Grip the floor with the standing foot"],
+ mist:["Opening the hip and turning it into a rotation exercise"]},
+{id:"hip-thrust",n:"Barbell Hip Thrust",cat:"Strength",eq:"Barbell",dif:"Beginner",mus:["Glutes","Hamstrings"],
+ cues:["Shoulder blades on the bench, chin tucked","Drive through the heels to a full lockout","Ribs down at the top — squeeze, do not arch"],
+ mist:["Hyperextending the low back instead of finishing with glutes"]},
+{id:"glute-bridge",n:"Glute Bridge",cat:"Strength",eq:"Bodyweight",dif:"Beginner",mus:["Glutes","Hamstrings"],
+ cues:["Heels close to your hips","Posterior tilt first, then lift","Pause and squeeze one second at the top"],
+ mist:["Pushing through the toes and cramping the hamstrings"]},
+{id:"nordic-curl",n:"Nordic Ham Curl",cat:"Strength",eq:"Bodyweight",dif:"Advanced",mus:["Hamstrings"],
+ cues:["Hips extended, body one straight line knee to shoulder","Lower as slowly as possible","Use hands to push back up — the eccentric is the work"],
+ mist:["Breaking at the hips to make the lever shorter"]},
+{id:"back-extension",n:"Back Extension",cat:"Strength",eq:"Bodyweight",dif:"Beginner",mus:["Spinal erectors","Glutes","Hamstrings"],
+ cues:["Hinge from the hips, not the spine","Squeeze glutes to come up to neutral","Stop at a straight line — no hyperextension"],
+ mist:["Whipping up past neutral every rep"]},
+{id:"good-morning",n:"Good Morning",cat:"Strength",eq:"Barbell",dif:"Intermediate",mus:["Hamstrings","Spinal erectors","Glutes"],
+ cues:["Bar set like a squat; brace before you hinge","Push hips back until hamstrings load up","Keep the back flat and shins vertical"],
+ mist:["Going too heavy and rounding — this is a moderate-load lift"]},
+{id:"zercher-squat",n:"Zercher Squat",cat:"Strength",eq:"Barbell",dif:"Advanced",mus:["Quads","Core","Upper back"],
+ cues:["Bar in the crook of the elbows, hands clasped","Stay upright and fight the forward pull","Breathe and brace at the top of every rep"],
+ mist:["Letting the elbows drop and turning it into a back exercise"]},
+{id:"overhead-squat",n:"Overhead Squat",cat:"Strength",eq:"Barbell",dif:"Advanced",mus:["Quads","Shoulders","Core"],
+ cues:["Wide snatch grip; punch up into the bar","Armpits forward, bar over mid-foot always","Only as deep as position allows"],
+ mist:["Chasing depth with a collapsing chest"]},
+{id:"snatch-grip-deadlift",n:"Snatch-Grip Deadlift",cat:"Strength",eq:"Barbell",dif:"Advanced",mus:["Upper back","Hamstrings","Glutes"],
+ cues:["Wide grip, hips lower than a conventional pull","Sweep the bar in and stay over it longer","Big upper-back tension before the break"],
+ mist:["Letting the wide grip round the upper back"]},
+{id:"bench-press",n:"Bench Press",cat:"Strength",eq:"Barbell",dif:"Intermediate",mus:["Chest","Triceps","Front delts"],
+ cues:["Shoulder blades pinched and dug into the bench","Bar touches low chest, forearms vertical","Press back toward the rack, not straight up"],
+ mist:["Flaring elbows to 90 degrees","Bouncing off the chest"]},
+{id:"close-grip-bench",n:"Close-Grip Bench Press",cat:"Strength",eq:"Barbell",dif:"Intermediate",mus:["Triceps","Chest"],
+ cues:["Grip just inside shoulder width","Tuck the elbows to about 45 degrees","Touch lower on the torso than a regular bench"],
+ mist:["Grip so narrow the wrists cave"]},
+{id:"incline-db-press",n:"Incline DB Press",cat:"Strength",eq:"Dumbbell",dif:"Beginner",mus:["Upper chest","Front delts","Triceps"],
+ cues:["30-45 degree bench","Lower to the outside of the shoulders","Press up and slightly in"],
+ mist:["Turning it into a shoulder press by going too steep"]},
+{id:"floor-press",n:"Floor Press",cat:"Strength",eq:"Barbell",dif:"Intermediate",mus:["Triceps","Chest"],
+ cues:["Let the upper arm settle on the floor each rep — dead stop","Keep the wrist stacked over the elbow","Press with intent off every pause"],
+ mist:["Bouncing the elbows off the floor"]},
+{id:"push-up",n:"Push-Up",cat:"Strength",eq:"Bodyweight",dif:"Beginner",mus:["Chest","Triceps","Core"],
+ cues:["Rigid plank from head to heel","Hands under shoulders, elbows about 45 degrees","Chest to an inch off the floor every rep"],
+ mist:["Sagging hips","Half range at speed"]},
+{id:"deficit-push-up",n:"Deficit Push-Up",cat:"Strength",eq:"Bodyweight",dif:"Intermediate",mus:["Chest","Triceps","Core"],
+ cues:["Hands on plates or handles; chest below hand level","Control the stretch at the bottom","Keep the plank — deficit punishes a saggy trunk"],
+ mist:["Cutting depth, which removes the entire point"]},
+{id:"overhead-press",n:"Overhead Press",cat:"Strength",eq:"Barbell",dif:"Intermediate",mus:["Shoulders","Triceps","Upper back"],
+ cues:["Squeeze glutes, ribs down — no lean-back","Bar travels in a straight line past the face","Finish with biceps by the ears"],
+ mist:["Turning it into an incline press with a big arch"]},
+{id:"push-press",n:"Push Press",cat:"Strength",eq:"Barbell",dif:"Intermediate",mus:["Shoulders","Triceps","Legs"],
+ cues:["Short, vertical dip — like the start of a jump","Drive with legs, then punch the bar","Torso stays vertical through the dip"],
+ mist:["Dipping forward onto the toes and pressing the bar out front"]},
+{id:"db-shoulder-press",n:"DB Shoulder Press",cat:"Strength",eq:"Dumbbell",dif:"Beginner",mus:["Shoulders","Triceps"],
+ cues:["Start at the shoulders, palms slightly turned in","Press up and slightly together","Lower under control to ear level or below"],
+ mist:["Shrugging the weight up with the traps"]},
+{id:"landmine-press",n:"Landmine Press",cat:"Strength",eq:"Barbell",dif:"Beginner",mus:["Shoulders","Upper chest","Core"],
+ cues:["Half-kneeling or staggered stance","Press along the bar path — up and away","Keep ribs stacked over pelvis"],
+ mist:["Leaning back to finish the press"]},
+{id:"pull-up",n:"Pull-Up",cat:"Strength",eq:"Bodyweight",dif:"Intermediate",mus:["Lats","Biceps","Mid-back"],
+ cues:["Start from a dead hang with tense shoulders","Drive elbows down toward your ribs","Chin clears the bar without reaching"],
+ mist:["Kipping and half reps at the top"]},
+{id:"chin-up",n:"Chin-Up",cat:"Strength",eq:"Bodyweight",dif:"Intermediate",mus:["Lats","Biceps"],
+ cues:["Underhand grip, shoulder width","Lead with the chest to the bar","Full hang between reps"],
+ mist:["Shortening the bottom half of the range"]},
+{id:"weighted-pull-up",n:"Weighted Pull-Up",cat:"Strength",eq:"Bodyweight",dif:"Advanced",mus:["Lats","Biceps","Mid-back"],
+ cues:["Add load only after 10 strict bodyweight reps","Same dead-hang standard as bodyweight","Brace so the weight does not swing"],
+ mist:["Adding load while reps are still ugly"]},
+{id:"barbell-row",n:"Barbell Row",cat:"Strength",eq:"Barbell",dif:"Intermediate",mus:["Lats","Mid-back","Biceps"],
+ cues:["Hinge to about 45 degrees and hold it there","Pull the bar to the lower ribs","Squeeze the blades, then lower with control"],
+ mist:["Standing up and heaving with the hips every rep"]},
+{id:"chest-supported-row",n:"Chest-Supported Row",cat:"Strength",eq:"Dumbbell",dif:"Beginner",mus:["Mid-back","Lats","Rear delts"],
+ cues:["Chest stays welded to the bench","Row to the hips, not the armpits","Pause a beat with blades squeezed"],
+ mist:["Lifting the chest to cheat range"]},
+{id:"one-arm-db-row",n:"One-Arm DB Row",cat:"Strength",eq:"Dumbbell",dif:"Beginner",mus:["Lats","Mid-back"],
+ cues:["Flat back, knee and hand on the bench","Pull the elbow to the hip pocket","Let the blade protract fully at the bottom"],
+ mist:["Rotating the torso open to move more weight"]},
+{id:"inverted-row",n:"Inverted Row",cat:"Strength",eq:"Bodyweight",dif:"Beginner",mus:["Mid-back","Lats","Biceps"],
+ cues:["Body rigid from shoulders to heels","Pull chest to the bar","Elevate feet to make it harder"],
+ mist:["Hips sagging as the set fatigues"]},
+{id:"face-pull",n:"Band Face Pull",cat:"Strength",eq:"Bands",dif:"Beginner",mus:["Rear delts","Mid-back","Rotator cuff"],
+ cues:["Pull to the bridge of the nose","Finish with knuckles back, thumbs pointing behind you","High reps, honest squeeze"],
+ mist:["Turning it into a row by pulling to the chest"]},
+{id:"band-pull-apart",n:"Band Pull-Apart",cat:"Strength",eq:"Bands",dif:"Beginner",mus:["Rear delts","Mid-back"],
+ cues:["Arms long, pull the band to the sternum","Squeeze the blades together","Control the return — no snapping back"],
+ mist:["Shrugging into the neck"]},
+{id:"dips",n:"Dips",cat:"Strength",eq:"Bodyweight",dif:"Intermediate",mus:["Chest","Triceps","Front delts"],
+ cues:["Slight forward lean, elbows track back","Descend until upper arm is parallel","Lock out fully without shrugging"],
+ mist:["Diving too deep with shoulders rolled forward"]},
+{id:"farmer-carry",n:"Farmer Carry",cat:"Strength",eq:"Dumbbell",dif:"Beginner",mus:["Grip","Traps","Core"],
+ cues:["Stand tall — ears over shoulders over hips","Walk with short, quick steps","Crush-grip the handles the whole way"],
+ mist:["Leaning or rushing so the weights swing"]},
+{id:"suitcase-carry",n:"Suitcase Carry",cat:"Strength",eq:"Kettlebell",dif:"Beginner",mus:["Obliques","Grip","Traps"],
+ cues:["One side loaded — do not let it bend you","Level shoulders, level hips","Breathe behind the brace"],
+ mist:["Hiking the free-side hip to compensate"]},
+{id:"kb-goblet-carry",n:"KB Front Rack Carry",cat:"Strength",eq:"Kettlebell",dif:"Intermediate",mus:["Core","Upper back","Shoulders"],
+ cues:["Bell racked at the collarbone, elbow tucked","Ribs down against the load","Smooth heel-to-toe walking"],
+ mist:["Letting the bell pull you into extension"]},
+{id:"calf-raise",n:"Standing Calf Raise",cat:"Strength",eq:"Dumbbell",dif:"Beginner",mus:["Calves"],
+ cues:["Full stretch at the bottom, pause at the top","Straight knee to bias the gastroc","Slow eccentrics build the tendon"],
+ mist:["Bouncing out of the stretch"]},
+{id:"tib-raise",n:"Tibialis Raise",cat:"Strength",eq:"Bodyweight",dif:"Beginner",mus:["Tibialis anterior"],
+ cues:["Heels down, lift the toes as high as possible","Lean against a wall to isolate","Slow down the lowering"],
+ mist:["Tiny partial reps done fast"]},
+{id:"pistol-squat",n:"Pistol Squat",cat:"Strength",eq:"Bodyweight",dif:"Advanced",mus:["Quads","Glutes","Balance"],
+ cues:["Reach arms and free leg forward as counterweight","Sit slowly into the bottom","Use a box or counterbalance to build up"],
+ mist:["Crashing into the bottom position"]},
+// ---------------- POWER ----------------
+{id:"power-clean",n:"Power Clean",cat:"Power",eq:"Barbell",dif:"Advanced",mus:["Full posterior chain","Traps","Quads"],
+ cues:["Sweep the bar close off the floor","Explode tall — jump and shrug at the hip","Fast elbows into the rack, catch above parallel"],
+ mist:["Pulling with the arms early","Letting the bar loop away from the body"]},
+{id:"hang-power-clean",n:"Hang Power Clean",cat:"Power",eq:"Barbell",dif:"Intermediate",mus:["Posterior chain","Traps"],
+ cues:["Start above the knee, shoulders over the bar","Snap the hips through, then pull under","Catch with elbows through and feet planted"],
+ mist:["Reverse-curling the bar instead of finishing the hip"]},
+{id:"clean-pull",n:"Clean Pull",cat:"Power",eq:"Barbell",dif:"Intermediate",mus:["Posterior chain","Traps"],
+ cues:["Same start as a clean, no catch","Accelerate through the floor and finish tall","Keep arms as ropes until the shrug"],
+ mist:["Bending the elbows to lift the bar higher"]},
+{id:"push-jerk",n:"Push Jerk",cat:"Power",eq:"Barbell",dif:"Advanced",mus:["Shoulders","Triceps","Legs"],
+ cues:["Dip vertical, drive the bar off the shoulders","Punch under into a quarter squat","Lock arms before you stand"],
+ mist:["Pressing the bar out instead of dropping under"]},
+{id:"snatch-high-pull",n:"Snatch-Grip High Pull",cat:"Power",eq:"Barbell",dif:"Intermediate",mus:["Traps","Posterior chain","Upper back"],
+ cues:["Wide grip, explode from above the knee","Elbows high and outside at the top","Bar stays close to the body"],
+ mist:["Swinging the bar forward at the finish"]},
+{id:"db-snatch",n:"Single-Arm DB Snatch",cat:"Power",eq:"Dumbbell",dif:"Intermediate",mus:["Posterior chain","Shoulders"],
+ cues:["Hike the bell between the legs, back flat","One violent hip extension — punch to the ceiling","Lock out overhead with the bicep by the ear"],
+ mist:["Muscling it up with the arm after a lazy hip"]},
+{id:"kb-swing",n:"Kettlebell Swing",cat:"Power",eq:"Kettlebell",dif:"Beginner",mus:["Glutes","Hamstrings","Core"],
+ cues:["Hinge, do not squat — bell attacks the zipper","Snap the hips; float the bell to chest height","Plank at the top: glutes, quads, lats all on"],
+ mist:["Lifting with the arms and shoulders","Rounding the back in the backswing"]},
+{id:"box-jump",n:"Box Jump",cat:"Power",eq:"Box",dif:"Beginner",mus:["Glutes","Quads","Calves"],
+ cues:["Big arm swing, explode off both feet","Land soft in a quarter squat on the box","Step down — never rebound off the top"],
+ mist:["Chasing box height with a deep tucked landing"]},
+{id:"seated-box-jump",n:"Seated Box Jump",cat:"Power",eq:"Box",dif:"Intermediate",mus:["Glutes","Quads"],
+ cues:["Start seated, kill all momentum","Explode with zero countermovement","Stick the landing tall"],
+ mist:["Rocking forward to cheat the start"]},
+{id:"depth-jump",n:"Depth Jump",cat:"Power",eq:"Box",dif:"Advanced",mus:["Reactive stiffness","Quads","Calves"],
+ cues:["Step off — do not jump off — a modest box","Minimal ground time: touch and explode","Land the second jump balanced and quiet"],
+ mist:["Using a box so tall the landing collapses"]},
+{id:"broad-jump",n:"Standing Broad Jump",cat:"Power",eq:"Bodyweight",dif:"Beginner",mus:["Glutes","Hamstrings","Quads"],
+ cues:["Throw the arms back, then hurl them forward","Drive hips through full extension in the air","Stick the landing with chest up"],
+ mist:["Landing with straight stiff legs"]},
+{id:"cmj",n:"Countermovement Jump",cat:"Power",eq:"Bodyweight",dif:"Beginner",mus:["Quads","Glutes","Calves"],
+ cues:["Quick dip, violent extension","Reach tall at the top","Land where you took off, soft knees"],
+ mist:["Slow, deep dip that leaks the stretch reflex"]},
+{id:"hurdle-hop",n:"Hurdle Hop",cat:"Power",eq:"Bodyweight",dif:"Intermediate",mus:["Reactive stiffness","Calves","Quads"],
+ cues:["Bounce over with stiff ankles — minimal knee bend","Ground contact under 0.2s in your head","Arms drive the rhythm"],
+ mist:["Absorbing each landing with a deep squat"]},
+{id:"single-leg-bound",n:"Single-Leg Bound",cat:"Power",eq:"Bodyweight",dif:"Intermediate",mus:["Glutes","Hamstrings","Reactive stiffness"],
+ cues:["Drive the free knee up and through","Cover distance, not height","Full-foot strike, roll to the toe"],
+ mist:["Reaching with the foot and braking every contact"]},
+{id:"mb-chest-pass",n:"Med Ball Chest Pass",cat:"Power",eq:"Med Ball",dif:"Beginner",mus:["Chest","Triceps","Core"],
+ cues:["Step into it and throw through the wall","Full follow-through — let the arms go","Every rep max intent"],
+ mist:["Throttling the throw to control the catch"]},
+{id:"mb-rotational-throw",n:"Med Ball Rotational Throw",cat:"Power",eq:"Med Ball",dif:"Intermediate",mus:["Obliques","Hips","Core"],
+ cues:["Load the back hip, then drive it toward the wall","Hips lead, arms follow","Finish with the back heel turned through"],
+ mist:["All arms, no hip turn"]},
+{id:"mb-slam",n:"Med Ball Slam",cat:"Power",eq:"Med Ball",dif:"Beginner",mus:["Lats","Core","Shoulders"],
+ cues:["Reach tall on your toes","Slam through the floor with the whole body","Catch the bounce and go again"],
+ mist:["Only using arms and losing the trunk snap"]},
+{id:"trap-bar-jump",n:"Trap Bar Jump",cat:"Power",eq:"Barbell",dif:"Advanced",mus:["Glutes","Quads"],
+ cues:["Light load — 20-30% of your deadlift","Jump as if unloaded; full extension","Land quiet, reset every rep"],
+ mist:["Loading so heavy it becomes a slow deadlift"]},
+// ---------------- SPEED & AGILITY ----------------
+{id:"accel-10m",n:"10-20m Acceleration Sprint",cat:"Speed & Agility",dif:"Beginner",eq:"None",mus:["Glutes","Hamstrings","Calves"],
+ cues:["45-degree body lean out of the start","Punch the ground back behind you","Big arm split — cheek to cheek"],
+ mist:["Standing up tall in the first three steps"]},
+{id:"flying-20",n:"Flying 20s",cat:"Speed & Agility",eq:"None",dif:"Intermediate",mus:["Hamstrings","Glutes","Hip flexors"],
+ cues:["Build for 20m, hit max speed for 20m","Run tall — hips high, heel cycles under the hip","Relax the face and hands at top speed"],
+ mist:["Straining and tightening up instead of staying smooth"]},
+{id:"hill-sprint",n:"Hill Sprint",cat:"Speed & Agility",eq:"None",dif:"Intermediate",mus:["Glutes","Quads","Calves"],
+ cues:["Moderate 10-15% grade, 10-20m","Drive knees and pump arms","Walk back down — full recovery between reps"],
+ mist:["Turning speed work into conditioning with short rest"]},
+{id:"sled-push",n:"Sled Push",cat:"Speed & Agility",eq:"Sled",dif:"Intermediate",mus:["Quads","Glutes","Calves"],
+ cues:["Arms locked, spine long from head to hip","Drive each leg through full extension","Load light enough to keep moving fast"],
+ mist:["Overloading it into a slow grind when the goal is speed"]},
+{id:"sled-drag",n:"Sled Drag (Backward)",cat:"Speed & Agility",eq:"Sled",dif:"Beginner",mus:["Quads","Knees","Calves"],
+ cues:["Lean back slightly against the strap","Pull with long steps, toes up","Constant tension — no jerking"],
+ mist:["Short stabby steps that never load the quad"]},
+{id:"a-skip",n:"A-Skip",cat:"Speed & Agility",eq:"None",dif:"Beginner",mus:["Hip flexors","Calves","Coordination"],
+ cues:["Knee punches up, foot snaps down under the hip","Stay tall and rhythmic","Opposite arm drives with the knee"],
+ mist:["Reaching the foot out in front of the body"]},
+{id:"b-skip",n:"B-Skip",cat:"Speed & Agility",eq:"None",dif:"Intermediate",mus:["Hamstrings","Hip flexors"],
+ cues:["A-skip knee lift, then paw the foot down and back","Cyclical — think pedaling","Keep ground contacts quick"],
+ mist:["Kicking the lower leg out and locking the knee"]},
+{id:"high-knees",n:"High Knees",cat:"Speed & Agility",eq:"None",dif:"Beginner",mus:["Hip flexors","Calves"],
+ cues:["Belt-height knees, fast off the floor","Tall posture — no lean back","Arms at sprint rhythm"],
+ mist:["Leaning back to fake knee height"]},
+{id:"wall-drill",n:"Wall Acceleration Drill",cat:"Speed & Agility",eq:"None",dif:"Beginner",mus:["Hip flexors","Glutes","Core"],
+ cues:["Hands on wall, body at 45 degrees, one straight line","Exchange knees like pistons on command","Hold the line — no sagging hips"],
+ mist:["Bending at the hips so the drill stops transferring"]},
+{id:"falling-start",n:"Falling Start",cat:"Speed & Agility",eq:"None",dif:"Beginner",mus:["Glutes","Calves"],
+ cues:["Lean until you must step or fall","First three steps push back hard","Stay low through 10m"],
+ mist:["Popping upright on step one"]},
+{id:"pro-agility",n:"5-10-5 Pro Agility",cat:"Speed & Agility",eq:"None",dif:"Intermediate",mus:["Glutes","Adductors","Calves"],
+ cues:["Sink the hips into each cut — do not stand up","Touch the line with your hand","Lean into the new direction before the plant"],
+ mist:["Rounding the cuts and drifting past the line"]},
+{id:"t-drill",n:"T-Drill",cat:"Speed & Agility",eq:"None",dif:"Intermediate",mus:["Glutes","Adductors"],
+ cues:["Sprint, shuffle, shuffle, backpedal — four gears","Stay low in the shuffles, no crossing feet","Eyes up the whole pattern"],
+ mist:["Clicking the heels together mid-shuffle"]},
+{id:"lateral-shuffle",n:"Lateral Shuffle",cat:"Speed & Agility",eq:"None",dif:"Beginner",mus:["Adductors","Glutes","Quads"],
+ cues:["Hips low, chest over knees","Push off the trailing leg","Feet never touch"],
+ mist:["Standing tall and bouncing"]},
+{id:"carioca",n:"Carioca",cat:"Speed & Agility",eq:"None",dif:"Beginner",mus:["Hips","Adductors","Coordination"],
+ cues:["Hips rotate, shoulders stay square","Quick knee-across drive","Light, fast feet"],
+ mist:["Turning the shoulders with the hips"]},
+{id:"line-hops",n:"Line Hops",cat:"Speed & Agility",eq:"None",dif:"Beginner",mus:["Calves","Ankles"],
+ cues:["Two-foot contacts as fast as possible","Stay on the balls of the feet","Stiff ankles — bounce, do not squat"],
+ mist:["Big slow jumps instead of fast small ones"]},
+{id:"backpedal-sprint",n:"Backpedal to Sprint",cat:"Speed & Agility",eq:"None",dif:"Intermediate",mus:["Quads","Glutes","Hip turn"],
+ cues:["Backpedal low with weight over the toes","Snap the hips open on the turn","Accelerate out of the turn in two steps"],
+ mist:["Standing up before the transition"]},
+{id:"tempo-strides",n:"Tempo Strides (100m)",cat:"Speed & Agility",eq:"None",dif:"Beginner",mus:["Full lower body","Aerobic system"],
+ cues:["Run at ~70% of max speed, tall and smooth","Focus on rhythm and relaxation","Walk 30-60s between reps"],
+ mist:["Creeping up to 90% and turning it into speed work"]},
+// ---------------- CONDITIONING ----------------
+{id:"row-intervals",n:"Row Erg Intervals",cat:"Conditioning",eq:"Machine",dif:"Beginner",mus:["Full body","Aerobic system"],
+ cues:["Legs, then body, then arms — reverse on the way up","Long strokes at controlled rate","Hold target split, not max effort"],
+ mist:["Yanking with arms early and shorting the leg drive"]},
+{id:"bike-sprints",n:"Air Bike Sprints",cat:"Conditioning",eq:"Machine",dif:"Intermediate",mus:["Full body","Anaerobic system"],
+ cues:["Drive knees and pull the handles","Sit tall — do not collapse over the console","All-out means all-out; keep reps short"],
+ mist:["Pacing a sprint that is supposed to hurt"]},
+{id:"ski-erg",n:"Ski Erg Intervals",cat:"Conditioning",eq:"Machine",dif:"Intermediate",mus:["Lats","Core","Aerobic system"],
+ cues:["Hinge and crunch through each pull","Arms finish long past the hips","Rhythm over rage"],
+ mist:["All arms with a frozen trunk"]},
+{id:"run-400s",n:"400m Run Repeats",cat:"Conditioning",eq:"None",dif:"Beginner",mus:["Aerobic system","Legs"],
+ cues:["Even pace across all reps — the last should match the first","Quick feet, relaxed shoulders","Jog or walk the recovery, do not sit"],
+ mist:["Sprinting rep one and dying by rep three"]},
+{id:"run-800s",n:"800m Run Repeats",cat:"Conditioning",eq:"None",dif:"Intermediate",mus:["Aerobic system","Legs"],
+ cues:["Target 5k effort or slightly faster","Settle into rhythm by 100m","Control the first lap — negative split the second"],
+ mist:["Going out 10 seconds too hot"]},
+{id:"tempo-run",n:"Tempo Run",cat:"Conditioning",eq:"None",dif:"Beginner",mus:["Aerobic system","Legs"],
+ cues:["Comfortably hard — you can say a phrase, not a sentence","Even effort over 20-30 minutes","Cadence high, stride quiet"],
+ mist:["Turning it into a race against yesterday"]},
+{id:"easy-run",n:"Easy Zone-2 Run",cat:"Conditioning",eq:"None",dif:"Beginner",mus:["Aerobic base","Legs"],
+ cues:["Conversational pace — nose breathing possible","Keep it genuinely easy; ego kills this run","30-60 minutes of relaxed rhythm"],
+ mist:["Drifting into moderate pace so it is neither easy nor hard"]},
+{id:"shuttle-300",n:"300-Yard Shuttle",cat:"Conditioning",eq:"None",dif:"Intermediate",mus:["Anaerobic system","Legs"],
+ cues:["25-yard turns — sink into each one","Accelerate out of every turn","Split the distance into chunks mentally"],
+ mist:["Coasting the middle 100 yards"]},
+{id:"burpee",n:"Burpee",cat:"Conditioning",eq:"Bodyweight",dif:"Beginner",mus:["Full body"],
+ cues:["Chest to floor every rep","Snap the hips up and land in a squat","Small jump, full hip extension"],
+ mist:["Sagging worm-style push-up in the middle"]},
+{id:"burpee-broad-jump",n:"Burpee Broad Jump",cat:"Conditioning",eq:"Bodyweight",dif:"Intermediate",mus:["Full body","Glutes"],
+ cues:["Burpee, then jump for distance not height","Stick each landing before the next rep","Keep the push-up honest under fatigue"],
+ mist:["Shuffling forward instead of jumping"]},
+{id:"wall-ball",n:"Wall Ball",cat:"Conditioning",eq:"Med Ball",dif:"Beginner",mus:["Quads","Shoulders","Aerobic system"],
+ cues:["Full-depth squat, throw out of the drive","Catch high and ride it down","Breathe at the top of every rep"],
+ mist:["Catching the ball low and getting buried"]},
+{id:"db-thruster",n:"DB Thruster",cat:"Conditioning",eq:"Dumbbell",dif:"Intermediate",mus:["Quads","Shoulders","Core"],
+ cues:["Front squat straight into a press — one motion","Use the leg drive; save the shoulders","Exhale as the bells lock out"],
+ mist:["Pausing at the shoulders and strict-pressing every rep"]},
+{id:"devil-press",n:"Devil Press",cat:"Conditioning",eq:"Dumbbell",dif:"Advanced",mus:["Full body"],
+ cues:["Burpee over the bells, then swing them overhead in one arc","Use hips, not shoulders, to launch","Lock out and stand fully before dropping"],
+ mist:["Strict-pressing from the shoulders when the hips should do it"]},
+{id:"kb-swing-intervals",n:"KB Swing Intervals",cat:"Conditioning",eq:"Kettlebell",dif:"Intermediate",mus:["Posterior chain","Grip","Anaerobic system"],
+ cues:["Sets of 15-20 on the minute","Crisp hip snap on every rep — no mush","If form degrades, the set ends"],
+ mist:["Letting fatigue turn swings into squats"]},
+{id:"bear-crawl",n:"Bear Crawl",cat:"Conditioning",eq:"Bodyweight",dif:"Beginner",mus:["Shoulders","Core","Quads"],
+ cues:["Knees an inch off the floor the whole time","Opposite hand and foot move together","Hips stay level — no side-to-side sway"],
+ mist:["High hips turning it into a walk"]},
+{id:"mountain-climber",n:"Mountain Climber",cat:"Conditioning",eq:"Bodyweight",dif:"Beginner",mus:["Core","Hip flexors","Shoulders"],
+ cues:["Shoulders stacked over wrists","Drive knees to chest without bouncing hips","Fast but rhythmic"],
+ mist:["Bouncing the hips up and down instead of driving knees"]},
+{id:"sled-medley",n:"Sled Push-Pull Medley",cat:"Conditioning",eq:"Sled",dif:"Advanced",mus:["Full body","Anaerobic system"],
+ cues:["Push down, drag back — that is one rep","Moderate load; the goal is continuous movement","Big breaths at each turnaround"],
+ mist:["Loading so heavy you stall mid-length"]},
+{id:"ruck-walk",n:"Ruck Walk",cat:"Conditioning",eq:"Bodyweight",dif:"Beginner",mus:["Aerobic base","Legs","Trunk"],
+ cues:["Loaded pack 10-20% bodyweight","Brisk hiking pace, tall posture","Build duration before load"],
+ mist:["Loading too heavy and shuffling with a rounded back"]},
+// ---------------- MOBILITY ----------------
+{id:"worlds-greatest",n:"World's Greatest Stretch",cat:"Mobility",eq:"Bodyweight",dif:"Beginner",mus:["Hips","T-spine","Hamstrings"],
+ cues:["Long lunge, elbow toward the instep","Rotate and reach for the ceiling","Move slowly through each position"],
+ mist:["Rushing through without pausing at end range"]},
+{id:"couch-stretch",n:"Couch Stretch",cat:"Mobility",eq:"Bodyweight",dif:"Beginner",mus:["Hip flexors","Quads"],
+ cues:["Rear foot up a wall or bench, knee in the corner","Squeeze the glute of the trailing leg","Stay tall — do not arch to fake range"],
+ mist:["Extending the low back instead of opening the hip"]},
+{id:"pigeon-stretch",n:"Pigeon Stretch",cat:"Mobility",eq:"Bodyweight",dif:"Beginner",mus:["Glutes","External rotators"],
+ cues:["Front shin angled, hips square","Fold forward over the front leg","Breathe into the stretch for 60-90s"],
+ mist:["Collapsing onto one hip"]},
+{id:"90-90",n:"90/90 Hip Switch",cat:"Mobility",eq:"Bodyweight",dif:"Beginner",mus:["Hip internal & external rotators"],
+ cues:["Both knees at 90 degrees","Rotate knees side to side without hands","Keep the chest tall through the switch"],
+ mist:["Using momentum instead of control"]},
+{id:"deep-squat-hold",n:"Deep Squat Hold",cat:"Mobility",eq:"Bodyweight",dif:"Beginner",mus:["Hips","Ankles","Adductors"],
+ cues:["Heels down, chest up, sit in the hole","Use elbows to pry the knees out","Accumulate 2-3 minutes total"],
+ mist:["Heels floating off the floor"]},
+{id:"cossack-squat",n:"Cossack Squat",cat:"Mobility",eq:"Bodyweight",dif:"Intermediate",mus:["Adductors","Hips","Ankles"],
+ cues:["Shift side to side over one heel","Keep the working heel planted","Straight leg toes can point up"],
+ mist:["Bouncing at the bottom of the shift"]},
+{id:"ankle-rock",n:"Ankle Dorsiflexion Rock",cat:"Mobility",eq:"Bodyweight",dif:"Beginner",mus:["Ankles","Calves"],
+ cues:["Half-kneel, drive the knee over the toes","Heel stays welded to the floor","Small pulses at end range"],
+ mist:["Letting the heel lift and calling it range"]},
+{id:"active-hamstring",n:"Active Hamstring Stretch",cat:"Mobility",eq:"Bodyweight",dif:"Beginner",mus:["Hamstrings"],
+ cues:["On your back, hold the thigh at 90 degrees","Actively kick toward the ceiling","Slow reps — 5s up, 5s down"],
+ mist:["Cranking on the leg with hands instead of using muscle"]},
+{id:"tspine-ext",n:"T-Spine Extension (Bench)",cat:"Mobility",eq:"Bodyweight",dif:"Beginner",mus:["Thoracic spine","Lats"],
+ cues:["Elbows on a bench, hips back","Drop the chest between the arms","Exhale as you sink"],
+ mist:["Extending through the lower back instead of the mid-back"]},
+{id:"open-book",n:"Open Book",cat:"Mobility",eq:"Bodyweight",dif:"Beginner",mus:["Thoracic spine","Chest"],
+ cues:["Side-lying, knees stacked at 90","Sweep the top arm open and follow with the eyes","Knees stay glued together"],
+ mist:["Letting the knees separate so the low back rotates"]},
+{id:"cat-cow",n:"Cat-Cow",cat:"Mobility",eq:"Bodyweight",dif:"Beginner",mus:["Spine","Core"],
+ cues:["Segment the spine — one vertebra at a time","Sync breath: inhale down, exhale round","Slow beats sloppy"],
+ mist:["Hinging only at the neck and low back"]},
+{id:"thread-needle",n:"Thread the Needle",cat:"Mobility",eq:"Bodyweight",dif:"Beginner",mus:["Thoracic spine","Shoulders"],
+ cues:["From all fours, slide one arm under and through","Rest the shoulder on the floor at end range","Reach and breathe, then reverse to a big open twist"],
+ mist:["Collapsing instead of actively reaching"]},
+{id:"shoulder-cars",n:"Shoulder CARs",cat:"Mobility",eq:"Bodyweight",dif:"Beginner",mus:["Shoulder capsule","Rotator cuff"],
+ cues:["Biggest pain-free circle you can draw","Move only the shoulder — body stays still","Slow enough to feel every degree"],
+ mist:["Shrugging and side-bending to cheat the circle"]},
+{id:"hip-cars",n:"Hip CARs",cat:"Mobility",eq:"Bodyweight",dif:"Beginner",mus:["Hip capsule"],
+ cues:["On all fours, draw a full circle with the knee","Brace so only the hip moves","Both directions, both sides"],
+ mist:["Tilting the pelvis to fake range"]},
+{id:"band-dislocate",n:"Band Shoulder Dislocate",cat:"Mobility",eq:"Bands",dif:"Beginner",mus:["Shoulders","Chest"],
+ cues:["Wide grip, arms straight over and behind","Narrow the grip over weeks, not reps","Even arc — no side leading"],
+ mist:["Bending the elbows through the sticking point"]},
+{id:"wall-slide",n:"Wall Slide",cat:"Mobility",eq:"Bodyweight",dif:"Beginner",mus:["Shoulders","Scapular upward rotation"],
+ cues:["Forearms on the wall, ribs down","Slide up while keeping contact","Reach and rotate the blades at the top"],
+ mist:["Flaring the ribs off the wall to gain height"]},
+{id:"scap-pushup",n:"Scap Push-Up",cat:"Mobility",eq:"Bodyweight",dif:"Beginner",mus:["Serratus","Scapular control"],
+ cues:["Arms stay locked; only the blades move","Push the floor away at the top","Slow and full range"],
+ mist:["Bending the elbows into a mini push-up"]},
+{id:"down-dog-cobra",n:"Down Dog to Cobra",cat:"Mobility",eq:"Bodyweight",dif:"Beginner",mus:["Shoulders","Spine","Hamstrings"],
+ cues:["Push hips high, heels reaching down","Sweep through low, then open the chest","Flow with the breath"],
+ mist:["Sagging shoulders in the cobra position"]},
+{id:"adductor-rock",n:"Adductor Rock Back",cat:"Mobility",eq:"Bodyweight",dif:"Beginner",mus:["Adductors","Hips"],
+ cues:["One leg long to the side, rock hips back","Keep the spine long as you sit back","Pulse gently at the first barrier"],
+ mist:["Rounding the back to chase depth"]},
+// ---------------- CORE ----------------
+{id:"plank",n:"Plank",cat:"Core",eq:"Bodyweight",dif:"Beginner",mus:["Anterior core","Shoulders"],
+ cues:["Squeeze glutes and quads — full-body tension","Ribs down, tuck the pelvis slightly","Quality time beats long saggy minutes"],
+ mist:["Hips drifting up or sagging down"]},
+{id:"side-plank",n:"Side Plank",cat:"Core",eq:"Bodyweight",dif:"Beginner",mus:["Obliques","QL","Shoulder"],
+ cues:["Straight line ankle to ear","Push the floor away with the forearm","Stack or stagger the feet"],
+ mist:["Hips dropping toward the floor"]},
+{id:"copenhagen-plank",n:"Copenhagen Plank",cat:"Core",eq:"Bodyweight",dif:"Advanced",mus:["Adductors","Obliques"],
+ cues:["Top leg on a bench, body straight","Lift the bottom leg to meet it","Short holds first — adductors fatigue fast"],
+ mist:["Bending at the hips and hanging on the joint"]},
+{id:"dead-bug",n:"Dead Bug",cat:"Core",eq:"Bodyweight",dif:"Beginner",mus:["Anterior core"],
+ cues:["Low back gently pressed to the floor","Opposite arm and leg reach long","Exhale fully as the limbs extend"],
+ mist:["Low back arching off the floor as the leg lowers"]},
+{id:"bird-dog",n:"Bird Dog",cat:"Core",eq:"Bodyweight",dif:"Beginner",mus:["Posterior core","Glutes"],
+ cues:["Reach long, not high","Pause 2s with hips dead level","Imagine a cup of water on your low back"],
+ mist:["Rotating the pelvis as the leg lifts"]},
+{id:"pallof-press",n:"Pallof Press",cat:"Core",eq:"Bands",dif:"Beginner",mus:["Obliques","Anterior core"],
+ cues:["Press the band straight out and resist the twist","Soft knees, tall spine","Slow out, slow in"],
+ mist:["Letting the shoulders rotate toward the anchor"]},
+{id:"hanging-knee-raise",n:"Hanging Knee Raise",cat:"Core",eq:"Bodyweight",dif:"Intermediate",mus:["Hip flexors","Lower abs"],
+ cues:["Posterior tilt first, then lift the knees","No swing between reps — dead stop","Knees to chest, not just hip height"],
+ mist:["Swinging momentum doing the work"]},
+{id:"toes-to-bar",n:"Hanging Leg Raise / Toes-to-Bar",cat:"Core",eq:"Bodyweight",dif:"Advanced",mus:["Abs","Hip flexors","Lats"],
+ cues:["Push down on the bar with straight arms","Curl the pelvis, legs follow","Control the descent — no free-fall"],
+ mist:["Kipping every rep in a strength context"]},
+{id:"bb-rollout",n:"Barbell Rollout",cat:"Core",eq:"Barbell",dif:"Intermediate",mus:["Anterior core","Lats"],
+ cues:["Start over the bar, hips tucked","Roll only as far as the brace holds","Pull back with lats and abs together"],
+ mist:["Hips sagging into extension at the far point"]},
+{id:"hollow-hold",n:"Hollow Body Hold",cat:"Core",eq:"Bodyweight",dif:"Intermediate",mus:["Anterior core"],
+ cues:["Low back pressed down, legs and arms long","Shoulder blades just off the floor","Shrink the shape if the back arches"],
+ mist:["Neck cranked forward doing all the work"]},
+{id:"v-up",n:"V-Up",cat:"Core",eq:"Bodyweight",dif:"Intermediate",mus:["Abs","Hip flexors"],
+ cues:["Fold in one crisp piece — hands to feet","Lower with control to a hollow","Exhale hard at the top"],
+ mist:["Throwing the arms to generate momentum"]},
+{id:"russian-twist",n:"Med Ball Russian Twist",cat:"Core",eq:"Med Ball",dif:"Beginner",mus:["Obliques"],
+ cues:["Tall chest, lean back to 45 degrees","Rotate the ribcage, not just the arms","Touch the ball down with control"],
+ mist:["Fast arm swings with a frozen torso"]},
+{id:"band-chop",n:"Band Chop",cat:"Core",eq:"Bands",dif:"Beginner",mus:["Obliques","Hips"],
+ cues:["Chop high-to-low across the body","Pivot the back foot as you rotate","Arms stay long — torso drives"],
+ mist:["All arms, no trunk rotation"]},
+{id:"superman-hold",n:"Superman Hold",cat:"Core",eq:"Bodyweight",dif:"Beginner",mus:["Spinal erectors","Glutes"],
+ cues:["Lift chest and thighs together","Reach long through fingers and toes","Hold 10-20s with steady breathing"],
+ mist:["Cranking the neck up to look forward"]},
+{id:"l-sit",n:"L-Sit",cat:"Core",eq:"Bodyweight",dif:"Advanced",mus:["Abs","Hip flexors","Triceps"],
+ cues:["Push the floor away — shoulders depressed","Legs locked and together","Tuck knees to regress"],
+ mist:["Shoulders shrugging up to the ears"]},
+{id:"body-saw",n:"Body Saw",cat:"Core",eq:"Bodyweight",dif:"Intermediate",mus:["Anterior core","Shoulders"],
+ cues:["Plank on forearms, slide back and forth","Small range first — the further back, the harder","Nothing moves except the shoulders"],
+ mist:["Hips rising as you saw backward"]}
+];
+
+/* Prescription fields per block:
+   ex   exercise name (matches EXERCISES.n where applicable)
+   s    sets   — number, or per-week array
+   r    reps   — string ("5", "8/side", "30s", "400m"), or per-week array
+   pct  %1RM   — number or per-week array (main lifts)
+   rpe  target RPE — number or per-week array
+   rest seconds between sets (defaults by block type)
+   t    'main' | 'power' | 'acc' | 'cond' | 'mob'  (main = counts toward autoregulation)
+   note coaching note */
+const PROGRAMS = [
+{id:"off-season",tag:"STR-01",name:"Off-Season Strength",weeks:8,dpw:4,level:"Intermediate",
+ goal:"Linear-progression barbell block to add raw strength when the calendar is empty.",
+ desc:"For athletes with 8 clean weeks and access to a barbell. One main lift per day, pushed linearly from 70% to a heavy double, with just enough accessory work to keep positions honest. If you can already squat 2x bodyweight, run an intermediate block instead — this one is about steady, boring, effective loading.",
+ outcomes:["+5-10% on squat, bench, deadlift and press 1RMs","Re-grooved bracing and bar-path habits","A base of work capacity for the power phase that should follow"],
+ structure:"4 lifting days: Squat / Bench / Deadlift / Press. Main lift climbs ~2.5% weekly, reps drop from 5s to a heavy double in week 8. Accessories stay at RPE 7 throughout.",
+ notes:"Rest 48h between squat and deadlift days if you rearrange the week. Week 8 doubles at 90% are a test — take them only if bar speed has been good for two straight weeks.",
+ days:[
+  {name:"Squat Day",focus:{i:"high",t:"lower"},blocks:[
+    {ex:"Back Squat",s:[5,5,5,5,5,4,4,3],r:["5","5","5","5","3","3","3","2"],pct:[70,72.5,75,77.5,80,82.5,85,90],rest:180,t:"main"},
+    {ex:"Romanian Deadlift",s:3,r:"8",rpe:7,rest:120,t:"acc"},
+    {ex:"Walking Lunge",s:3,r:"10/side",rpe:7,rest:90,t:"acc"},
+    {ex:"Plank",s:3,r:"45s",rest:45,t:"acc"}]},
+  {name:"Bench Day",focus:{i:"high",t:"upper"},blocks:[
+    {ex:"Bench Press",s:[5,5,5,5,5,4,4,3],r:["5","5","5","5","3","3","3","2"],pct:[70,72.5,75,77.5,80,82.5,85,90],rest:180,t:"main"},
+    {ex:"Barbell Row",s:4,r:"8",rpe:7,rest:120,t:"acc"},
+    {ex:"Incline DB Press",s:3,r:"10",rpe:8,rest:90,t:"acc"},
+    {ex:"Band Face Pull",s:3,r:"15",rest:60,t:"acc"}]},
+  {name:"Deadlift Day",focus:{i:"high",t:"lower"},blocks:[
+    {ex:"Deadlift",s:[4,4,4,4,4,3,3,2],r:["5","5","5","3","3","3","2","2"],pct:[70,72.5,75,77.5,80,82.5,85,90],rest:210,t:"main"},
+    {ex:"Front Squat",s:3,r:"5",rpe:7,rest:150,t:"acc"},
+    {ex:"Back Extension",s:3,r:"12",rest:90,t:"acc"},
+    {ex:"Hanging Knee Raise",s:3,r:"10",rest:60,t:"acc"}]},
+  {name:"Press Day",focus:{i:"mod",t:"upper"},blocks:[
+    {ex:"Overhead Press",s:[5,5,5,5,5,4,4,3],r:["5","5","5","5","3","3","3","2"],pct:[70,72.5,75,77.5,80,82.5,85,90],rest:180,t:"main"},
+    {ex:"Pull-Up",s:4,r:"6-10",rpe:8,rest:120,t:"acc"},
+    {ex:"Dips",s:3,r:"8",rpe:8,rest:90,t:"acc"},
+    {ex:"Band Pull-Apart",s:3,r:"20",rest:45,t:"acc"},
+    {ex:"Farmer Carry",s:3,r:"40m",rpe:7,rest:90,t:"acc"}]}
+ ]},
+{id:"power-explosive",tag:"PWR-01",name:"Power & Explosiveness",weeks:6,dpw:3,level:"Advanced",
+ goal:"Olympic lift variations, jumps and throws to convert strength into violent hips.",
+ desc:"For athletes who already have a strength base (roughly 1.5x bodyweight squat) and need it to show up fast. Every rep is done at maximum intent with full recovery — this program should never feel like conditioning. If a set slows down, you are done for that exercise.",
+ outcomes:["Higher rate of force development on jumps and cleans","Cleaner catch positions on Olympic lift variations","Carryover to sprinting and change of direction"],
+ structure:"3 days: Force (clean + squat), Velocity (jumps + press), Reactive (hang clean + plyometrics). 48h between sessions. Bar loads climb, jump volume stays modest.",
+ notes:"Rest periods are long on purpose — power dies with fatigue. If you also play sport this season, drop to 2 days and cut the last block of each session.",
+ days:[
+  {name:"Force",focus:{i:"high",t:"lower"},blocks:[
+    {ex:"Power Clean",s:5,r:"3",pct:[60,65,70,72.5,75,80],rest:180,t:"main"},
+    {ex:"Back Squat",s:4,r:"3",pct:[75,77.5,80,82.5,85,87.5],rest:210,t:"main"},
+    {ex:"Box Jump",s:4,r:"3",rest:90,t:"power",note:"Step down every rep"},
+    {ex:"Med Ball Slam",s:3,r:"5",rest:75,t:"power"}]},
+  {name:"Velocity",focus:{i:"high",t:"full"},blocks:[
+    {ex:"Trap Bar Jump",s:4,r:"3",rest:150,t:"power",note:"20-30% of deadlift 1RM, jump for height"},
+    {ex:"Push Press",s:5,r:"3",pct:[65,70,72.5,75,77.5,80],rest:180,t:"main"},
+    {ex:"Med Ball Chest Pass",s:4,r:"4",rest:75,t:"power",note:"Throw through the wall"},
+    {ex:"Single-Leg Bound",s:3,r:"5/side",rest:120,t:"power"}]},
+  {name:"Reactive",focus:{i:"high",t:"lower"},blocks:[
+    {ex:"Hang Power Clean",s:5,r:"2",pct:[65,70,75,77.5,80,85],rest:180,t:"main"},
+    {ex:"Depth Jump",s:[2,2,3,3,3,4],r:"3",rest:150,t:"power",note:"12-18in box; ground contact minimal"},
+    {ex:"Hurdle Hop",s:4,r:"5",rest:120,t:"power"},
+    {ex:"Med Ball Rotational Throw",s:3,r:"4/side",rest:75,t:"power"}]}
+ ]},
+{id:"speed-accel",tag:"SPD-01",name:"Speed & Acceleration",weeks:6,dpw:3,level:"Intermediate",
+ goal:"Sprint mechanics, acceleration and top speed for field-sport athletes.",
+ desc:"Track-style speed training for athletes whose sport is decided in the first 10 meters. Sessions are short in work and long in rest: total sprint volume rarely exceeds 300m, but every meter is at maximal or near-maximal intent. Needs about 40m of runway; a hill and a sled expand the toolbox but are not mandatory.",
+ outcomes:["Faster 10m and 40yd splits","More horizontal force in early acceleration","Sprint mechanics that hold up at top speed"],
+ structure:"3 days, minimum 48h apart: Acceleration (starts + sled), Max Velocity (flying sprints), Change of Direction (cuts + reactive work). Every rep gets full recovery — about 1 minute per 10m sprinted.",
+ notes:"Never run speed work on tired legs; if your readiness score is low, swap the day for the tempo-stride block only. Grass or turf beats concrete for everything here.",
+ days:[
+  {name:"Acceleration",focus:{i:"high",t:"run"},blocks:[
+    {ex:"Wall Acceleration Drill",s:3,r:"10 exchanges",rest:60,t:"power"},
+    {ex:"Falling Start",s:4,r:"10m",rest:120,t:"power"},
+    {ex:"10-20m Acceleration Sprint",s:[5,5,6,6,7,7],r:"20m",rest:150,t:"power",note:"Full recovery — walk back slow"},
+    {ex:"Sled Push",s:4,r:"15m",rpe:8,rest:150,t:"power",note:"Light enough to move fast"},
+    {ex:"Standing Broad Jump",s:3,r:"3",rest:90,t:"power"}]},
+  {name:"Max Velocity",focus:{i:"high",t:"run"},blocks:[
+    {ex:"A-Skip",s:3,r:"20m",rest:60,t:"power"},
+    {ex:"B-Skip",s:3,r:"20m",rest:60,t:"power"},
+    {ex:"Flying 20s",s:[3,4,4,5,5,6],r:"20m fly",rest:240,t:"power",note:"20m build + 20m max — 4min rest is the program"},
+    {ex:"Tempo Strides (100m)",s:4,r:"100m @70%",rest:60,t:"cond"}]},
+  {name:"Change of Direction",focus:{i:"high",t:"run"},blocks:[
+    {ex:"Lateral Shuffle",s:4,r:"10m each way",rest:60,t:"power"},
+    {ex:"Carioca",s:3,r:"20m each way",rest:60,t:"power"},
+    {ex:"5-10-5 Pro Agility",s:[4,4,5,5,6,6],r:"1 rep",rest:150,t:"power",note:"Time yourself every other week"},
+    {ex:"T-Drill",s:4,r:"1 rep",rest:150,t:"power"},
+    {ex:"Line Hops",s:3,r:"20s",rest:60,t:"power"}]}
+ ]},
+{id:"hybrid",tag:"HYB-01",name:"Hybrid Athlete",weeks:8,dpw:5,level:"Intermediate",
+ goal:"Concurrent strength and running without letting either sabotage the other.",
+ desc:"For the athlete who refuses to choose between a 300lb squat and a fast 10k. Two lift days, two run days, one power day — sequenced so hard leg work and hard running never collide. Expect strength to climb slowly and running to climb steadily; that is the deal with concurrent training.",
+ outcomes:["Squat and bench maintained or nudged up while weekly mileage grows","Faster threshold pace from weekly interval work","A template you can repeat year-round"],
+ structure:"Mon heavy lower · Tue easy Z2 run · Wed heavy upper · Thu run intervals · Fri power + trunk. Weekend fully off or an optional easy spin/walk.",
+ notes:"Sequencing is the whole point: the heavy lower day (Day 1) sits 72 hours before the hard run day (Day 4), and the easy Tuesday run actively flushes Monday's legs. Do not swap Day 4 next to Day 1 — heavy legs feeding into hard intervals is how hybrid plans die. Interference is managed, not eliminated: keep the easy run genuinely easy.",
+ days:[
+  {name:"Lower Strength",focus:{i:"high",t:"lower"},blocks:[
+    {ex:"Back Squat",s:4,r:["5","5","5","5","4","4","3","3"],pct:[72.5,75,77.5,80,72.5,82.5,85,87.5],rest:180,t:"main"},
+    {ex:"Romanian Deadlift",s:3,r:"8",rpe:7,rest:120,t:"acc"},
+    {ex:"Bulgarian Split Squat",s:3,r:"8/side",rpe:7,rest:90,t:"acc"},
+    {ex:"Suitcase Carry",s:3,r:"30m/side",rest:60,t:"acc"}]},
+  {name:"Easy Run (Z2)",focus:{i:"low",t:"run"},blocks:[
+    {ex:"Easy Zone-2 Run",s:1,r:["35min","40min","40min","45min","45min","50min","55min","40min"],rest:0,t:"cond",note:"Conversational pace — this run recovers Monday's legs, do not race it"}]},
+  {name:"Upper Strength",focus:{i:"high",t:"upper"},blocks:[
+    {ex:"Bench Press",s:4,r:["5","5","5","5","4","4","3","3"],pct:[72.5,75,77.5,80,72.5,82.5,85,87.5],rest:180,t:"main"},
+    {ex:"Pull-Up",s:4,r:"6-10",rpe:8,rest:120,t:"acc"},
+    {ex:"Overhead Press",s:3,r:"6",rpe:7,rest:120,t:"acc"},
+    {ex:"Chest-Supported Row",s:3,r:"10",rpe:8,rest:90,t:"acc"},
+    {ex:"Band Face Pull",s:3,r:"15",rest:60,t:"acc"}]},
+  {name:"Run Intervals",focus:{i:"high",t:"run"},blocks:[
+    {ex:"400m Run Repeats",s:[6,6,7,8,6,8,9,5],r:"400m",rest:90,t:"cond",note:"5k effort; even splits across all reps"},
+    {ex:"Tempo Strides (100m)",s:4,r:"100m @70%",rest:60,t:"cond"}]},
+  {name:"Power + Trunk",focus:{i:"mod",t:"full"},blocks:[
+    {ex:"Hang Power Clean",s:4,r:"3",pct:[60,65,67.5,70,65,72.5,75,60],rest:150,t:"main"},
+    {ex:"Kettlebell Swing",s:4,r:"10",rpe:7,rest:75,t:"power"},
+    {ex:"Hollow Body Hold",s:3,r:"30s",rest:45,t:"acc"},
+    {ex:"Pallof Press",s:3,r:"12/side",rest:45,t:"acc"}]}
+ ]},
+{id:"engine-builder",tag:"CND-01",name:"Engine Builder",weeks:6,dpw:4,level:"Beginner",
+ goal:"Intervals and circuits to build an aerobic engine that does not quit.",
+ desc:"Pure conditioning block for athletes whose strength outruns their lungs. Mixes erg intervals, mixed-modal circuits, tempo running and one long grind per week. Loads are light everywhere — the barbell keeps what you have while the engine gets rebuilt.",
+ outcomes:["Lower heart rate at the same pace within 3 weeks","Bigger repeatable output on ergs and circuits","An aerobic base that speeds recovery between lift sets too"],
+ structure:"4 days: Threshold erg intervals · Mixed circuit · Tempo run · Long grind. Two easy days minimum between the circuit and the tempo run if you rearrange.",
+ notes:"Progress is volume-first: reps and minutes climb week to week while intensity stays honest, not heroic. The long grind should feel almost too easy — that is the point.",
+ days:[
+  {name:"Threshold Ergs",focus:{i:"high",t:"engine"},blocks:[
+    {ex:"Row Erg Intervals",s:[4,5,5,6,6,7],r:"500m",rest:90,t:"cond",note:"Hold your 2k split +3-5s on every rep"},
+    {ex:"Ski Erg Intervals",s:3,r:"250m",rest:75,t:"cond"},
+    {ex:"Dead Bug",s:3,r:"8/side",rest:45,t:"acc"}]},
+  {name:"Mixed Circuit",focus:{i:"mod",t:"full"},blocks:[
+    {ex:"Wall Ball",s:4,r:[ "12","14","15","16","18","20"],rest:45,t:"cond",note:"Circuit: run the four movements back-to-back, rest 90s between rounds"},
+    {ex:"Kettlebell Swing",s:4,r:"15",rest:0,t:"cond"},
+    {ex:"Burpee",s:4,r:["10","10","12","12","14","15"],rest:0,t:"cond"},
+    {ex:"DB Thruster",s:4,r:"10",rest:90,t:"cond"}]},
+  {name:"Tempo Run",focus:{i:"mod",t:"run"},blocks:[
+    {ex:"Tempo Run",s:1,r:["20min","20min","25min","25min","30min","30min"],rest:0,t:"cond",note:"Comfortably hard — a phrase, not a sentence"},
+    {ex:"Tempo Strides (100m)",s:4,r:"100m @70%",rest:60,t:"cond"}]},
+  {name:"Long Grind",focus:{i:"low",t:"engine"},blocks:[
+    {ex:"Ruck Walk",s:1,r:["40min","45min","50min","55min","60min","60min"],rest:0,t:"cond",note:"Or easy row/bike for the same duration — nose-breathing pace"},
+    {ex:"Bear Crawl",s:3,r:"15m",rest:60,t:"cond"},
+    {ex:"Deep Squat Hold",s:3,r:"45s",rest:30,t:"mob"}]}
+ ]},
+{id:"in-season",tag:"MNT-01",name:"In-Season Maintenance",weeks:6,dpw:2,level:"Intermediate",
+ goal:"Keep strength and pop through a competitive season on two short sessions a week.",
+ desc:"For athletes in-season: practices, games and travel come first, and the weight room exists to keep qualities from leaking away. Volume is cut to the bone — a handful of heavy, crisp sets at high intent. In and out in 40 minutes, never sore for game day.",
+ outcomes:["Strength held within a few percent all season","Bar speed and jump height maintained","Zero training-induced soreness on game day"],
+ structure:"2 days: Total-Body Heavy and Power + Pull. Lift 48h+ before competition. Every set ends with reps in the tank.",
+ notes:"Autoregulate hard here: if the week was brutal, drop the top sets to 80% and leave. The suggestion banner in this app will do that math for you — respect it in-season.",
+ days:[
+  {name:"Total-Body Heavy",focus:{i:"high",t:"lower"},blocks:[
+    {ex:"Back Squat",s:3,r:"3",pct:[80,82.5,85,80,85,82.5],rest:180,t:"main",note:"Crisp bar speed — no grinders in-season"},
+    {ex:"Bench Press",s:3,r:"3",pct:[80,82.5,85,80,85,82.5],rest:180,t:"main"},
+    {ex:"Pull-Up",s:3,r:"5",rpe:7,rest:120,t:"acc"},
+    {ex:"Suitcase Carry",s:2,r:"30m/side",rest:60,t:"acc"}]},
+  {name:"Power + Pull",focus:{i:"mod",t:"full"},blocks:[
+    {ex:"Hang Power Clean",s:3,r:"2",pct:[70,70,72.5,70,72.5,70],rest:150,t:"main"},
+    {ex:"Box Jump",s:3,r:"3",rest:90,t:"power"},
+    {ex:"Trap Bar Deadlift",s:3,r:"3",rpe:7,rest:180,t:"acc"},
+    {ex:"Chest-Supported Row",s:3,r:"8",rpe:7,rest:90,t:"acc"},
+    {ex:"Pallof Press",s:2,r:"10/side",rest:45,t:"acc"}]}
+ ]},
+{id:"gpp",tag:"GPP-01",name:"GPP / Return to Training",weeks:4,dpw:3,level:"Beginner",
+ goal:"Four weeks of general physical preparation after a layoff, injury clearance or off-season slump.",
+ desc:"The on-ramp. Rebuilds tissue tolerance, movement quality and light work capacity before you touch a real strength or speed block. Everything is submaximal — RPE 6-7 caps, carries, sleds and easy aerobic work. Boring by design; four weeks here saves twelve weeks of setbacks.",
+ outcomes:["Joints and tendons re-accustomed to load","Baseline work capacity restored","Cleared runway into any other program in this app"],
+ structure:"3 full-body days with a carry or sled emphasis in the middle session. Nothing to failure, ever. Add a daily 15-minute mobility routine if time allows.",
+ notes:"If anything hurts (not burns — hurts), regress the movement one step and carry on. Sled work is joint-friendly precisely because there is no eccentric — lean on it.",
+ days:[
+  {name:"Full Body A",focus:{i:"mod",t:"full"},blocks:[
+    {ex:"Goblet Squat",s:3,r:["10","12","12","15"],rpe:6,rest:90,t:"acc"},
+    {ex:"Push-Up",s:3,r:["8","10","12","15"],rpe:6,rest:75,t:"acc"},
+    {ex:"One-Arm DB Row",s:3,r:"10/side",rpe:6,rest:75,t:"acc"},
+    {ex:"Farmer Carry",s:3,r:"30m",rpe:6,rest:75,t:"acc"},
+    {ex:"Plank",s:3,r:"30s",rest:45,t:"acc"}]},
+  {name:"Sleds & Carries",focus:{i:"low",t:"full"},blocks:[
+    {ex:"Sled Drag (Backward)",s:5,r:"20m",rpe:6,rest:75,t:"cond"},
+    {ex:"Bear Crawl",s:3,r:"15m",rest:60,t:"cond"},
+    {ex:"Step-Up",s:3,r:"10/side",rpe:6,rest:75,t:"acc"},
+    {ex:"Dead Bug",s:3,r:"8/side",rest:45,t:"acc"},
+    {ex:"Row Erg Intervals",s:1,r:"10min easy",rest:0,t:"cond",note:"Conversational pace"}]},
+  {name:"Full Body B",focus:{i:"mod",t:"full"},blocks:[
+    {ex:"Trap Bar Deadlift",s:3,r:["8","8","10","10"],rpe:6,rest:120,t:"acc"},
+    {ex:"DB Shoulder Press",s:3,r:"10",rpe:6,rest:75,t:"acc"},
+    {ex:"Inverted Row",s:3,r:"10",rpe:7,rest:75,t:"acc"},
+    {ex:"Cossack Squat",s:2,r:"8/side",rest:60,t:"mob"},
+    {ex:"Tempo Strides (100m)",s:6,r:"100m @70%",rest:60,t:"cond"}]}
+ ]},
+{id:"bodyweight",tag:"BWT-01",name:"No-Gym Athlete",weeks:6,dpw:4,level:"Beginner",
+ goal:"A complete athlete program — strength, power, speed, engine — with zero equipment.",
+ desc:"Travel, deployment, home training, no excuses. Four days a week using floor space, something to pull on (a door-frame bar, rings, or a sturdy table edge) and gravity. Progression comes from harder leverages and added reps, not added plates.",
+ outcomes:["Strength endurance across push, pull, squat and hinge patterns","Maintained (or new) speed and jump ability","Proof you never actually needed the machines"],
+ structure:"4 days: Lower · Upper · Speed & Plyo · Core + Engine. Runs on reps-per-week progression; hardest leverage you can do cleanly always wins over more reps.",
+ notes:"For Inverted Rows, a sturdy table edge works if you have no bar. Nordic curls can be done with feet hooked under a couch — lower as slow as possible and push back up.",
+ days:[
+  {name:"Lower",focus:{i:"high",t:"lower"},blocks:[
+    {ex:"Reverse Lunge",s:4,r:["10/side","10/side","12/side","12/side","14/side","15/side"],rest:75,t:"acc"},
+    {ex:"Glute Bridge",s:4,r:"15",rest:60,t:"acc",note:"Single-leg once 15 is easy"},
+    {ex:"Nordic Ham Curl",s:3,r:["3","4","4","5","5","6"],rest:120,t:"acc",note:"Eccentric only — push back up with hands"},
+    {ex:"Pistol Squat",s:3,r:"5/side",rest:90,t:"acc",note:"To a box or with support as needed"},
+    {ex:"Tibialis Raise",s:3,r:"15",rest:45,t:"acc"}]},
+  {name:"Upper",focus:{i:"high",t:"upper"},blocks:[
+    {ex:"Push-Up",s:4,r:"AMRAP-2",rest:90,t:"acc",note:"Stop 2 reps shy of failure each set"},
+    {ex:"Inverted Row",s:4,r:["8","9","10","10","11","12"],rest:90,t:"acc"},
+    {ex:"Deficit Push-Up",s:3,r:"8",rest:90,t:"acc",note:"Hands on books or blocks"},
+    {ex:"Dips",s:3,r:"8",rest:90,t:"acc",note:"Between two chairs or a bench corner"},
+    {ex:"Scap Push-Up",s:2,r:"10",rest:45,t:"mob"}]},
+  {name:"Speed & Plyo",focus:{i:"high",t:"run"},blocks:[
+    {ex:"A-Skip",s:3,r:"20m",rest:60,t:"power"},
+    {ex:"High Knees",s:3,r:"15m",rest:60,t:"power"},
+    {ex:"Standing Broad Jump",s:4,r:"3",rest:90,t:"power"},
+    {ex:"10-20m Acceleration Sprint",s:[4,5,5,6,6,6],r:"20m",rest:150,t:"power",note:"Any open stretch — full recovery"},
+    {ex:"Line Hops",s:3,r:"20s",rest:60,t:"power"}]},
+  {name:"Core + Engine",focus:{i:"mod",t:"engine"},blocks:[
+    {ex:"Burpee",s:6,r:["10","10","12","12","14","15"],rest:60,t:"cond",note:"Every 90s on the clock"},
+    {ex:"Mountain Climber",s:4,r:"30s",rest:45,t:"cond"},
+    {ex:"Hollow Body Hold",s:3,r:["20s","20s","25s","25s","30s","30s"],rest:45,t:"acc"},
+    {ex:"Side Plank",s:3,r:"30s/side",rest:45,t:"acc"},
+    {ex:"Bear Crawl",s:3,r:"20m",rest:60,t:"cond"}]}
+ ]},
+{id:"vertical-jump",tag:"VRT-01",name:"Vertical Jump",weeks:8,dpw:3,level:"Intermediate",
+ goal:"Add inches to your vertical with strength, elastic and contrast work.",
+ desc:"An 8-week jump specialization: one max-strength day, one elastic/plyometric day, one contrast-power day. Squat strength climbs while jump volume is carefully rationed — tendons adapt slower than motivation. Test your vertical in week 1 and week 8 using the Performance Tests tab, not every session.",
+ outcomes:["2-5 inches on a trained athlete's vertical","Stiffer, springier ankle and knee response","A heavier squat that actually shows up in the jump"],
+ structure:"3 days, 48h apart: Max Strength · Elastic (plyos) · Contrast Power. Depth jumps enter in week 3 once landings are quiet.",
+ notes:"Plyo quality rule: the moment landings get loud or slow, the set is over regardless of the prescription. Jumping tired teaches you to be slow.",
+ days:[
+  {name:"Max Strength",focus:{i:"high",t:"lower"},blocks:[
+    {ex:"Back Squat",s:4,r:["5","5","4","4","3","3","2","2"],pct:[72.5,75,77.5,80,82.5,85,87.5,90],rest:210,t:"main"},
+    {ex:"Romanian Deadlift",s:3,r:"8",rpe:7,rest:120,t:"acc"},
+    {ex:"Standing Calf Raise",s:4,r:"10",rpe:8,rest:75,t:"acc",note:"3s lowering every rep"},
+    {ex:"Tibialis Raise",s:3,r:"15",rest:45,t:"acc"}]},
+  {name:"Elastic",focus:{i:"high",t:"lower"},blocks:[
+    {ex:"Countermovement Jump",s:4,r:"3",rest:120,t:"power",note:"Max height, full reset between reps"},
+    {ex:"Depth Jump",s:[0,0,2,2,3,3,4,3],r:"3",rest:150,t:"power",note:"Starts week 3 — 12-18in box"},
+    {ex:"Hurdle Hop",s:4,r:"4",rest:120,t:"power"},
+    {ex:"Standing Broad Jump",s:3,r:"3",rest:90,t:"power"},
+    {ex:"Line Hops",s:3,r:"15s",rest:60,t:"power"}]},
+  {name:"Contrast Power",focus:{i:"high",t:"lower"},blocks:[
+    {ex:"Trap Bar Jump",s:4,r:"3",rest:150,t:"power",note:"Pair mentally with the squat sets — lift heavy, then move light fast"},
+    {ex:"Hang Power Clean",s:4,r:"2",pct:[60,65,67.5,70,72.5,75,77.5,70],rest:180,t:"main"},
+    {ex:"Box Jump",s:4,r:"3",rest:90,t:"power"},
+    {ex:"Seated Box Jump",s:3,r:"3",rest:120,t:"power",note:"Kills the stretch reflex — pure concentric power"},
+    {ex:"Med Ball Slam",s:3,r:"5",rest:75,t:"power"}]}
+ ]},
+{id:"hyrox-prep",tag:"HRX-01",name:"HYROX / Comp Prep",weeks:8,dpw:4,level:"Advanced",
+ goal:"Race-specific engine, station strength and compromised running for fitness racing.",
+ desc:"Built around the demands of a HYROX-style event: repeated 1km runs broken up by sled pushes, lunges, wall balls and erg work. The signature adaptation is compromised running — holding pace on legs that are full of sled and lunges. One full simulation block every week keeps race day honest.",
+ outcomes:["Race-pace durability across runs and stations","Sled and lunge capacity that stops eating your run splits","Pacing discipline drilled before the event"],
+ structure:"4 days: Run + Wall Balls · Station Strength · Erg Engine · Compromised-Run Simulation. Keep 48h between Station Strength and the Simulation.",
+ notes:"The simulation day is the priority session — if you can only do three days, cut Erg Engine. Learn your sustainable wall-ball set size early and never bet the race on heroics.",
+ days:[
+  {name:"Run + Wall Balls",focus:{i:"high",t:"run"},blocks:[
+    {ex:"800m Run Repeats",s:[4,4,5,5,5,6,6,4],r:"800m",rest:120,t:"cond",note:"Target race pace"},
+    {ex:"Wall Ball",s:4,r:["15","15","20","20","25","25","30","20"],rest:75,t:"cond"},
+    {ex:"Burpee Broad Jump",s:3,r:"10m",rest:75,t:"cond"}]},
+  {name:"Station Strength",focus:{i:"high",t:"lower"},blocks:[
+    {ex:"Sled Push",s:6,r:"20m",rpe:8,rest:120,t:"cond",note:"Race weight or slightly above"},
+    {ex:"Sled Drag (Backward)",s:4,r:"20m",rpe:7,rest:90,t:"cond"},
+    {ex:"Walking Lunge",s:4,r:"20 steps",rpe:7,rest:90,t:"acc",note:"Add load over the weeks — race is 100m each way"},
+    {ex:"Deadlift",s:4,r:"6",pct:[70,72.5,75,77.5,80,82.5,85,72.5],rest:180,t:"main"},
+    {ex:"Farmer Carry",s:4,r:"40m",rpe:7,rest:90,t:"acc"}]},
+  {name:"Erg Engine",focus:{i:"mod",t:"engine"},blocks:[
+    {ex:"Ski Erg Intervals",s:5,r:"250m",rest:75,t:"cond"},
+    {ex:"Row Erg Intervals",s:5,r:"500m",rest:90,t:"cond",note:"Hold race split"},
+    {ex:"Easy Zone-2 Run",s:1,r:"10min",rest:0,t:"cond",note:"Flush jog to finish"}]},
+  {name:"Compromised-Run Sim",focus:{i:"high",t:"full"},blocks:[
+    {ex:"400m Run Repeats",s:[6,6,7,7,8,8,9,6],r:"400m",rest:0,t:"cond",note:"No standing rest — the station below IS the rest. Alternate run → station → run"},
+    {ex:"Sled Push",s:3,r:"15m",rpe:7,rest:0,t:"cond"},
+    {ex:"Walking Lunge",s:3,r:"20 steps",rest:0,t:"cond"},
+    {ex:"Wall Ball",s:3,r:"15",rest:0,t:"cond",note:"Rest 2min after each full run+station round"}]}
+ ]},
+{id:"mobility-durability",tag:"MOB-01",name:"Mobility & Durability",weeks:4,dpw:7,level:"Beginner",
+ goal:"Fifteen focused minutes a day to keep an athlete's joints ready for work.",
+ desc:"Seven short daily routines — hips, shoulders, spine, ankles, posterior chain, a full-body flow and an active-recovery day. Run it as a standalone month when beat up, or layer it on top of any other program in this app. Nothing here should hurt; everything here should feel like maintenance on expensive machinery, because it is.",
+ outcomes:["Noticeably better squat, hinge and overhead positions","Fewer aches walking into hard sessions","A daily habit that survives busy seasons"],
+ structure:"7 days × ~15 minutes. Each day owns one region. Repeat the cycle for 4 weeks; positions should improve week to week at the same effort.",
+ notes:"Pairs perfectly with In-Season Maintenance or any strength block — do it on waking or before bed rather than replacing a warm-up.",
+ days:[
+  {name:"Hips",focus:{i:"low",t:"mob"},blocks:[
+    {ex:"Couch Stretch",s:2,r:"60s/side",rest:15,t:"mob"},
+    {ex:"90/90 Hip Switch",s:2,r:"8",rest:15,t:"mob"},
+    {ex:"Pigeon Stretch",s:2,r:"60s/side",rest:15,t:"mob"},
+    {ex:"Hip CARs",s:2,r:"5/side",rest:15,t:"mob"}]},
+  {name:"Shoulders",focus:{i:"low",t:"mob"},blocks:[
+    {ex:"Wall Slide",s:2,r:"10",rest:15,t:"mob"},
+    {ex:"Band Shoulder Dislocate",s:2,r:"10",rest:15,t:"mob"},
+    {ex:"Shoulder CARs",s:2,r:"5/side",rest:15,t:"mob"},
+    {ex:"Band Face Pull",s:2,r:"15",rest:15,t:"mob"}]},
+  {name:"Spine",focus:{i:"low",t:"mob"},blocks:[
+    {ex:"Cat-Cow",s:2,r:"10",rest:15,t:"mob"},
+    {ex:"Open Book",s:2,r:"8/side",rest:15,t:"mob"},
+    {ex:"Thread the Needle",s:2,r:"8/side",rest:15,t:"mob"},
+    {ex:"T-Spine Extension (Bench)",s:2,r:"45s",rest:15,t:"mob"}]},
+  {name:"Ankles & Feet",focus:{i:"low",t:"mob"},blocks:[
+    {ex:"Ankle Dorsiflexion Rock",s:2,r:"12/side",rest:15,t:"mob"},
+    {ex:"Tibialis Raise",s:2,r:"15",rest:15,t:"mob"},
+    {ex:"Standing Calf Raise",s:2,r:"12",rest:15,t:"mob",note:"Slow and light — tendon work, not training"},
+    {ex:"Line Hops",s:2,r:"15s",rest:30,t:"mob",note:"Light and springy"}]},
+  {name:"Posterior Chain",focus:{i:"low",t:"mob"},blocks:[
+    {ex:"Active Hamstring Stretch",s:2,r:"8/side",rest:15,t:"mob"},
+    {ex:"Adductor Rock Back",s:2,r:"10",rest:15,t:"mob"},
+    {ex:"Glute Bridge",s:2,r:"12",rest:15,t:"mob"},
+    {ex:"Bird Dog",s:2,r:"8/side",rest:15,t:"mob"}]},
+  {name:"Full-Body Flow",focus:{i:"low",t:"mob"},blocks:[
+    {ex:"World's Greatest Stretch",s:2,r:"5/side",rest:15,t:"mob"},
+    {ex:"Down Dog to Cobra",s:2,r:"8",rest:15,t:"mob"},
+    {ex:"Deep Squat Hold",s:3,r:"45s",rest:20,t:"mob"},
+    {ex:"Cossack Squat",s:2,r:"6/side",rest:15,t:"mob"}]},
+  {name:"Active Recovery",focus:{i:"low",t:"mob"},blocks:[
+    {ex:"Easy Zone-2 Run",s:1,r:"15min",rest:0,t:"cond",note:"Or a brisk walk — movement, not training"},
+    {ex:"Dead Bug",s:2,r:"8/side",rest:15,t:"mob"},
+    {ex:"Superman Hold",s:2,r:"20s",rest:15,t:"mob"}]}
+ ]},
+{id:"foundations",tag:"FND-01",name:"Beginner Athlete Foundations",weeks:6,dpw:3,level:"Beginner",
+ goal:"Six weeks to learn the patterns every athlete program is built on.",
+ desc:"Your first structured program: squat, hinge, push, pull, carry and brace, three days a week, at loads that teach rather than test. Every session repeats the same skeleton so the patterns burn in. Graduate to Off-Season Strength when goblet squats and trap-bar pulls feel crisp at the top of each rep range.",
+ outcomes:["Confident, repeatable technique on the six basic patterns","First strength gains and a baseline in the test tracker","Readiness for barbell-based programming"],
+ structure:"3 alternating full-body days, 48h apart. Reps climb gently across the six weeks; add load only when all sets hit the top of the range with perfect form.",
+ notes:"Log every session even when it feels light — the history you build now powers the 1RM trends and PR detection later. Do the readiness check daily to learn your own patterns.",
+ days:[
+  {name:"Foundation A — Squat & Push",focus:{i:"mod",t:"full"},blocks:[
+    {ex:"Goblet Squat",s:3,r:["8","10","10","12","12","12"],rpe:6,rest:90,t:"acc"},
+    {ex:"Push-Up",s:3,r:["6","8","8","10","10","12"],rest:75,t:"acc",note:"Elevate hands if form breaks"},
+    {ex:"Chest-Supported Row",s:3,r:"10",rpe:6,rest:75,t:"acc"},
+    {ex:"Plank",s:3,r:["20s","25s","30s","35s","40s","45s"],rest:45,t:"acc"},
+    {ex:"Farmer Carry",s:2,r:"30m",rpe:6,rest:75,t:"acc"}]},
+  {name:"Foundation B — Hinge & Pull",focus:{i:"mod",t:"full"},blocks:[
+    {ex:"Trap Bar Deadlift",s:3,r:["6","6","8","8","8","10"],rpe:6,rest:120,t:"acc",note:"Use light DBs at your sides if no trap bar"},
+    {ex:"DB Shoulder Press",s:3,r:"8",rpe:6,rest:75,t:"acc"},
+    {ex:"Inverted Row",s:3,r:"8",rpe:7,rest:75,t:"acc"},
+    {ex:"Dead Bug",s:3,r:"8/side",rest:45,t:"acc"},
+    {ex:"Step-Up",s:2,r:"10/side",rpe:6,rest:60,t:"acc"}]},
+  {name:"Foundation C — Total Body",focus:{i:"mod",t:"full"},blocks:[
+    {ex:"Reverse Lunge",s:3,r:"8/side",rpe:6,rest:75,t:"acc"},
+    {ex:"Barbell Hip Thrust",s:3,r:"10",rpe:6,rest:90,t:"acc"},
+    {ex:"One-Arm DB Row",s:3,r:"10/side",rpe:6,rest:75,t:"acc"},
+    {ex:"Kettlebell Swing",s:3,r:"10",rpe:6,rest:75,t:"power",note:"Light bell — learn the hip snap"},
+    {ex:"Tempo Strides (100m)",s:6,r:"80m @70%",rest:60,t:"cond"},
+    {ex:"Bird Dog",s:2,r:"8/side",rest:45,t:"acc"}]}
+ ]}
+];
+
+/* Standalone workouts for the planner & freestyle sessions */
+const STANDALONE_WORKOUTS = [
+{id:"sw-easy-run",label:"Easy Zone-2 Run",sub:"30-45 min conversational",focus:{i:"low",t:"run"}},
+{id:"sw-tempo-run",label:"Tempo Run",sub:"20-30 min comfortably hard",focus:{i:"high",t:"run"}},
+{id:"sw-sprints",label:"Sprint Session",sub:"6-8 × 20-30m, full recovery",focus:{i:"high",t:"lower"}},
+{id:"sw-lower",label:"Lower Strength",sub:"Squat or hinge emphasis",focus:{i:"high",t:"lower"}},
+{id:"sw-upper",label:"Upper Strength",sub:"Push / pull emphasis",focus:{i:"high",t:"upper"}},
+{id:"sw-kb",label:"Full-Body KB Circuit",sub:"30 min swings, carries, presses",focus:{i:"mod",t:"full"}},
+{id:"sw-erg",label:"Erg Intervals",sub:"Row / ski / bike repeats",focus:{i:"high",t:"engine"}},
+{id:"sw-mobility",label:"Mobility 15",sub:"15 min joint maintenance",focus:{i:"low",t:"mob"}},
+{id:"sw-rest",label:"Rest Day",sub:"Full recovery",focus:{i:"rest",t:"rest"}}
+];
+
+/* Performance tests */
+const TESTS = [
+{id:"vert",n:"Vertical Jump",unit:"in",better:"high",hint:"Standing two-foot jump, best of 3"},
+{id:"broad",n:"Broad Jump",unit:"in",better:"high",hint:"Standing, stick the landing"},
+{id:"dash40",n:"40-Yard Dash",unit:"s",better:"low",hint:"Timed from first movement"},
+{id:"shuttle",n:"5-10-5 Shuttle",unit:"s",better:"low",hint:"Pro agility, best of 2"},
+{id:"mile",n:"Mile Run",unit:"time",better:"low",hint:"Enter as mm:ss"},
+{id:"pullups",n:"Max Pull-Ups",unit:"reps",better:"high",hint:"Strict, dead hang"},
+{id:"plank",n:"Plank Hold",unit:"time",better:"high",hint:"Enter as mm:ss"}
+];
+
+/* Main lifts for the PR board / 1RM trends. match = exercise names that feed it */
+const LIFTS = [
+{id:"squat",n:"Back Squat",match:["Back Squat"]},
+{id:"bench",n:"Bench Press",match:["Bench Press"]},
+{id:"dead",n:"Deadlift",match:["Deadlift","Trap Bar Deadlift"]},
+{id:"ohp",n:"Overhead Press",match:["Overhead Press"]},
+{id:"clean",n:"Power Clean",match:["Power Clean","Hang Power Clean"]}
+];
+
+/* ============================================================
+   STATE & PERSISTENCE
+   ============================================================ */
+const STORE_KEY = 'tas.v1';
+const DEFAULT_STATE = () => ({
+  unit: 'lb',
+  active: null,                    // program id
+  progress: {},                    // pid -> {week, day, done:{'w:d':true}, completedAt}
+  history: [],                     // completed sessions
+  prs: {},                         // liftId -> [{d,e1,w,r}]
+  tests: {},                       // testId -> [{d,v}]
+  readiness: [],                   // [{d, sleep, sore, mot, score}]
+  planner: {0:[],1:[],2:[],3:[],4:[],5:[],6:[]}, // mon..sun
+  sugg: {},                        // pid -> {dir, avg, d}
+  live: null                       // in-flight session (crash recovery)
+});
+let S = loadState();
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(!raw) return DEFAULT_STATE();
+    const s = Object.assign(DEFAULT_STATE(), JSON.parse(raw));
+    s.planner = Object.assign({0:[],1:[],2:[],3:[],4:[],5:[],6:[]}, s.planner);
+    return s;
+  }catch(e){ return DEFAULT_STATE(); }
+}
+function save(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(S)); }catch(e){} }
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+const $  = (s,root) => (root||document).querySelector(s);
+const $$ = (s,root) => Array.from((root||document).querySelectorAll(s));
+function esc(x){ return String(x==null?'':x).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function todayISO(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function fmtDate(iso){ if(!iso) return '—'; const d=new Date(iso+'T12:00'); return d.toLocaleDateString(undefined,{month:'short',day:'numeric'}); }
+function fmtDateShort(iso){ const d=new Date(iso+'T12:00'); return (d.getMonth()+1)+'/'+d.getDate(); }
+function fmtClock(sec){ sec=Math.max(0,Math.round(sec)); const m=Math.floor(sec/60), s=sec%60; return m+':'+String(s).padStart(2,'0'); }
+function fmtDur(sec){ const m=Math.round(sec/60); return m<60? m+' min' : Math.floor(m/60)+'h '+(m%60)+'m'; }
+function parseTimeVal(str){ // "mm:ss" or "ss" -> seconds
+  str = String(str||'').trim(); if(!str) return NaN;
+  if(str.includes(':')){ const p=str.split(':'); return (+p[0])*60 + (+p[1]||0); }
+  return +str;
+}
+function fmtTimeVal(sec){ if(sec==null||isNaN(sec)) return '—'; const m=Math.floor(sec/60), s=Math.round(sec%60); return m+':'+String(s).padStart(2,'0'); }
+function epley(w,r){ r=+r; w=+w; if(!w||!r||r<1) return 0; if(r===1) return w; return w*(1+r/30); }
+function roundLoad(x){ const inc = S.unit==='kg'?2.5:5; return Math.round(x/inc)*inc; }
+function resolveWk(v, week){ return Array.isArray(v) ? v[week-1] : v; }
+function unitLabel(){ return S.unit; }
+function progById(id){ return PROGRAMS.find(p=>p.id===id); }
+function exByName(n){ return EXERCISES.find(e=>e.n===n); }
+function liftForEx(name){ const lf = LIFTS.find(l=>l.match.includes(name)); return lf?lf.id:null; }
+function bestE1(liftId){ const arr=S.prs[liftId]||[]; return arr.length? Math.max(...arr.map(p=>p.e1)) : 0; }
+/* Monday-first index of a date (0=Mon .. 6=Sun) */
+function dowIdx(d){ return (d.getDay()+6)%7; }
+function isoOfWeekday(idx){ // date ISO of weekday idx in the current week
+  const now=new Date(); const monday=new Date(now); monday.setDate(now.getDate()-dowIdx(now));
+  const d=new Date(monday); d.setDate(monday.getDate()+idx);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function weekStartISO(date){ const d=new Date(date); d.setDate(d.getDate()-dowIdx(d)); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+
+/* ============================================================
+   TOASTS & MODALS
+   ============================================================ */
+function toast(title, msg, cls){
+  const t = document.createElement('div');
+  t.className = 'toast '+(cls||'');
+  t.innerHTML = (title?'<div class="flex1"><span class="t-title">'+esc(title)+'</span>'+esc(msg||'')+'</div>':'<div class="flex1">'+esc(msg||'')+'</div>');
+  $('#toast-root').appendChild(t);
+  setTimeout(()=>{ t.classList.add('out'); setTimeout(()=>t.remove(), 350); }, cls==='pr-toast'?4200:2800);
+}
+function openModal(html, onready){
+  const root = $('#modal-root');
+  root.innerHTML = '<div class="modal-scrim" data-close="1"></div><div class="modal-sheet"><div class="modal-grip"></div>'+html+'</div>';
+  root.classList.add('open');
+  root.onclick = (e)=>{ if(e.target.dataset.close) closeModal(); };
+  if(onready) onready(root.querySelector('.modal-sheet'));
+  return root.querySelector('.modal-sheet');
+}
+function closeModal(){ const r=$('#modal-root'); r.classList.remove('open'); r.innerHTML=''; }
+
+/* ============================================================
+   READINESS
+   ============================================================ */
+function readinessToday(){ return S.readiness.find(r=>r.d===todayISO()) || null; }
+function readinessColor(score){ return score<=7 ? 'var(--danger)' : score<=10 ? 'var(--warn)' : 'var(--volt)'; }
+function updateReadinessChip(){
+  const chip = $('#readiness-chip');
+  const r = readinessToday();
+  if(r){
+    chip.innerHTML = '<span class="dot" style="background:'+readinessColor(r.score)+'"></span>READY <span class="num">'+r.score+'/15</span>';
+  } else {
+    chip.innerHTML = '<span class="dot" style="background:var(--ink-3)"></span>Check in';
+  }
+}
+function openReadinessModal(){
+  const r = readinessToday();
+  const cur = r ? {sleep:r.sleep, sore:r.sore, mot:r.mot} : {sleep:0, sore:0, mot:0};
+  const Q = [
+    {k:'sleep', label:'How did you sleep?', hint:'1 = terrible · 5 = fully recharged'},
+    {k:'sore',  label:'How sore are you?',  hint:'1 = wrecked · 5 = fresh'},
+    {k:'mot',   label:'Motivation to train?', hint:'1 = zero drive · 5 = caged animal'}
+  ];
+  const sheet = openModal(
+    '<h2>Daily Readiness</h2>'+
+    Q.map(q=>'<div class="ready-q"><div class="rq-label">'+q.label+' <span class="rq-hint">'+q.hint+'</span></div>'+
+      '<div class="rq-scale" data-q="'+q.k+'">'+[1,2,3,4,5].map(v=>'<button class="rq-opt'+(cur[q.k]===v?' on':'')+'" data-v="'+v+'">'+v+'</button>').join('')+'</div></div>').join('')+
+    '<div class="ready-score-big" id="rd-score" style="display:'+(r?'block':'none')+'"><span class="num" style="color:'+(r?readinessColor(r.score):'')+'">'+(r?r.score:'')+'</span><span class="mut2"> / 15</span></div>'+
+    '<div class="modal-actions"><button class="btn ghost" data-close="1">Cancel</button><button class="btn primary block" id="rd-save" '+(r?'':'disabled')+'>Save Check-In</button></div>',
+    (sheet)=>{
+      sheet.addEventListener('click',(e)=>{
+        const opt = e.target.closest('.rq-opt');
+        if(opt){
+          const scale = opt.parentElement;
+          $$('.rq-opt',scale).forEach(b=>b.classList.remove('on'));
+          opt.classList.add('on');
+          cur[scale.dataset.q] = +opt.dataset.v;
+          if(cur.sleep && cur.sore && cur.mot){
+            const sc = cur.sleep+cur.sore+cur.mot;
+            const big = $('#rd-score',sheet); big.style.display='block';
+            big.innerHTML = '<span class="num" style="color:'+readinessColor(sc)+'">'+sc+'</span><span class="mut2"> / 15</span>';
+            $('#rd-save',sheet).removeAttribute('disabled');
+          }
+        }
+        if(e.target.id==='rd-save'){
+          const sc = cur.sleep+cur.sore+cur.mot;
+          const entry = {d:todayISO(), sleep:cur.sleep, sore:cur.sore, mot:cur.mot, score:sc};
+          const i = S.readiness.findIndex(x=>x.d===entry.d);
+          if(i>=0) S.readiness[i]=entry; else S.readiness.push(entry);
+          save(); updateReadinessChip(); closeModal();
+          if(sc<=7) toast('Low readiness','Score '+sc+'/15 — consider swapping today for a mobility or easy day.','volt');
+          else toast('Checked in','Readiness '+sc+'/15. Cleared to train.');
+          render();
+        }
+      });
+    });
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+let TAB = 'train';
+let VIEW = {};   // per-tab sub-view state (programDetail, libFilters, etc.)
+function switchTab(name){
+  TAB = name; VIEW.programDetail = null;
+  $$('#tabbar .tab').forEach(b=>b.classList.toggle('on', b.dataset.tab===name));
+  render();
+  window.scrollTo(0,0);
+}
+function render(){
+  const m = $('#main');
+  if(TAB==='train') m.innerHTML = viewTrain();
+  else if(TAB==='programs') m.innerHTML = VIEW.programDetail ? viewProgramDetail(VIEW.programDetail) : viewPrograms();
+  else if(TAB==='library') { m.innerHTML = viewLibrary(); bindLibrary(); }
+  else if(TAB==='planner') m.innerHTML = viewPlanner();
+  else if(TAB==='progress') { m.innerHTML = viewProgress(); drawCharts(); }
+  updateReadinessChip();
+}
+
+/* ============================================================
+   TRAIN TAB
+   ============================================================ */
+function progPointer(pid){
+  if(!S.progress[pid]) S.progress[pid] = {week:1, day:1, done:{}, completedAt:null};
+  return S.progress[pid];
+}
+function progPctDone(pid){
+  const p = progById(pid), pp = progPointer(pid);
+  const total = p.weeks * p.days.length;
+  return Math.round(100 * Object.keys(pp.done).length / total);
+}
+function suggFor(pid){
+  const g = S.sugg[pid];
+  if(!g || !g.dir) return '';
+  const down = g.dir < 0;
+  return '<div class="banner '+(down?'warn':'volt')+'"><div class="b-ic">'+(down?icoDown():icoUp())+'</div><div>'+
+    '<span class="banner-title">'+(down?'Back off suggested':'Load bump suggested')+'</span>'+
+    'Top sets last session averaged <b>RPE '+g.avg.toFixed(1)+'</b>. Suggestion: '+(down
+      ? 'reduce main-lift loads about <b>5%</b> today.'
+      : 'add about <b>'+g.dir+'%</b> to main-lift loads today.')+
+    ' Your call — targets below are unchanged.</div></div>';
+}
+function icoUp(){ return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--volt)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>'; }
+function icoDown(){ return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--warn)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>'; }
+function icoFlag(){ return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V4a1 1 0 0 1 1-1h9l1 2h5v11h-6l-1-2H6"/></svg>'; }
+
+function blockRx(b, week){
+  const s = resolveWk(b.s, week), r = resolveWk(b.r, week);
+  if(!s) return null;
+  const pct = resolveWk(b.pct, week), rpe = resolveWk(b.rpe, week);
+  let rx = s + ' × ' + r;
+  if(pct) rx += ' @ ' + pct + '%';
+  else if(rpe) rx += ' @ RPE ' + rpe;
+  return rx;
+}
+function viewTrain(){
+  let h = '<h1 class="view-title">Train</h1>';
+  const rd = readinessToday();
+  h += '<p class="view-sub">'+ (rd ? 'Readiness '+rd.score+'/15 · '+new Date().toLocaleDateString(undefined,{weekday:'long', month:'long', day:'numeric'}) : new Date().toLocaleDateString(undefined,{weekday:'long', month:'long', day:'numeric'})) +'</p>';
+  if(!rd){
+    h += '<div class="banner"><div class="b-ic">'+icoFlag()+'</div><div class="flex1"><span class="banner-title">No check-in yet</span>30 seconds: sleep, soreness, motivation. It calibrates today\'s call.</div><button class="btn sm primary" onclick="openReadinessModal()">Check in</button></div>';
+  } else if(rd.score<=7){
+    h += '<div class="banner danger"><div class="b-ic">'+icoFlag()+'</div><div><span class="banner-title">Readiness '+rd.score+'/15 — go light</span>Recovery is behind. Suggested swap: a <b>Mobility 15</b> routine or an easy Zone-2 session instead of today\'s hard work. Training through a red score now costs you the week.</div></div>';
+  }
+  if(S.active){
+    const p = progById(S.active), pp = progPointer(S.active);
+    const completed = pp.completedAt;
+    const day = p.days[pp.day-1];
+    h += '<div class="card">';
+    h += '<div class="card-kicker">Active Program <span class="rule"></span> <span class="num">'+progPctDone(p.id)+'%</span></div>';
+    h += '<h3>'+esc(p.name)+'</h3>';
+    if(completed){
+      h += '<p class="mut small mb12">Program complete — every session logged. Restart it or pick your next block.</p>';
+      h += '<div class="flex"><button class="btn primary" onclick="restartProgram(\''+p.id+'\')">Run It Back</button><button class="btn" onclick="switchTab(\'programs\')">Browse Programs</button></div>';
+    } else {
+      h += '<div class="flex mb6" style="margin-top:2px"><span class="tag volt">Week '+pp.week+' / '+p.weeks+'</span><span class="tag">Day '+pp.day+' · '+esc(day.name)+'</span><button class="btn sm ghost" style="margin-left:auto" onclick="openDayPicker()">Change</button></div>';
+      h += '<div class="prog-bar mb12"><i style="width:'+progPctDone(p.id)+'%"></i></div>';
+      h += suggFor(p.id);
+      h += '<div class="day-block" style="margin-bottom:12px"><table>';
+      p.days[pp.day-1].blocks.forEach(b=>{
+        const rx = blockRx(b, pp.week);
+        if(!rx) return;
+        h += '<tr><td>'+esc(b.ex)+(b.note?'<span class="block-note">'+esc(b.note)+'</span>':'')+'</td><td>'+esc(rx)+'</td></tr>';
+      });
+      h += '</table></div>';
+      h += '<button class="btn primary block" onclick="startProgramSession()">Start Session</button>';
+    }
+    h += '</div>';
+  } else {
+    h += '<div class="card"><div class="card-kicker">No Active Program <span class="rule"></span></div>'+
+      '<h3>Pick your block</h3><p class="mut small mb12">12 programs: strength, power, speed, hybrid, engine and more. Enroll in one and this tab becomes your daily session.</p>'+
+      '<button class="btn primary block" onclick="switchTab(\'programs\')">Browse Programs</button></div>';
+  }
+  h += '<div class="card"><div class="card-kicker">Freestyle <span class="rule"></span></div>'+
+    '<p class="mut small mb12">Off-script day? Build a one-off session from the exercise library and log it against your history and PRs.</p>'+
+    '<button class="btn block" onclick="openFreestylePicker()">Build Freestyle Session</button></div>';
+  const recent = S.history.slice(-3).reverse();
+  if(recent.length){
+    h += '<div class="sec-head"><h2>Recent Sessions</h2><span class="rule"></span><span class="aux num">'+S.history.length+' total</span></div>';
+    h += recent.map(histRow).join('');
+  }
+  return h;
+}
+function histRow(sess){
+  const i = S.history.indexOf(sess);
+  return '<button class="hist-row" onclick="openHistDetail('+i+')">'+
+    '<span class="h-date">'+fmtDate(sess.d)+'</span>'+
+    '<span class="flex1"><span class="h-name">'+esc(sess.name)+'</span><br><span class="h-sub">'+sess.sets+' sets · '+Math.round(sess.vol).toLocaleString()+' '+unitLabel()+' · '+fmtDur(sess.dur)+'</span></span>'+
+    (sess.avgRpe?'<span class="h-rpe">RPE '+sess.avgRpe.toFixed(1)+'</span>':'')+
+    '</button>';
+}
+function openHistDetail(i){
+  const sess = S.history[i];
+  if(!sess) return;
+  let h = '<h2>'+esc(sess.name)+'</h2><p class="mut2 small" style="margin:-8px 0 12px">'+fmtDate(sess.d)+' · '+fmtDur(sess.dur)+' · '+Math.round(sess.vol).toLocaleString()+' '+unitLabel()+' volume'+(sess.avgRpe?' · avg RPE '+sess.avgRpe.toFixed(1):'')+'</p>';
+  sess.ex.forEach(x=>{
+    if(!x.sets.length) return;
+    h += '<div class="card" style="padding:11px 13px"><b class="small">'+esc(x.n)+'</b><div class="num small mut" style="margin-top:3px">'+
+      x.sets.map(st=> (st.w? st.w+unitLabel()+' × ':'') + (st.r||'✓') + (st.rpe?' @'+st.rpe:'')).join(' · ')+'</div></div>';
+  });
+  if(sess.prs && sess.prs.length) h += '<div class="banner volt"><div class="b-ic">'+icoUp()+'</div><div><span class="banner-title">PRs this session</span>'+sess.prs.map(p=>esc(p.label)).join(' · ')+'</div></div>';
+  h += '<div class="modal-actions"><button class="btn danger sm" onclick="deleteHist('+i+')">Delete</button><button class="btn primary block" data-close="1">Close</button></div>';
+  openModal(h);
+}
+function deleteHist(i){
+  const sess = S.history[i];
+  openModal('<h2>Delete session?</h2><p class="mut small mb12">Removes "'+esc(sess.name)+'" ('+fmtDate(sess.d)+') from history. Volume and trend charts will update; detected PRs from other sessions are kept.</p>'+
+    '<div class="modal-actions"><button class="btn ghost" data-close="1">Keep it</button><button class="btn danger block" onclick="S.history.splice('+i+',1);save();closeModal();render();toast(\'\',\'Session deleted.\')">Delete</button></div>');
+}
+function openDayPicker(){
+  const p = progById(S.active), pp = progPointer(S.active);
+  let h = '<h2>Jump to a day</h2><p class="mut2 small" style="margin:-8px 0 10px">Sessions you have completed are marked. Picking a day moves your pointer — nothing is skipped permanently.</p>';
+  for(let w=1; w<=p.weeks; w++){
+    h += '<div class="fgroup-label">Week '+w+'</div>';
+    p.days.forEach((d,di)=>{
+      const done = pp.done[w+':'+(di+1)];
+      const cur = (pp.week===w && pp.day===di+1);
+      h += '<button class="plan-item" style="border:1px solid var(--line);border-radius:7px;margin-bottom:6px" onclick="setPointer('+w+','+(di+1)+')">'+
+        '<span class="pi-bar '+stressCls(d.focus)+'"></span>'+
+        '<span class="pi-name">'+esc(d.name)+(cur?' <span class="tag volt">current</span>':'')+'</span>'+
+        (done?'<span class="tag volt">✓ done</span>':'')+'</button>';
+    });
+  }
+  openModal(h+'<div class="modal-actions"><button class="btn block" data-close="1">Close</button></div>');
+}
+function setPointer(w,d){ const pp=progPointer(S.active); pp.week=w; pp.day=d; pp.completedAt=null; save(); closeModal(); render(); }
+function restartProgram(pid){
+  S.progress[pid] = {week:1, day:1, done:{}, completedAt:null};
+  S.active = pid; delete S.sugg[pid];
+  save(); render(); toast('Restarted', progById(pid).name+' back to Week 1, Day 1.');
+}
+function stressCls(f){ return f.i==='high'?'s-high':f.i==='mod'?'s-mod':f.i==='rest'?'s-rest':'s-low'; }
+
+/* ============================================================
+   SESSION ENGINE
+   ============================================================ */
+let SESS = null, sessTick = null;
+function isNumericReps(r){ return /^\d+(-\d+)?(\/side)?$/.test(String(r)); }
+function repTargetNum(r){ const m=String(r).match(/^(\d+)/); return m? +m[1] : ''; }
+
+function buildSession(pid, week, dayIdx){
+  const p = progById(pid), day = p.days[dayIdx-1];
+  const blocks = [];
+  day.blocks.forEach(b=>{
+    const s = resolveWk(b.s, week); if(!s) return;
+    const r = resolveWk(b.r, week);
+    const pct = resolveWk(b.pct, week), rpe = resolveWk(b.rpe, week);
+    let target = 0;
+    const lift = liftForEx(b.ex);
+    if(pct && lift && bestE1(lift)) target = roundLoad(bestE1(lift)*pct/100);
+    blocks.push({ex:b.ex, t:b.t||'acc', rest:b.rest!=null?b.rest:90, note:b.note||'', rx:blockRx(b,week),
+      numeric:isNumericReps(r), repTarget:r, target,
+      sets:Array.from({length:s},()=>({w:'',r:'',rpe:'',done:false}))});
+  });
+  return {pid, week, day:dayIdx, name:p.name+' — W'+week+'D'+dayIdx+' '+day.name, label:day.name, startTs:Date.now(), blocks};
+}
+function buildFreestyle(names){
+  return {pid:null, week:0, day:0, name:'Freestyle Session', label:'Freestyle', startTs:Date.now(),
+    blocks:names.map(n=>{
+      const e = exByName(n) || {n:n, cat:''};
+      const cond = (e.cat==='Conditioning'||e.cat==='Mobility');
+      return {ex:n, t: e.cat==='Power'?'power':cond?'cond':'acc', rest:90, note:'', rx:'3 × 8',
+        numeric:!cond, repTarget: cond?'—':'8', target:0, sets:Array.from({length:3},()=>({w:'',r:'',rpe:'',done:false}))};
+    })};
+}
+function startProgramSession(){
+  const pp = progPointer(S.active);
+  SESS = buildSession(S.active, pp.week, pp.day);
+  openSession();
+}
+function startProgramDay(pid, week, dayIdx){
+  if(S.active!==pid){ S.active = pid; }
+  const pp = progPointer(pid); pp.week = week; pp.day = dayIdx; pp.completedAt = null;
+  save();
+  SESS = buildSession(pid, week, dayIdx);
+  openSession();
+}
+function openFreestylePicker(){
+  VIEW.fsSel = VIEW.fsSel || [];
+  VIEW.fsSel = [];
+  const listHtml = () => EXERCISES
+    .filter(e=>{ const q=(VIEW.fsQ||'').toLowerCase(); return !q || e.n.toLowerCase().includes(q) || e.cat.toLowerCase().includes(q); })
+    .slice(0,40)
+    .map(e=>'<button class="plan-item" style="border:1px solid var(--line);border-radius:7px;margin-bottom:6px'+(VIEW.fsSel.includes(e.n)?';background:var(--volt-glow);border-color:rgba(191,255,60,.4)':'')+'" data-ex="'+esc(e.n)+'">'+
+      '<span class="pi-name">'+esc(e.n)+'</span><span class="pi-sub">'+esc(e.cat)+'</span>'+(VIEW.fsSel.includes(e.n)?'<span class="tag volt">✓</span>':'')+'</button>').join('');
+  const sheet = openModal(
+    '<h2>Freestyle Session</h2>'+
+    '<div class="searchbar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input type="search" id="fs-q" placeholder="Search 130+ exercises…"></div>'+
+    '<div id="fs-list" style="max-height:42vh;overflow-y:auto">'+listHtml()+'</div>'+
+    '<div class="modal-actions"><button class="btn ghost" data-close="1">Cancel</button><button class="btn primary block" id="fs-go" disabled>Start (0)</button></div>',
+    (sheet)=>{
+      $('#fs-q',sheet).addEventListener('input', e=>{ VIEW.fsQ = e.target.value; $('#fs-list',sheet).innerHTML = listHtml(); });
+      sheet.addEventListener('click', e=>{
+        const row = e.target.closest('[data-ex]');
+        if(row){
+          const n = row.dataset.ex;
+          const i = VIEW.fsSel.indexOf(n);
+          if(i>=0) VIEW.fsSel.splice(i,1); else VIEW.fsSel.push(n);
+          $('#fs-list',sheet).innerHTML = listHtml();
+          const go = $('#fs-go',sheet);
+          go.textContent = 'Start ('+VIEW.fsSel.length+')';
+          if(VIEW.fsSel.length) go.removeAttribute('disabled'); else go.setAttribute('disabled','');
+        }
+        if(e.target.id==='fs-go' && VIEW.fsSel.length){
+          closeModal(); SESS = buildFreestyle(VIEW.fsSel); openSession();
+        }
+      });
+    });
+}
+function openSession(){
+  S.live = SESS; save();
+  const root = $('#session-root');
+  root.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  renderSession();
+  if(sessTick) clearInterval(sessTick);
+  sessTick = setInterval(()=>{ const el=$('#sess-clock'); if(el) el.textContent = fmtClock((Date.now()-SESS.startTs)/1000); }, 1000);
+}
+function renderSession(){
+  const root = $('#session-root');
+  let h = '<div class="sess-head">'+
+    '<button class="icon-btn" onclick="confirmCancelSession()" aria-label="Close session"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>'+
+    '<div class="sh-title"><h2>'+esc(SESS.label)+'</h2><div class="sh-sub">'+esc(SESS.pid?progById(SESS.pid).name+' · Week '+SESS.week+' · Day '+SESS.day:'Freestyle')+'</div></div>'+
+    '<div class="sess-clock num" id="sess-clock">'+fmtClock((Date.now()-SESS.startTs)/1000)+'</div></div>';
+  h += '<div class="sess-body">';
+  if(SESS.pid) h += suggFor(SESS.pid);
+  SESS.blocks.forEach((b,bi)=>{
+    h += '<div class="sblock"><div class="sblock-head"><div class="sb-name">'+esc(b.ex)+'</div><div class="sb-rx">'+esc(b.rx)+(b.target?' · target '+b.target+' '+unitLabel():'')+'</div>'+(b.note?'<div class="sb-note">'+esc(b.note)+'</div>':'')+'</div>';
+    h += '<table class="setgrid"><tr><th>Set</th><th>'+(b.numeric?unitLabel():'')+'</th><th>'+(b.numeric?'Reps':'Target')+'</th><th>RPE</th><th></th></tr>';
+    b.sets.forEach((st,si)=>{
+      h += '<tr class="'+(st.done?'row-done':'')+'" id="row-'+bi+'-'+si+'"><td><span class="set-idx">'+(si+1)+'</span></td>';
+      if(b.numeric){
+        h += '<td><input class="set-in" type="number" inputmode="decimal" placeholder="'+(b.target||'—')+'" value="'+(st.w!==''?st.w:'')+'" oninput="setVal('+bi+','+si+',\'w\',this.value)"></td>';
+        h += '<td><input class="set-in" type="number" inputmode="numeric" placeholder="'+repTargetNum(b.repTarget)+'" value="'+(st.r!==''?st.r:'')+'" oninput="setVal('+bi+','+si+',\'r\',this.value)"></td>';
+      } else {
+        h += '<td></td><td><span class="num small mut">'+esc(b.repTarget)+'</span></td>';
+      }
+      h += '<td><select class="set-in" onchange="setVal('+bi+','+si+',\'rpe\',this.value)"><option value="">—</option>'+
+        [1,2,3,4,5,6,6.5,7,7.5,8,8.5,9,9.5,10].map(v=>'<option '+(String(st.rpe)===String(v)?'selected':'')+' value="'+v+'">'+v+'</option>').join('')+'</select></td>';
+      h += '<td><button class="set-check'+(st.done?' done':'')+'" onclick="toggleSet('+bi+','+si+')" aria-label="Complete set"><svg viewBox="0 0 24 24"><path d="M4.5 12.5l5 5 10-11"/></svg></button></td></tr>';
+    });
+    h += '</table></div>';
+  });
+  h += '</div>';
+  h += '<div class="sess-foot"><button class="btn ghost" onclick="confirmCancelSession()">Discard</button><button class="btn primary block" onclick="finishSession()">Finish Session</button></div>';
+  root.innerHTML = h;
+}
+function setVal(bi,si,k,v){
+  SESS.blocks[bi].sets[si][k] = v;
+  S.live = SESS; save();
+}
+function toggleSet(bi,si){
+  const b = SESS.blocks[bi], st = b.sets[si];
+  st.done = !st.done;
+  if(st.done && b.numeric){
+    if(st.w==='' && b.target) st.w = String(b.target);
+    if(st.r==='') st.r = String(repTargetNum(b.repTarget));
+  }
+  const row = $('#row-'+bi+'-'+si);
+  if(row){
+    row.classList.toggle('row-done', st.done);
+    const chk = row.querySelector('.set-check');
+    chk.classList.toggle('done', st.done);
+    if(b.numeric){
+      const ins = row.querySelectorAll('input');
+      ins[0].value = st.w; ins[1].value = st.r;
+    }
+  }
+  S.live = SESS; save();
+  if(st.done && b.rest>0){
+    const remaining = b.sets.some(x=>!x.done);
+    if(remaining || SESS.blocks[bi+1]) startRest(b.rest);
+  }
+}
+/* ---- rest timer ---- */
+let restEnd = 0, restTotal = 0, restInt = null;
+function startRest(sec){
+  restTotal = sec; restEnd = Date.now() + sec*1000;
+  const el = $('#rest-timer'); el.classList.add('open');
+  if(restInt) clearInterval(restInt);
+  tickRest();
+  restInt = setInterval(tickRest, 250);
+}
+function tickRest(){
+  const left = (restEnd - Date.now())/1000;
+  const t = $('#rt-time'), bar = $('#rt-bar');
+  if(left<=0){
+    t.textContent = '0:00';
+    bar.style.width = '0%';
+    stopRest(true);
+    return;
+  }
+  t.textContent = fmtClock(left);
+  bar.style.width = Math.max(0,(left/restTotal)*100)+'%';
+}
+function stopRest(finished){
+  if(restInt){ clearInterval(restInt); restInt = null; }
+  $('#rest-timer').classList.remove('open');
+  if(finished){
+    if(navigator.vibrate) navigator.vibrate([120,60,120]);
+    beep();
+  }
+}
+let AC = null;
+function beep(){
+  try{
+    AC = AC || new (window.AudioContext||window.webkitAudioContext)();
+    const o = AC.createOscillator(), g = AC.createGain();
+    o.type='square'; o.frequency.value = 880;
+    g.gain.setValueAtTime(.12, AC.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001, AC.currentTime+.4);
+    o.connect(g); g.connect(AC.destination);
+    o.start(); o.stop(AC.currentTime+.42);
+  }catch(e){}
+}
+function confirmCancelSession(){
+  openModal('<h2>Discard session?</h2><p class="mut small mb12">Nothing from this session will be saved.</p>'+
+    '<div class="modal-actions"><button class="btn ghost" data-close="1">Keep training</button><button class="btn danger block" onclick="closeSession(true)">Discard</button></div>');
+}
+function closeSession(discard){
+  if(discard){ SESS = null; S.live = null; save(); }
+  closeModal();
+  stopRest(false);
+  if(sessTick){ clearInterval(sessTick); sessTick = null; }
+  $('#session-root').classList.remove('open');
+  document.body.style.overflow = '';
+  render();
+}
+function finishSession(){
+  const doneSets = SESS.blocks.reduce((a,b)=>a+b.sets.filter(s=>s.done).length,0);
+  if(!doneSets){
+    toast('Nothing logged','Check off at least one set — or discard the session.');
+    return;
+  }
+  let vol = 0, setCount = 0, mainRpes = [], allRpes = [], newPrs = [];
+  const exLog = [];
+  SESS.blocks.forEach(b=>{
+    const done = b.sets.filter(s=>s.done);
+    if(!done.length) return;
+    const rows = [];
+    done.forEach(st=>{
+      setCount++;
+      const w = parseFloat(st.w), r = parseFloat(st.r);
+      if(!isNaN(w) && !isNaN(r)) vol += w*r;
+      if(st.rpe!==''){ allRpes.push(+st.rpe); if(b.t==='main') mainRpes.push(+st.rpe); }
+      rows.push({w:isNaN(w)?'':w, r:isNaN(r)?'':r, rpe:st.rpe});
+      // PR detection on mapped lifts
+      const lift = liftForEx(b.ex);
+      if(lift && !isNaN(w) && !isNaN(r) && r>=1 && r<=12){
+        const e1 = Math.round(epley(w,r));
+        if(e1 > bestE1(lift)){
+          if(!S.prs[lift]) S.prs[lift] = [];
+          S.prs[lift].push({d:todayISO(), e1, w, r});
+          const lf = LIFTS.find(l=>l.id===lift);
+          newPrs.push({lift, label:lf.n+' est. 1RM '+e1+' '+unitLabel()});
+        }
+      }
+    });
+    exLog.push({n:b.ex, t:b.t, sets:rows});
+  });
+  const rpePool = mainRpes.length ? mainRpes : allRpes;
+  const avgRpe = rpePool.length ? rpePool.reduce((a,b)=>a+b,0)/rpePool.length : 0;
+  const dur = (Date.now()-SESS.startTs)/1000;
+  const entry = {d:todayISO(), ts:Date.now(), pid:SESS.pid, week:SESS.week, day:SESS.day,
+    name:SESS.name, dur, vol, sets:setCount, avgRpe, prs:newPrs, ex:exLog};
+  S.history.push(entry);
+  // autoregulation for next session of this program
+  if(SESS.pid && mainRpes.length){
+    if(avgRpe >= 9) S.sugg[SESS.pid] = {dir:-5, avg:avgRpe, d:todayISO()};
+    else if(avgRpe <= 6) S.sugg[SESS.pid] = {dir: avgRpe<=5 ? 5 : 2.5, avg:avgRpe, d:todayISO()};
+    else delete S.sugg[SESS.pid];
+  }
+  // advance program pointer
+  let progressNote = '';
+  if(SESS.pid){
+    const p = progById(SESS.pid), pp = progPointer(SESS.pid);
+    pp.done[SESS.week+':'+SESS.day] = true;
+    let w = SESS.week, d = SESS.day + 1;
+    if(d > p.days.length){ d = 1; w++; }
+    if(w > p.weeks){
+      pp.completedAt = todayISO();
+      progressNote = 'That was the final session — <b>'+esc(p.name)+' complete.</b>';
+    } else {
+      pp.week = w; pp.day = d;
+      progressNote = 'Up next: <b>Week '+w+' · Day '+d+' — '+esc(p.days[d-1].name)+'</b>';
+    }
+  }
+  SESS = null; S.live = null; save();
+  stopRest(false);
+  // summary modal
+  let h = '<h2>Session Logged</h2>';
+  h += '<div class="stat-row">'+
+    '<div class="stat"><div class="s-label">Duration</div><div class="s-value">'+fmtDur(dur)+'</div></div>'+
+    '<div class="stat"><div class="s-label">Sets</div><div class="s-value">'+setCount+'</div></div>'+
+    '<div class="stat"><div class="s-label">Volume</div><div class="s-value">'+Math.round(vol).toLocaleString()+'<small>'+unitLabel()+'</small></div></div>'+
+    (avgRpe?'<div class="stat"><div class="s-label">Avg RPE</div><div class="s-value">'+avgRpe.toFixed(1)+'</div></div>':'')+'</div>';
+  newPrs.forEach(pr=>{ h += '<div class="banner volt"><div class="b-ic">'+icoUp()+'</div><div><span class="banner-title">New PR</span>'+esc(pr.label)+'</div></div>'; });
+  if(avgRpe>=9) h += '<div class="banner warn"><div class="b-ic">'+icoDown()+'</div><div><span class="banner-title">That was heavy</span>Main sets averaged RPE '+avgRpe.toFixed(1)+'. A ~5% back-off will be suggested next session.</div></div>';
+  else if(avgRpe>0 && avgRpe<=6) h += '<div class="banner volt"><div class="b-ic">'+icoUp()+'</div><div><span class="banner-title">Plenty in the tank</span>Main sets averaged RPE '+avgRpe.toFixed(1)+'. A small load bump will be suggested next session.</div></div>';
+  if(progressNote) h += '<p class="mut small mb12">'+progressNote+'</p>';
+  h += '<button class="btn primary block" onclick="closeSession(false)">Done</button>';
+  openModal(h);
+  if(newPrs.length) toast('PR '+(newPrs.length>1?'× '+newPrs.length:''), newPrs.map(p=>p.label).join(' · '), 'pr-toast');
+}
+
+/* ============================================================
+   PROGRAMS TAB
+   ============================================================ */
+function viewPrograms(){
+  let h = '<h1 class="view-title">Programs</h1><p class="view-sub">'+PROGRAMS.length+' structured blocks · 4-8 weeks · pick one and enroll</p>';
+  h += '<div class="prog-grid">';
+  PROGRAMS.forEach(p=>{
+    const enrolled = S.active===p.id;
+    const started = S.progress[p.id] && Object.keys(S.progress[p.id].done).length>0;
+    h += '<button class="prog-card'+(enrolled?' active-prog':'')+'" onclick="openProgram(\''+p.id+'\')">'+
+      '<div class="p-tag">'+esc(p.tag)+(enrolled?' · ACTIVE':'')+'</div>'+
+      '<h3>'+esc(p.name)+'</h3>'+
+      '<div class="p-goal">'+esc(p.goal)+'</div>'+
+      '<div class="p-meta"><span class="tag">'+p.weeks+' weeks</span><span class="tag">'+p.dpw+'×/week</span><span class="tag">'+esc(p.level)+'</span></div>'+
+      (started?'<div class="prog-bar"><i style="width:'+progPctDone(p.id)+'%"></i></div>':'')+
+      '</button>';
+  });
+  h += '</div>';
+  return h;
+}
+function openProgram(pid){ VIEW.programDetail = pid; VIEW.pdWeek = null; render(); window.scrollTo(0,0); }
+function viewProgramDetail(pid){
+  const p = progById(pid);
+  const enrolled = S.active===pid;
+  const pp = S.progress[pid];
+  const wk = VIEW.pdWeek || (enrolled && pp ? pp.week : 1);
+  let h = '<button class="back-btn" onclick="VIEW.programDetail=null;render()"><svg viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>All Programs</button>';
+  h += '<div class="pd-hero"><div class="p-tag">'+esc(p.tag)+'</div><h1>'+esc(p.name)+'</h1><p class="mut">'+esc(p.desc)+'</p></div>';
+  h += '<div class="pd-stats">'+
+    '<div class="stat"><div class="s-label">Length</div><div class="s-value">'+p.weeks+'<small>wks</small></div></div>'+
+    '<div class="stat"><div class="s-label">Days / Week</div><div class="s-value">'+p.dpw+'</div></div>'+
+    '<div class="stat"><div class="s-label">Level</div><div class="s-value" style="font-size:15px;padding-top:6px">'+esc(p.level)+'</div></div></div>';
+  if(enrolled && pp && !pp.completedAt){
+    h += '<div class="banner volt"><div class="b-ic">'+icoFlag()+'</div><div><span class="banner-title">Enrolled</span>You are on <b>Week '+pp.week+' · Day '+pp.day+'</b> ('+progPctDone(pid)+'% complete). Head to the Train tab for today\'s session.</div></div>';
+  } else if(pp && pp.completedAt){
+    h += '<div class="banner volt"><div class="b-ic">'+icoUp()+'</div><div><span class="banner-title">Completed '+fmtDate(pp.completedAt)+'</span>Run it back or take what you built into another block.</div></div>';
+  }
+  h += '<div class="sec-head"><h2>Expected Outcomes</h2><span class="rule"></span></div>';
+  h += '<div class="card"><ul class="ex-detail" style="border:0;margin:0;padding:0">'+p.outcomes.map(o=>'<li>'+esc(o)+'</li>').join('')+'</ul></div>';
+  h += '<div class="sec-head"><h2>Weekly Structure</h2><span class="rule"></span></div>';
+  h += '<div class="card"><p class="small mut">'+esc(p.structure)+'</p></div>';
+  if(p.notes) h += '<div class="banner"><div class="b-ic">'+icoFlag()+'</div><div><span class="banner-title">Coach\'s Notes</span>'+esc(p.notes)+'</div></div>';
+  h += '<div class="sec-head"><h2>The Sessions</h2><span class="rule"></span><span class="aux">prescriptions shown for selected week</span></div>';
+  h += '<div class="week-picker">'+Array.from({length:p.weeks},(_,i)=>'<button class="wk-btn'+(wk===i+1?' on':'')+'" onclick="VIEW.pdWeek='+(i+1)+';render()">W'+(i+1)+'</button>').join('')+'</div>';
+  p.days.forEach((d,di)=>{
+    const done = pp && pp.done[wk+':'+(di+1)];
+    h += '<div class="day-block"><div class="db-head"><span class="pi-bar '+stressCls(d.focus)+'" style="width:3px;align-self:stretch;border-radius:2px"></span><h4>Day '+(di+1)+' — '+esc(d.name)+'</h4>'+
+      (done?'<span class="tag volt">✓ logged</span>':'')+
+      '<button class="btn sm" onclick="startProgramDay(\''+pid+'\','+wk+','+(di+1)+')">Start</button></div><table>';
+    d.blocks.forEach(b=>{
+      const rx = blockRx(b, wk);
+      h += '<tr><td>'+esc(b.ex)+(b.note?'<span class="block-note">'+esc(b.note)+'</span>':'')+'</td><td>'+(rx?esc(rx):'<span class="mut2">— this week</span>')+'</td></tr>';
+    });
+    h += '</table></div>';
+  });
+  h += '<div style="height:8px"></div>';
+  if(enrolled && pp && !pp.completedAt){
+    h += '<button class="btn block mb6" onclick="switchTab(\'train\')">Go To Today\'s Session</button>';
+    h += '<button class="btn ghost block danger" onclick="confirmLeave(\''+pid+'\')">Leave Program</button>';
+  } else {
+    h += '<button class="btn primary block" onclick="enroll(\''+pid+'\')">'+(pp&&Object.keys(pp.done).length?'Resume Program':'Start Program')+'</button>';
+  }
+  return h;
+}
+function enroll(pid){
+  const prev = S.active;
+  S.active = pid;
+  progPointer(pid);
+  save(); toast('Enrolled', progById(pid).name+' is now your active program.');
+  switchTab('train');
+}
+function confirmLeave(pid){
+  openModal('<h2>Leave program?</h2><p class="mut small mb12">Your logged sessions and week/day position are kept — you can resume any time from the program page.</p>'+
+    '<div class="modal-actions"><button class="btn ghost" data-close="1">Stay</button><button class="btn danger block" onclick="S.active=null;save();closeModal();render()">Leave</button></div>');
+}
+
+/* ============================================================
+   LIBRARY TAB
+   ============================================================ */
+const LIB_CATS = ['Strength','Power','Speed & Agility','Conditioning','Mobility','Core'];
+function viewLibrary(){
+  const f = VIEW.lib = VIEW.lib || {q:'', cat:null, eq:null, dif:null, open:null};
+  const eqs = [...new Set(EXERCISES.map(e=>e.eq))].sort();
+  const difs = ['Beginner','Intermediate','Advanced'];
+  const list = EXERCISES.filter(e=>
+    (!f.cat || e.cat===f.cat) && (!f.eq || e.eq===f.eq) && (!f.dif || e.dif===f.dif) &&
+    (!f.q || (e.n+' '+e.mus.join(' ')+' '+e.cat).toLowerCase().includes(f.q.toLowerCase())));
+  let h = '<h1 class="view-title">Library</h1><p class="view-sub">'+EXERCISES.length+' movements · cues and common mistakes on every one</p>';
+  h += '<div class="searchbar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input type="search" id="lib-q" placeholder="Search name, muscle, category…" value="'+esc(f.q)+'"></div>';
+  h += '<div class="fgroup-label">Category</div><div class="chiprow">'+LIB_CATS.map(c=>'<button class="fchip'+(f.cat===c?' on':'')+'" data-f="cat" data-v="'+esc(c)+'">'+esc(c)+'</button>').join('')+'</div>';
+  h += '<div class="fgroup-label">Equipment</div><div class="chiprow">'+eqs.map(c=>'<button class="fchip'+(f.eq===c?' on':'')+'" data-f="eq" data-v="'+esc(c)+'">'+esc(c)+'</button>').join('')+'</div>';
+  h += '<div class="fgroup-label">Difficulty</div><div class="chiprow">'+difs.map(c=>'<button class="fchip'+(f.dif===c?' on':'')+'" data-f="dif" data-v="'+esc(c)+'">'+esc(c)+'</button>').join('')+'</div>';
+  h += '<div class="sec-head"><h2>Results</h2><span class="rule"></span><span class="aux num">'+list.length+'</span></div>';
+  if(!list.length) h += '<div class="empty-state"><p>No exercises match those filters. Clear one and try again.</p></div>';
+  h += '<div id="lib-list">'+list.map(e=>exRow(e, f.open===e.id)).join('')+'</div>';
+  return h;
+}
+function exRow(e, open){
+  const difCls = e.dif==='Beginner'?'diff-b':e.dif==='Intermediate'?'diff-i':'diff-a';
+  let h = '<button class="exrow" data-ex="'+e.id+'"><div class="ex-top"><span class="ex-name">'+esc(e.n)+'</span><span class="tag '+''+'" style="color:inherit"><span class="'+difCls+'">'+esc(e.dif)+'</span></span></div>'+
+    '<div class="ex-meta"><span class="tag">'+esc(e.cat)+'</span><span class="tag">'+esc(e.eq)+'</span><span class="tag">'+esc(e.mus[0])+'</span></div>';
+  if(open){
+    h += '<div class="ex-detail"><div class="ex-muscles"><b class="small">Primary:</b> '+esc(e.mus.join(', '))+'</div>'+
+      '<h5>Coaching Cues</h5><ul>'+e.cues.map(c=>'<li>'+esc(c)+'</li>').join('')+'</ul>'+
+      '<h5 class="neg">Avoid</h5><ul>'+e.mist.map(c=>'<li class="neg">'+esc(c)+'</li>').join('')+'</ul></div>';
+  }
+  return h+'</button>';
+}
+function bindLibrary(){
+  const f = VIEW.lib;
+  const q = $('#lib-q');
+  q.addEventListener('input', ()=>{
+    f.q = q.value;
+    // live update the list without re-rendering the input (keeps keyboard open)
+    const list = EXERCISES.filter(e=>
+      (!f.cat || e.cat===f.cat) && (!f.eq || e.eq===f.eq) && (!f.dif || e.dif===f.dif) &&
+      (!f.q || (e.n+' '+e.mus.join(' ')+' '+e.cat).toLowerCase().includes(f.q.toLowerCase())));
+    $('#lib-list').innerHTML = list.length? list.map(e=>exRow(e, f.open===e.id)).join('') : '<div class="empty-state"><p>No exercises match. Clear a filter and try again.</p></div>';
+    const aux = $('.sec-head .aux'); if(aux) aux.textContent = list.length;
+  });
+  $('#main').removeEventListener('click', libClick);
+  $('#main').addEventListener('click', libClick);
+}
+function libClick(e){
+  const f = VIEW.lib; if(!f) return;
+  const chip = e.target.closest('.fchip');
+  if(chip){
+    const k = chip.dataset.f, v = chip.dataset.v;
+    f[k] = (f[k]===v)? null : v;
+    render(); return;
+  }
+  const row = e.target.closest('.exrow');
+  if(row){
+    f.open = (f.open===row.dataset.ex)? null : row.dataset.ex;
+    render();
+    return;
+  }
+}
+
+/* ============================================================
+   PLANNER TAB
+   ============================================================ */
+const DAY_NAMES = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+function plannerItemInfo(it){
+  if(it.k==='sw'){
+    const w = STANDALONE_WORKOUTS.find(x=>x.id===it.sid);
+    return w ? {label:w.label, sub:w.sub, focus:w.focus} : null;
+  }
+  const p = progById(it.pid);
+  if(!p || !p.days[it.di]) return null;
+  const d = p.days[it.di];
+  return {label:d.name, sub:p.name, focus:d.focus};
+}
+function isLegHeavy(focus){ return focus.i==='high' && ['lower','run','full'].includes(focus.t); }
+function plannerConflicts(){
+  const flags = [];
+  for(let i=0;i<6;i++){
+    const a = (S.planner[i]||[]).map(plannerItemInfo).filter(Boolean);
+    const b = (S.planner[i+1]||[]).map(plannerItemInfo).filter(Boolean);
+    const ha = a.filter(x=>isLegHeavy(x.focus)), hb = b.filter(x=>isLegHeavy(x.focus));
+    if(ha.length && hb.length){
+      flags.push('<b>'+DAY_NAMES[i]+' → '+DAY_NAMES[i+1]+':</b> two high-intensity leg/run days back to back ('+esc(ha[0].label)+' → '+esc(hb[0].label)+'). Separate them with an upper, easy or rest day.');
+    }
+  }
+  // 3+ high-intensity days in a row (any target)
+  let run = 0;
+  for(let i=0;i<7;i++){
+    const hi = (S.planner[i]||[]).map(plannerItemInfo).filter(Boolean).some(x=>x.focus.i==='high');
+    run = hi ? run+1 : 0;
+    if(run===3) flags.push('<b>Three straight high-intensity days</b> ending '+DAY_NAMES[i]+'. Even pros periodize — drop one to moderate.');
+  }
+  return flags;
+}
+function viewPlanner(){
+  const todayIdx = dowIdx(new Date());
+  let h = '<h1 class="view-title">Week Planner</h1><p class="view-sub">Assign program days and standalone work. The bar colors show training stress.</p>';
+  plannerConflicts().forEach(f=>{ h += '<div class="banner warn"><div class="b-ic">'+icoFlag()+'</div><div><span class="banner-title">Stress collision</span>'+f+'</div></div>'; });
+  h += '<div class="flex mb12" style="gap:14px;flex-wrap:wrap"><span class="small mut2 flex" style="gap:5px"><span class="stress-pip s-high" style="width:14px"></span>High</span><span class="small mut2 flex" style="gap:5px"><span class="stress-pip s-mod" style="width:14px"></span>Moderate</span><span class="small mut2 flex" style="gap:5px"><span class="stress-pip s-low" style="width:14px"></span>Low</span><span class="small mut2 flex" style="gap:5px"><span class="stress-pip s-rest" style="width:14px"></span>Rest</span></div>';
+  for(let i=0;i<7;i++){
+    const items = S.planner[i]||[];
+    h += '<div class="plan-day'+(i===todayIdx?' today':'')+'"><div class="pdy-head"><h4>'+DAY_NAMES[i]+'</h4><div class="pdy-stress">'+
+      items.map(it=>{ const inf=plannerItemInfo(it); return inf?'<span class="stress-pip '+stressCls(inf.focus)+'" style="width:22px"></span>':''; }).join('')+
+      '</div><button class="pdy-add" onclick="openPlanAdd('+i+')" aria-label="Add to '+DAY_NAMES[i]+'">+</button></div>';
+    if(!items.length) h += '<div class="plan-empty">Nothing planned</div>';
+    items.forEach((it,ii)=>{
+      const inf = plannerItemInfo(it);
+      if(!inf){ return; }
+      h += '<button class="plan-item" onclick="openPlanItem('+i+','+ii+')"><span class="pi-bar '+stressCls(inf.focus)+'"></span>'+
+        '<span class="pi-name">'+esc(inf.label)+'<br><span class="pi-sub">'+esc(inf.sub)+'</span></span></button>';
+    });
+    h += '</div>';
+  }
+  return h;
+}
+function openPlanAdd(dayIdx){
+  let h = '<h2>Add to '+DAY_NAMES[dayIdx]+'</h2>';
+  if(S.active){
+    const p = progById(S.active);
+    h += '<div class="fgroup-label">'+esc(p.name)+' — program days</div>';
+    p.days.forEach((d,di)=>{
+      h += '<button class="plan-item" style="border:1px solid var(--line);border-radius:7px;margin-bottom:6px" onclick="planAdd('+dayIdx+',{k:\'pd\',pid:\''+p.id+'\',di:'+di+'})">'+
+        '<span class="pi-bar '+stressCls(d.focus)+'"></span><span class="pi-name">Day '+(di+1)+' — '+esc(d.name)+'</span></button>';
+    });
+  } else {
+    h += '<p class="mut2 small mb12">Enroll in a program to schedule its days here.</p>';
+  }
+  h += '<div class="fgroup-label">Standalone</div>';
+  STANDALONE_WORKOUTS.forEach(w=>{
+    h += '<button class="plan-item" style="border:1px solid var(--line);border-radius:7px;margin-bottom:6px" onclick="planAdd('+dayIdx+',{k:\'sw\',sid:\''+w.id+'\'})">'+
+      '<span class="pi-bar '+stressCls(w.focus)+'"></span><span class="pi-name">'+esc(w.label)+'<br><span class="pi-sub">'+esc(w.sub)+'</span></span></button>';
+  });
+  openModal(h+'<div class="modal-actions"><button class="btn block" data-close="1">Cancel</button></div>');
+}
+function planAdd(dayIdx, item){
+  S.planner[dayIdx].push(item);
+  save(); closeModal(); render();
+}
+function openPlanItem(dayIdx, ii){
+  const it = S.planner[dayIdx][ii];
+  const inf = plannerItemInfo(it);
+  let h = '<h2>'+esc(inf.label)+'</h2><p class="mut2 small" style="margin:-8px 0 12px">'+esc(inf.sub)+' · '+DAY_NAMES[dayIdx]+'</p>';
+  h += '<div class="fgroup-label">Move to</div><div class="rq-scale" style="grid-template-columns:repeat(7,1fr)">'+
+    DAY_NAMES.map((n,di)=>'<button class="rq-opt" style="font-size:12px" '+(di===dayIdx?'disabled':'')+' onclick="planMove('+dayIdx+','+ii+','+di+')">'+n+'</button>').join('')+'</div>';
+  h += '<div class="modal-actions"><button class="btn danger" onclick="planRemove('+dayIdx+','+ii+')">Remove</button><button class="btn block" data-close="1">Close</button></div>';
+  openModal(h);
+}
+function planMove(from, ii, to){
+  const it = S.planner[from].splice(ii,1)[0];
+  S.planner[to].push(it);
+  save(); closeModal(); render();
+}
+function planRemove(dayIdx, ii){
+  S.planner[dayIdx].splice(ii,1);
+  save(); closeModal(); render();
+}
+
+/* ============================================================
+   PROGRESS TAB — charts are hand-rolled inline SVG
+   ============================================================ */
+function fmtVol(v){ return v>=10000 ? (v/1000).toFixed(1)+'k' : String(Math.round(v)); }
+function svgLine(pts, fmt){
+  fmt = fmt || (v=>String(Math.round(v)));
+  const W=340, H=150, L=38, R=14, T=16, B=22;
+  if(!pts.length) return '';
+  let yMin = Math.min(...pts.map(p=>p.y)), yMax = Math.max(...pts.map(p=>p.y));
+  if(yMin===yMax){ yMin*=0.94; yMax*=1.06; if(yMax===0){yMax=1;} }
+  const pad = (yMax-yMin)*0.08; yMin-=pad; yMax+=pad;
+  const px = i => pts.length===1 ? (L+(W-L-R)/2) : L + (W-L-R)*i/(pts.length-1);
+  const py = v => T + (H-T-B)*(1-(v-yMin)/(yMax-yMin));
+  let s = '<svg class="chart-svg" viewBox="0 0 '+W+' '+H+'" role="img">';
+  for(let g=0; g<3; g++){
+    const v = yMin + (yMax-yMin)*g/2;
+    s += '<line class="grid-line" x1="'+L+'" x2="'+(W-R)+'" y1="'+py(v)+'" y2="'+py(v)+'"/>';
+    s += '<text x="'+(L-5)+'" y="'+(py(v)+3)+'" text-anchor="end">'+fmt(v)+'</text>';
+  }
+  s += '<line class="axis-line" x1="'+L+'" x2="'+(W-R)+'" y1="'+(H-B)+'" y2="'+(H-B)+'"/>';
+  s += '<polyline fill="none" stroke="var(--volt)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" points="'+pts.map((p,i)=>px(i).toFixed(1)+','+py(p.y).toFixed(1)).join(' ')+'"/>';
+  pts.forEach((p,i)=>{
+    s += '<circle cx="'+px(i).toFixed(1)+'" cy="'+py(p.y).toFixed(1)+'" r="3.4" fill="var(--volt)" stroke="var(--bg)" stroke-width="2"><title>'+esc(p.x)+': '+fmt(p.y)+'</title></circle>';
+    s += '<circle cx="'+px(i).toFixed(1)+'" cy="'+py(p.y).toFixed(1)+'" r="11" fill="transparent"><title>'+esc(p.x)+': '+fmt(p.y)+'</title></circle>';
+  });
+  const last = pts[pts.length-1];
+  s += '<text x="'+px(pts.length-1)+'" y="'+(py(last.y)-8)+'" text-anchor="'+(pts.length===1?'middle':'end')+'" style="fill:var(--ink);font-weight:700;font-size:11px">'+fmt(last.y)+'</text>';
+  s += '<text x="'+L+'" y="'+(H-7)+'">'+esc(pts[0].x)+'</text>';
+  if(pts.length>1) s += '<text x="'+(W-R)+'" y="'+(H-7)+'" text-anchor="end">'+esc(last.x)+'</text>';
+  return s+'</svg>';
+}
+function svgBars(bars, fmt){
+  fmt = fmt || (v=>String(Math.round(v)));
+  const W=340, H=150, L=38, R=8, T=16, B=22;
+  if(!bars.length) return '';
+  const yMax = Math.max(1, Math.max(...bars.map(b=>b.y)))*1.12;
+  const iw = (W-L-R)/bars.length;
+  const bw = Math.min(30, iw-4);
+  const py = v => T + (H-T-B)*(1-v/yMax);
+  let s = '<svg class="chart-svg" viewBox="0 0 '+W+' '+H+'" role="img">';
+  for(let g=0; g<3; g++){
+    const v = yMax*g/2;
+    s += '<line class="grid-line" x1="'+L+'" x2="'+(W-R)+'" y1="'+py(v)+'" y2="'+py(v)+'"/>';
+    s += '<text x="'+(L-5)+'" y="'+(py(v)+3)+'" text-anchor="end">'+fmt(v)+'</text>';
+  }
+  bars.forEach((b,i)=>{
+    const x = L + iw*i + (iw-bw)/2;
+    const y = py(b.y), h = (H-B)-y;
+    if(b.y>0){
+      s += '<path d="M'+x.toFixed(1)+' '+(H-B)+' V'+(y+2).toFixed(1)+' Q'+x.toFixed(1)+' '+y.toFixed(1)+' '+(x+2).toFixed(1)+' '+y.toFixed(1)+' H'+(x+bw-2).toFixed(1)+' Q'+(x+bw).toFixed(1)+' '+y.toFixed(1)+' '+(x+bw).toFixed(1)+' '+(y+2).toFixed(1)+' V'+(H-B)+' Z" fill="var(--volt)"><title>'+esc(b.label)+': '+fmt(b.y)+'</title></path>';
+      s += '<text x="'+(x+bw/2).toFixed(1)+'" y="'+(y-4).toFixed(1)+'" text-anchor="middle" style="fill:var(--ink-2)">'+fmt(b.y)+'</text>';
+    }
+    s += '<text x="'+(x+bw/2).toFixed(1)+'" y="'+(H-7)+'" text-anchor="middle">'+esc(b.label)+'</text>';
+  });
+  s += '<line class="axis-line" x1="'+L+'" x2="'+(W-R)+'" y1="'+(H-B)+'" y2="'+(H-B)+'"/>';
+  return s+'</svg>';
+}
+function e1rmSeries(liftId){
+  const lf = LIFTS.find(l=>l.id===liftId);
+  const pts = [];
+  S.history.forEach(sess=>{
+    let best = 0;
+    sess.ex.forEach(x=>{
+      if(!lf.match.includes(x.n)) return;
+      x.sets.forEach(st=>{
+        if(st.w && st.r && st.r>=1 && st.r<=12) best = Math.max(best, epley(st.w, st.r));
+      });
+    });
+    if(best>0) pts.push({x:fmtDateShort(sess.d), y:Math.round(best)});
+  });
+  return pts;
+}
+function weeklyBuckets(n){
+  const out = [];
+  const cur = new Date();
+  for(let i=n-1;i>=0;i--){
+    const d = new Date(cur); d.setDate(cur.getDate()-7*i);
+    const wk = weekStartISO(d);
+    out.push({wk, label:fmtDateShort(wk), vol:0, count:0});
+  }
+  S.history.forEach(s=>{
+    const wk = weekStartISO(new Date(s.d+'T12:00'));
+    const b = out.find(o=>o.wk===wk);
+    if(b){ b.vol += s.vol; b.count++; }
+  });
+  return out;
+}
+function testBest(tid){
+  const t = TESTS.find(x=>x.id===tid);
+  const arr = S.tests[tid]||[];
+  if(!arr.length) return null;
+  return arr.reduce((best,e)=> best===null ? e : (t.better==='low' ? (e.v<best.v?e:best) : (e.v>best.v?e:best)), null);
+}
+function fmtTestVal(t, v){
+  if(t.unit==='time') return fmtTimeVal(v);
+  if(t.unit==='s') return v.toFixed(2)+'s';
+  return v+(t.unit==='in'?'"':' '+t.unit);
+}
+function viewProgress(){
+  const buckets = weeklyBuckets(8);
+  const thisWk = buckets[buckets.length-1];
+  let streak = 0;
+  for(let i=buckets.length-1;i>=0;i--){ if(buckets[i].count>0) streak++; else if(i<buckets.length-1) break; else break; }
+  const prCount = Object.values(S.prs).reduce((a,b)=>a+b.length,0);
+  let h = '<h1 class="view-title">Progress</h1><p class="view-sub">Trends, PRs and performance tests — all from your logged work.</p>';
+  h += '<div class="stat-row">'+
+    '<div class="stat"><div class="s-label">Sessions / wk</div><div class="s-value">'+thisWk.count+'</div></div>'+
+    '<div class="stat"><div class="s-label">Volume / wk</div><div class="s-value">'+fmtVol(thisWk.vol)+'<small>'+unitLabel()+'</small></div></div>'+
+    '<div class="stat"><div class="s-label">Lift PRs</div><div class="s-value">'+prCount+'</div></div>'+
+    '<div class="stat"><div class="s-label">Week streak</div><div class="s-value">'+streak+'</div></div></div>';
+  // PR board
+  h += '<div class="sec-head"><h2>PR Board</h2><span class="rule"></span><span class="aux">est. 1RM · Epley</span></div>';
+  h += '<div class="pr-grid mb12">';
+  LIFTS.forEach(l=>{
+    const best = bestE1(l.id);
+    const arr = S.prs[l.id]||[];
+    const latest = arr.length? arr[arr.length-1] : null;
+    h += '<button class="pr-cell'+(best?' is-pr':'')+'" onclick="openLiftHistory(\''+l.id+'\')"><div class="pr-lift">'+esc(l.n)+'</div><div class="pr-val num">'+(best?Math.round(best)+' <small>'+unitLabel()+'</small>':'—')+'</div><div class="pr-date">'+(latest?fmtDate(latest.d):'no data yet')+'</div></button>';
+  });
+  ['vert','dash40','mile'].forEach(tid=>{
+    const t = TESTS.find(x=>x.id===tid);
+    const best = testBest(tid);
+    h += '<button class="pr-cell'+(best?' is-pr':'')+'" onclick="openTestLog(\''+tid+'\')"><div class="pr-lift">'+esc(t.n)+'</div><div class="pr-val num">'+(best?fmtTestVal(t,best.v):'—')+'</div><div class="pr-date">'+(best?fmtDate(best.d):'tap to log')+'</div></button>';
+  });
+  h += '</div>';
+  // charts
+  VIEW.chartLift = VIEW.chartLift || 'squat';
+  VIEW.chartTest = VIEW.chartTest || 'vert';
+  h += '<div class="card chart-card"><div class="ch-head"><h3>Estimated 1RM Trend</h3><span class="ch-aux">'+unitLabel()+'</span></div>'+
+    '<div class="lift-chips">'+LIFTS.map(l=>'<button class="fchip'+(VIEW.chartLift===l.id?' on':'')+'" onclick="VIEW.chartLift=\''+l.id+'\';render()">'+esc(l.n)+'</button>').join('')+'</div>'+
+    '<div id="chart-e1"></div></div>';
+  h += '<div class="card chart-card"><div class="ch-head"><h3>Weekly Volume</h3><span class="ch-aux">'+unitLabel()+' lifted · 8 wks</span></div><div id="chart-vol"></div></div>';
+  h += '<div class="card chart-card"><div class="ch-head"><h3>Sessions Completed</h3><span class="ch-aux">per week · 8 wks</span></div><div id="chart-sess"></div></div>';
+  h += '<div class="card chart-card"><div class="ch-head"><h3>Performance Tests</h3></div>'+
+    '<div class="lift-chips">'+TESTS.map(t=>'<button class="fchip'+(VIEW.chartTest===t.id?' on':'')+'" onclick="VIEW.chartTest=\''+t.id+'\';render()">'+esc(t.n)+'</button>').join('')+'</div>'+
+    '<div id="chart-test"></div></div>';
+  // 1RM calculator
+  h += '<div class="sec-head"><h2>1RM Calculator</h2><span class="rule"></span><span class="aux">Epley formula</span></div>';
+  h += '<div class="card"><div class="frow"><div class="fcol"><label class="flabel">Weight ('+unitLabel()+')</label><input class="fin num" id="calc-w" type="number" inputmode="decimal" placeholder="225" oninput="calc1rm()"></div>'+
+    '<div class="fcol"><label class="flabel">Reps (1-12)</label><input class="fin num" id="calc-r" type="number" inputmode="numeric" placeholder="5" oninput="calc1rm()"></div></div>'+
+    '<div id="calc-out"></div></div>';
+  // performance tests tracker
+  h += '<div class="sec-head"><h2>Test Tracker</h2><span class="rule"></span><span class="aux">log · re-test · compare</span></div>';
+  h += '<div class="card pad-0">';
+  TESTS.forEach(t=>{
+    const arr = S.tests[t.id]||[];
+    const latest = arr.length? arr[arr.length-1] : null;
+    const prev = arr.length>1? arr[arr.length-2] : null;
+    let deltaHtml = '';
+    if(latest && prev){
+      const diff = latest.v - prev.v;
+      const better = t.better==='low' ? diff<0 : diff>0;
+      const cls = diff===0?'d-flat':better?'d-up':'d-down';
+      const dv = t.unit==='time'? fmtTimeVal(Math.abs(diff)) : Math.abs(diff).toFixed(t.unit==='s'?2:1);
+      deltaHtml = '<span class="tt-delta '+cls+'">'+(diff===0?'no change':(diff>0?'+':'−')+dv+' vs last')+'</span>';
+    }
+    h += '<div class="test-row"><div class="tt-name"><b>'+esc(t.n)+'</b><span>'+esc(t.hint)+'</span></div>'+
+      '<div class="tt-val"><span class="num">'+(latest?fmtTestVal(t,latest.v):'—')+'</span>'+deltaHtml+'</div>'+
+      '<button class="btn sm" onclick="openTestLog(\''+t.id+'\')">Log</button></div>';
+  });
+  h += '</div>';
+  // history
+  h += '<div class="sec-head"><h2>Session History</h2><span class="rule"></span><span class="aux num">'+S.history.length+'</span></div>';
+  const hist = S.history.slice(-(VIEW.histAll?S.history.length:8)).reverse();
+  h += hist.length ? hist.map(histRow).join('') : '<div class="empty-state"><p>No sessions yet. Start a program or a freestyle session and the receipts show up here.</p></div>';
+  if(S.history.length>8 && !VIEW.histAll) h += '<button class="btn ghost block sm" onclick="VIEW.histAll=1;render()">Show all '+S.history.length+'</button>';
+  return h;
+}
+function drawCharts(){
+  const e1 = e1rmSeries(VIEW.chartLift||'squat');
+  $('#chart-e1').innerHTML = e1.length ? svgLine(e1) : '<div class="chart-empty">Log working sets of '+esc(LIFTS.find(l=>l.id===(VIEW.chartLift||'squat')).n)+' to build this trend.</div>';
+  const buckets = weeklyBuckets(8);
+  $('#chart-vol').innerHTML = buckets.some(b=>b.vol>0) ? svgBars(buckets.map(b=>({label:b.label, y:Math.round(b.vol)})), fmtVol) : '<div class="chart-empty">Weekly tonnage appears after your first logged session.</div>';
+  $('#chart-sess').innerHTML = buckets.some(b=>b.count>0) ? svgBars(buckets.map(b=>({label:b.label, y:b.count}))) : '<div class="chart-empty">Sessions per week appear after your first logged session.</div>';
+  const t = TESTS.find(x=>x.id===(VIEW.chartTest||'vert'));
+  const ts = (S.tests[t.id]||[]).map(e=>({x:fmtDateShort(e.d), y:e.v}));
+  $('#chart-test').innerHTML = ts.length ? svgLine(ts, v=> t.unit==='time'? fmtTimeVal(v) : (t.unit==='s'? v.toFixed(2) : String(Math.round(v)))) : '<div class="chart-empty">No '+esc(t.n)+' results yet — log one in the tracker below.</div>';
+}
+function calc1rm(){
+  const w = parseFloat($('#calc-w').value), r = parseFloat($('#calc-r').value);
+  const out = $('#calc-out');
+  if(!w || !r || r<1 || r>12){ out.innerHTML = '<p class="mut2 small">Enter a weight and 1-12 reps. Estimates degrade fast past 12 reps.</p>'; return; }
+  const e1 = epley(w,r);
+  let h = '<div class="ready-score-big"><span class="num" style="color:var(--volt)">'+Math.round(e1)+'</span><span class="mut2"> '+unitLabel()+' est. 1RM</span></div>';
+  h += '<table class="setgrid" style="margin-top:6px"><tr><th>%</th>'+[95,90,85,80,75,70,65,60].map(p=>'<th>'+p+'</th>').join('')+'</tr>'+
+    '<tr><td><span class="set-idx">'+unitLabel()+'</span></td>'+[95,90,85,80,75,70,65,60].map(p=>'<td class="num small">'+roundLoad(e1*p/100)+'</td>').join('')+'</tr></table>';
+  out.innerHTML = h;
+}
+function openLiftHistory(liftId){
+  const l = LIFTS.find(x=>x.id===liftId);
+  const arr = (S.prs[liftId]||[]).slice().reverse();
+  let h = '<h2>'+esc(l.n)+' — PR history</h2>';
+  if(!arr.length) h += '<p class="mut small mb12">No PRs yet. Log working sets of '+esc(l.match.join(' or '))+' and PRs are detected automatically from the Epley estimate.</p>';
+  else h += arr.map(p=>'<div class="test-row" style="border-top:1px solid var(--line)"><div class="tt-name"><b class="num">'+Math.round(p.e1)+' '+unitLabel()+' est.</b><span>'+p.w+' '+unitLabel()+' × '+p.r+'</span></div><span class="pr-date num">'+fmtDate(p.d)+'</span></div>').join('');
+  h += '<div class="modal-actions"><button class="btn primary block" data-close="1">Close</button></div>';
+  openModal(h);
+}
+function openTestLog(tid){
+  const t = TESTS.find(x=>x.id===tid);
+  const arr = S.tests[tid]||[];
+  const latest = arr.length? arr[arr.length-1] : null;
+  const isTime = t.unit==='time';
+  let h = '<h2>Log — '+esc(t.n)+'</h2><p class="mut2 small" style="margin:-8px 0 12px">'+esc(t.hint)+(latest?' · last: '+fmtTestVal(t,latest.v)+' ('+fmtDate(latest.d)+')':'')+'</p>';
+  h += '<label class="flabel">Result '+(isTime?'(mm:ss)':'('+t.unit+')')+'</label>';
+  h += '<input class="fin num" id="test-v" '+(isTime?'type="text" inputmode="numeric" placeholder="7:30"':'type="number" inputmode="decimal" step="any" placeholder="'+(t.unit==='s'?'4.80':'28')+'"')+' style="font-size:22px;text-align:center">';
+  h += '<div class="modal-actions"><button class="btn ghost" data-close="1">Cancel</button><button class="btn primary block" onclick="saveTest(\''+tid+'\')">Save Result</button></div>';
+  if(arr.length){
+    h += '<div class="fgroup-label" style="margin-top:14px">History</div>';
+    h += arr.slice().reverse().slice(0,6).map(e=>'<div class="test-row"><span class="num small">'+fmtTestVal(t,e.v)+'</span><span class="pr-date num" style="margin-left:auto">'+fmtDate(e.d)+'</span></div>').join('');
+  }
+  openModal(h);
+  setTimeout(()=>{ const i=$('#test-v'); if(i) i.focus(); }, 250);
+}
+function saveTest(tid){
+  const t = TESTS.find(x=>x.id===tid);
+  const raw = $('#test-v').value;
+  const v = t.unit==='time' ? parseTimeVal(raw) : parseFloat(raw);
+  if(isNaN(v) || v<=0){ toast('','Enter a valid result'+(t.unit==='time'?' like 7:30':'')+'.'); return; }
+  if(!S.tests[tid]) S.tests[tid] = [];
+  const prev = testBest(tid);
+  S.tests[tid].push({d:todayISO(), v});
+  save(); closeModal(); render();
+  const isPR = prev===null || (t.better==='low' ? v<prev.v : v>prev.v);
+  if(isPR) toast('Test PR', t.n+': '+fmtTestVal(t,v), 'pr-toast');
+  else toast('Logged', t.n+': '+fmtTestVal(t,v));
+}
+
+/* ============================================================
+   SETTINGS
+   ============================================================ */
+function openSettings(){
+  let h = '<h2>Settings</h2>';
+  h += '<label class="flabel">Units</label><div class="seg mb12"><button id="set-lb" class="'+(S.unit==='lb'?'on':'')+'" onclick="setUnit(\'lb\')">Pounds (lb)</button><button id="set-kg" class="'+(S.unit==='kg'?'on':'')+'" onclick="setUnit(\'kg\')">Kilograms (kg)</button></div>';
+  h += '<p class="mut2 small mb12">Switching converts every stored weight, PR and volume figure.</p>';
+  h += '<label class="flabel">Data</label>';
+  h += '<button class="btn block mb6" onclick="exportData()">Export All Data (JSON)</button>';
+  h += '<button class="btn ghost block danger" onclick="confirmReset()">Reset All Data…</button>';
+  h += '<div class="hr"></div><p class="mut2 small">The Athlete Standard · single-file training platform.<br>All data lives in this browser\'s local storage — nothing leaves your device. '+S.history.length+' sessions · '+EXERCISES.length+' exercises · '+PROGRAMS.length+' programs.</p>';
+  h += '<div class="modal-actions"><button class="btn primary block" data-close="1">Done</button></div>';
+  openModal(h);
+}
+function setUnit(u){
+  if(S.unit===u) return;
+  const f = u==='kg' ? 1/2.20462262 : 2.20462262;
+  const cv = x => Math.round(x*f*10)/10;
+  S.history.forEach(s=>{ s.vol = s.vol*f; s.ex.forEach(x=>x.sets.forEach(st=>{ if(st.w) st.w = cv(st.w); })); });
+  Object.values(S.prs).forEach(arr=>arr.forEach(p=>{ p.e1 = cv(p.e1); p.w = cv(p.w); }));
+  S.unit = u;
+  save(); closeModal(); openSettings(); render();
+  toast('Units switched','Everything converted to '+u+'.');
+}
+function exportData(){
+  const blob = new Blob([JSON.stringify(S, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'athlete-standard-export-'+todayISO()+'.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
+  toast('Exported','Full backup downloaded as JSON.');
+}
+function confirmReset(){
+  openModal('<h2>Reset all data?</h2><p class="mut small mb12">This permanently erases <b>every</b> logged workout, PR, readiness check-in, test result, planner and program progress on this device. There is no undo. Export a backup first if in doubt.</p>'+
+    '<div class="modal-actions"><button class="btn primary block" data-close="1">Keep my data</button><button class="btn danger" onclick="confirmReset2()">Continue…</button></div>');
+}
+function confirmReset2(){
+  openModal('<h2>Last check</h2><p class="mut small mb12">You are one tap from a factory-fresh app. Still sure?</p>'+
+    '<div class="modal-actions"><button class="btn primary block" data-close="1">Cancel</button><button class="btn danger" onclick="doReset()">Erase Everything</button></div>');
+}
+function doReset(){
+  localStorage.removeItem(STORE_KEY);
+  S = DEFAULT_STATE();
+  closeModal(); switchTab('train');
+  toast('Reset complete','Clean slate. Time to build it back.');
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+$$('#tabbar .tab').forEach(b=>b.addEventListener('click', ()=>switchTab(b.dataset.tab)));
+$('#readiness-chip').addEventListener('click', openReadinessModal);
+$('#settings-btn').addEventListener('click', openSettings);
+$('#rt-add').addEventListener('click', ()=>{ restEnd += 30000; restTotal += 30; tickRest(); });
+$('#rt-skip').addEventListener('click', ()=>stopRest(false));
+switchTab('train');
+if(S.live && S.live.blocks && S.live.blocks.length){
+  openModal('<h2>Session in progress</h2><p class="mut small mb12">You have an unfinished session: <b>'+esc(S.live.name)+'</b>. Pick it back up or discard it.</p>'+
+    '<div class="modal-actions"><button class="btn ghost" onclick="S.live=null;save();closeModal()">Discard</button><button class="btn primary block" onclick="closeModal();SESS=S.live;openSession()">Resume</button></div>');
+}
+</script>
+</body>
+</html>
