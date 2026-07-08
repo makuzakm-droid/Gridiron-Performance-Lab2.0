@@ -1,0 +1,2277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gridiron Performance Lab — Position-Specific Football Training</title>
+<meta name="description" content="Position-specific lifting programs, field work, speed training, testing standards and recovery for football athletes.">
+<meta name="theme-color" content="#07090D">
+<meta property="og:title" content="Gridiron Performance Lab — Position-Specific Football Training">
+<meta property="og:description" content="Position-specific lifting programs, field work, speed training, testing standards and recovery for football athletes.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%224%22 fill=%22%23E23428%22/><text x=%2216%22 y=%2223%22 font-family=%22Arial Black,Arial%22 font-size=%2218%22 font-weight=%22900%22 fill=%22white%22 text-anchor=%22middle%22>G</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600;700&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   GRIDIRON PERFORMANCE LAB — design system
+   Palette: Turf Black / Steel Panel / Chalk / Ash / Red Zone / Gunmetal
+   Type:    Saira Condensed (display) · Barlow (body) · Barlow Semi Condensed (labels)
+   Signature: field hash-mark rules, chalk yard-line structure,
+              scoreboard stat tiles, broadcast-graphic accents
+   ============================================================ */
+:root{
+  --turf:#07090D;
+  --panel:#10151C;
+  --panel-2:#151C24;
+  --panel-3:#1B242E;
+  --line:#212A34;
+  --line-2:#313D4A;
+  --chalk:#F1F3EE;
+  --ash:#97A1AB;
+  --ash-dim:#5C656F;
+  --red:#E63C2F;
+  --red-hot:#FF6A5C;
+  --red-deep:#B02318;
+  --metal:#ACB8C4;
+  --metal-grad:linear-gradient(135deg,#CFD8E1 0%,#8E9BA8 45%,#CFD8E1 55%,#75828F 100%);
+  --ok:#43B573;
+  --warn:#E0AC33;
+  --radius:8px;
+  --disp:'Saira Condensed',Impact,'Arial Narrow',sans-serif;
+  --body:'Barlow','Helvetica Neue',Arial,sans-serif;
+  --label:'Barlow Semi Condensed','Arial Narrow',sans-serif;
+  --maxw:1180px;
+  --shadow-1:0 1px 2px rgba(0,0,0,.45),0 12px 32px -16px rgba(0,0,0,.55);
+  --shadow-2:0 2px 8px rgba(0,0,0,.5),0 28px 56px -24px rgba(0,0,0,.7);
+  --glow-red:0 4px 24px -6px rgba(230,60,47,.5);
+  --ease:cubic-bezier(.22,.68,.35,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0ms!important;transition-duration:.01ms!important;transition-delay:0ms!important}
+}
+body{
+  background:var(--turf);
+  color:var(--chalk);
+  font-family:var(--body);
+  font-size:16px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+/* subtle field grid + stadium vignette */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(241,243,238,.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(241,243,238,.02) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(120% 90% at 50% 0%,#000 40%,transparent 100%);
+  -webkit-mask-image:radial-gradient(120% 90% at 50% 0%,#000 40%,transparent 100%);
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(90% 60% at 50% 118%,rgba(0,0,0,.55),transparent 60%);
+}
+main,header,footer{position:relative;z-index:1}
+img{max-width:100%;display:block}
+a{color:inherit}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit;font-size:1rem}
+::selection{background:rgba(230,60,47,.4);color:#fff}
+::-webkit-scrollbar{width:11px;height:11px}
+::-webkit-scrollbar-track{background:var(--turf)}
+::-webkit-scrollbar-thumb{background:var(--panel-3);border-radius:6px;border:2px solid var(--turf)}
+::-webkit-scrollbar-thumb:hover{background:var(--line-2)}
+
+/* skip link */
+.skip{
+  position:fixed;top:-60px;left:16px;z-index:200;
+  background:var(--red);color:#fff;text-decoration:none;
+  font-family:var(--label);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:.8rem;
+  padding:.6rem 1rem;border-radius:0 0 6px 6px;transition:top .15s;
+}
+.skip:focus{top:0}
+
+/* ---------- typography ---------- */
+h1,h2,h3,.disp{
+  font-family:var(--disp);
+  text-transform:uppercase;
+  letter-spacing:.012em;
+  line-height:1.0;
+  font-weight:900;
+  text-wrap:balance;
+}
+h1{font-size:clamp(2.7rem,7vw,4.9rem)}
+h2{font-size:clamp(1.9rem,4.5vw,3rem)}
+h3{font-size:clamp(1.25rem,2.6vw,1.6rem);font-weight:800}
+.eyebrow{
+  font-family:var(--label);font-weight:700;text-transform:uppercase;
+  letter-spacing:.2em;font-size:.76rem;color:var(--red-hot);
+  display:flex;align-items:center;gap:.6rem;margin-bottom:.55rem;
+}
+.eyebrow::before{content:"";width:26px;height:2px;background:linear-gradient(90deg,var(--red),var(--red-hot));box-shadow:0 0 8px rgba(230,60,47,.6)}
+.sub{color:var(--ash);font-size:1.06rem;max-width:62ch}
+.small{font-size:.85rem;color:var(--ash)}
+
+/* hash-mark rule — signature divider */
+.hashrule{
+  height:14px;margin:1.2rem 0 1.8rem;
+  background-image:repeating-linear-gradient(90deg,var(--line-2) 0 3px,transparent 3px 26px);
+  background-size:100% 14px;
+  position:relative;
+}
+.hashrule::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:120px;
+  background-image:repeating-linear-gradient(90deg,var(--red) 0 3px,transparent 3px 26px);
+  opacity:.85;
+}
+.hashrule::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:linear-gradient(90deg,var(--line-2),var(--line) 40%,transparent)}
+
+/* ---------- layout ---------- */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+section{padding:64px 0}
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.g4{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+
+/* ---------- nav ---------- */
+header.site{
+  position:sticky;top:0;z-index:50;
+  background:rgba(7,9,13,.82);
+  backdrop-filter:blur(14px) saturate(1.4);
+  -webkit-backdrop-filter:blur(14px) saturate(1.4);
+  border-bottom:1px solid var(--line);
+  transition:box-shadow .25s;
+}
+header.site.scrolled{box-shadow:0 10px 40px -12px rgba(0,0,0,.8)}
+#scrollbar{
+  position:absolute;left:0;bottom:-1px;height:2px;width:0%;
+  background:linear-gradient(90deg,var(--red-deep),var(--red) 60%,var(--red-hot));
+  box-shadow:0 0 10px rgba(230,60,47,.55);
+  pointer-events:none;
+}
+.navbar{display:flex;align-items:center;gap:1rem;height:66px;max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.logo{display:flex;align-items:center;gap:.65rem;text-decoration:none;flex-shrink:0}
+.logo-mark{
+  width:36px;height:36px;border-radius:6px;
+  background:linear-gradient(160deg,var(--red-hot) -40%,var(--red) 40%,var(--red-deep));
+  display:grid;place-items:center;font-family:var(--disp);font-weight:900;font-size:1.2rem;color:#fff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25),inset 0 -6px 12px rgba(0,0,0,.3),var(--glow-red);
+}
+.logo-type{font-family:var(--disp);font-weight:900;text-transform:uppercase;font-size:1.15rem;letter-spacing:.02em;line-height:1}
+.logo-type span{display:block;font-family:var(--label);font-weight:600;font-size:.6rem;letter-spacing:.3em;color:var(--ash)}
+nav.main{display:flex;gap:.15rem;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+nav.main::-webkit-scrollbar{display:none}
+nav.main a{
+  text-decoration:none;font-family:var(--label);font-weight:600;text-transform:uppercase;
+  font-size:.76rem;letter-spacing:.05em;color:var(--ash);
+  padding:.55rem .55rem;border-radius:5px;white-space:nowrap;position:relative;
+  transition:color .15s,background .15s;
+}
+nav.main a[data-nav="home"]{display:none}
+nav.main a::after{
+  content:"";position:absolute;left:.7rem;right:.7rem;bottom:.25rem;height:2px;
+  background:var(--red);border-radius:1px;transform:scaleX(0);transform-origin:left;
+  transition:transform .2s var(--ease);
+}
+nav.main a:hover{color:var(--chalk)}
+nav.main a:hover::after{transform:scaleX(1)}
+nav.main a.on{color:var(--chalk);background:var(--panel-2)}
+nav.main a.on::after{transform:scaleX(1)}
+.nav-actions{display:flex;gap:.5rem;margin-left:.5rem}
+.hamb{display:none;background:none;border:1px solid var(--line-2);border-radius:6px;color:var(--chalk);padding:.4rem .65rem;font-size:1.05rem;transition:border-color .15s}
+.hamb:hover{border-color:var(--ash)}
+@media(max-width:1260px){
+  nav.main a{font-size:.7rem;letter-spacing:.03em;padding:.5rem .4rem}
+}
+@media(max-width:1080px){
+  nav.main{position:fixed;top:66px;left:0;right:0;background:rgba(7,9,13,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);
+    flex-direction:column;padding:.7rem 1rem 1.1rem;display:none;margin-left:0;box-shadow:0 30px 60px -20px rgba(0,0,0,.8)}
+  nav.main.open{display:flex;animation:navDrop .22s var(--ease)}
+  nav.main a{font-size:.85rem;letter-spacing:.08em;padding:.65rem .7rem}
+  nav.main a[data-nav="home"]{display:block}
+  nav.main a::after{display:none}
+  nav.main a.on{box-shadow:inset 3px 0 0 var(--red)}
+  .hamb{display:block;margin-left:auto}
+  .nav-actions{margin-left:0}
+}
+@keyframes navDrop{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  font-family:var(--label);font-weight:700;text-transform:uppercase;letter-spacing:.09em;
+  font-size:.85rem;padding:.82rem 1.5rem;border-radius:6px;border:1px solid transparent;
+  text-decoration:none;position:relative;overflow:hidden;
+  transition:transform .15s var(--ease),background .15s,border-color .15s,box-shadow .2s,color .15s;
+}
+.btn:active{transform:translateY(1px) scale(.99)}
+.btn-red{
+  background:linear-gradient(180deg,#F2503F,var(--red) 52%,#C4261A);
+  color:#fff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 3px 14px -4px rgba(230,60,47,.55);
+  text-shadow:0 1px 1px rgba(0,0,0,.25);
+}
+.btn-red:hover{
+  background:linear-gradient(180deg,#FF6152,var(--red-hot) 52%,var(--red));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 6px 22px -4px rgba(230,60,47,.7);
+  transform:translateY(-1px);
+}
+.btn-ghost{background:rgba(241,243,238,.02);color:var(--chalk);border-color:var(--line-2)}
+.btn-ghost:hover{border-color:var(--ash);background:rgba(241,243,238,.05);transform:translateY(-1px)}
+.btn-metal{background:var(--metal-grad);color:#10151b;font-weight:700;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 3px 12px -4px rgba(0,0,0,.6)}
+.btn-metal:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn-sm{padding:.48rem .85rem;font-size:.74rem}
+.btn-block{width:100%}
+
+/* ---------- hero ---------- */
+.hero{
+  position:relative;overflow:hidden;border-bottom:1px solid var(--line);
+  padding:104px 0 88px;
+}
+.hero-field{
+  position:absolute;inset:0;z-index:0;opacity:.6;
+  background:
+    radial-gradient(1100px 520px at 80% -12%, rgba(230,60,47,.2), transparent 62%),
+    radial-gradient(700px 340px at 8% 108%, rgba(230,60,47,.08), transparent 60%),
+    linear-gradient(180deg, rgba(7,9,13,.15), var(--turf) 90%),
+    repeating-linear-gradient(90deg, rgba(241,243,238,.05) 0 2px, transparent 2px 118px),
+    repeating-linear-gradient(90deg, rgba(241,243,238,.085) 0 2px, transparent 2px 24px);
+  background-size:auto,auto,auto,auto,auto 90px;
+  background-position:0 0,0 0,0 0,0 0,0 100%;
+  background-repeat:repeat,repeat,no-repeat,repeat,repeat-x;
+}
+.hero-ghost{
+  position:absolute;z-index:0;right:-.06em;top:50%;transform:translateY(-52%);
+  font-family:var(--disp);font-weight:900;text-transform:uppercase;line-height:.8;
+  font-size:clamp(9rem,26vw,22rem);letter-spacing:-.01em;
+  color:transparent;-webkit-text-stroke:1px rgba(241,243,238,.055);
+  user-select:none;pointer-events:none;white-space:nowrap;
+}
+.hero .wrap{position:relative;z-index:1}
+.hero h1{max-width:13ch}
+.hero h1 em{font-style:normal;color:var(--red-hot);position:relative;white-space:nowrap}
+.hero h1 em::after{
+  content:"";position:absolute;left:0;right:0;bottom:.02em;height:.1em;
+  background:linear-gradient(90deg,var(--red),var(--red-hot));
+  transform:skewX(-18deg);opacity:.9;box-shadow:0 0 18px rgba(230,60,47,.5);
+}
+.hero .sub{margin:1.2rem 0 2rem}
+.hero-cta{display:flex;gap:.8rem;flex-wrap:wrap}
+.hero-stats{display:flex;gap:.8rem;margin-top:2.8rem;flex-wrap:wrap}
+.hstat{
+  background:linear-gradient(180deg,var(--panel-2),var(--panel));
+  border:1px solid var(--line);border-top:2px solid var(--red);
+  border-radius:6px;padding:.85rem 1.3rem .7rem;min-width:128px;
+  box-shadow:var(--shadow-1);
+}
+.hstat b{
+  font-family:var(--disp);font-weight:900;font-size:2.2rem;display:block;line-height:1;
+  font-variant-numeric:tabular-nums;
+}
+.hstat span{font-family:var(--label);font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ash)}
+/* staged hero entrance */
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.hero .eyebrow,.hero h1,.hero .sub,.hero-cta,.hero-stats{animation:rise .6s var(--ease) both}
+.hero h1{animation-delay:.07s}
+.hero .sub{animation-delay:.15s}
+.hero-cta{animation-delay:.23s}
+.hero-stats{animation-delay:.32s}
+
+/* ---------- cards ---------- */
+.card{
+  background:linear-gradient(180deg,var(--panel-2),var(--panel) 70%);
+  border:1px solid var(--line);border-radius:var(--radius);
+  padding:1.2rem 1.2rem 1.1rem;display:flex;flex-direction:column;gap:.55rem;
+  position:relative;
+  transition:border-color .2s,transform .25s var(--ease),box-shadow .25s;
+}
+.card::before{
+  content:"";position:absolute;top:-1px;left:-1px;right:-1px;height:2px;
+  border-radius:var(--radius) var(--radius) 0 0;
+  background:linear-gradient(90deg,var(--red),var(--red-hot) 35%,transparent 75%);
+  opacity:0;transition:opacity .25s;
+}
+.card:hover{border-color:var(--line-2);transform:translateY(-3px);box-shadow:var(--shadow-2)}
+.card:hover::before{opacity:1}
+.card h3{font-size:1.25rem}
+.badges{display:flex;flex-wrap:wrap;gap:.35rem}
+.badge{
+  font-family:var(--label);font-weight:600;text-transform:uppercase;letter-spacing:.07em;
+  font-size:.66rem;padding:.24rem .52rem;border-radius:4px;
+  background:var(--panel-3);border:1px solid var(--line-2);color:var(--ash);
+}
+.badge.red{background:rgba(230,60,47,.14);border-color:rgba(230,60,47,.45);color:#FF8A7E}
+.badge.metal{background:var(--metal-grad);border:none;color:#10151b;font-weight:700}
+.badge.ok{background:rgba(67,181,115,.12);border-color:rgba(67,181,115,.4);color:#7FD4A4}
+.badge.warn{background:rgba(224,172,51,.12);border-color:rgba(224,172,51,.45);color:#EBC868}
+.meta-row{display:flex;gap:1.1rem;flex-wrap:wrap;font-size:.82rem;color:var(--ash);font-family:var(--label);letter-spacing:.04em;text-transform:uppercase}
+.meta-row b{color:var(--chalk);font-weight:600}
+.card-foot{margin-top:auto;display:flex;gap:.5rem;align-items:center;padding-top:.5rem}
+.fav{
+  margin-left:auto;background:none;border:1px solid var(--line-2);border-radius:6px;
+  color:var(--ash);width:34px;height:34px;font-size:1rem;line-height:1;
+  transition:color .15s,border-color .15s,transform .15s,background .15s;
+}
+.fav:hover{border-color:var(--ash);transform:scale(1.06)}
+.fav.on{color:var(--red-hot);border-color:rgba(230,60,47,.55);background:rgba(230,60,47,.1)}
+
+/* position tag — depth-chart style */
+.postag{
+  display:inline-grid;place-items:center;min-width:44px;height:30px;padding:0 .5rem;
+  font-family:var(--disp);font-weight:900;font-size:1rem;letter-spacing:.04em;
+  background:linear-gradient(180deg,var(--panel-3),var(--panel-2));
+  border:1px solid var(--line-2);border-left:3px solid var(--red);
+  border-radius:4px;box-shadow:inset 0 1px 0 rgba(241,243,238,.05);
+}
+
+/* ---------- filter bar ---------- */
+.filters{
+  background:linear-gradient(180deg,var(--panel-2),var(--panel));
+  border:1px solid var(--line);border-radius:var(--radius);
+  padding:1.1rem;display:grid;gap:.75rem;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  margin:1.4rem 0 1.6rem;box-shadow:var(--shadow-1);
+}
+.filters label{font-family:var(--label);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ash);display:block;margin-bottom:.35rem}
+.filters select,.filters input{
+  width:100%;background:var(--turf);border:1px solid var(--line-2);color:var(--chalk);
+  border-radius:6px;padding:.58rem .65rem;font-size:.92rem;
+  transition:border-color .15s,box-shadow .15s;
+}
+.filters select:hover,.filters input:hover{border-color:var(--ash-dim)}
+.filters select:focus,.filters input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(230,60,47,.18);outline:none}
+.btn:focus-visible,.fav:focus-visible,nav.main a:focus-visible,.hamb:focus-visible,button.vid:focus-visible,.quiz-opts button:focus-visible{
+  outline:2px solid var(--red);outline-offset:2px;
+}
+.search-row{grid-column:1/-1;display:flex;gap:.6rem}
+.search-row input{flex:1}
+.count{font-family:var(--label);letter-spacing:.12em;text-transform:uppercase;font-size:.75rem;color:var(--ash);margin-bottom:1rem}
+.empty{border:1px dashed var(--line-2);border-radius:var(--radius);padding:2.4rem;text-align:center;color:var(--ash);background:rgba(241,243,238,.01)}
+.empty b{color:var(--chalk);font-family:var(--disp);text-transform:uppercase;font-size:1.2rem;display:block;margin-bottom:.3rem}
+
+/* ---------- tables ---------- */
+.tbl{width:100%;border-collapse:collapse;font-size:.9rem}
+.tbl th{
+  font-family:var(--label);font-weight:700;text-transform:uppercase;letter-spacing:.1em;
+  font-size:.68rem;color:var(--ash);text-align:left;padding:.6rem .65rem;
+  border-bottom:2px solid var(--line-2);background:var(--panel-2);
+}
+.tbl td{padding:.58rem .65rem;border-bottom:1px solid var(--line);vertical-align:top;font-variant-numeric:tabular-nums}
+.tbl tbody tr{transition:background .12s}
+.tbl tbody tr:hover{background:rgba(241,243,238,.025)}
+.tbl tr:last-child td{border-bottom:none}
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);box-shadow:var(--shadow-1)}
+.tblwrap .tbl{min-width:560px}
+
+/* ---------- workout day card (signature hash rail) ---------- */
+.day{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  overflow:hidden;margin-bottom:1.1rem;box-shadow:var(--shadow-1);
+  transition:border-color .2s;
+}
+.day:hover{border-color:var(--line-2)}
+.day-head{
+  display:flex;align-items:center;gap:.85rem;padding:.9rem 1.05rem;
+  background:linear-gradient(180deg,var(--panel-3),var(--panel-2));
+  border-bottom:1px solid var(--line);position:relative;
+}
+.day-head::after{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--red-hot),var(--red-deep));
+}
+.day-num{
+  font-family:var(--disp);font-weight:900;font-size:1.45rem;color:var(--red-hot);
+  border-right:1px solid var(--line-2);padding-right:.85rem;min-width:64px;
+  font-variant-numeric:tabular-nums;text-shadow:0 0 16px rgba(230,60,47,.45);
+}
+.day-head h4{font-family:var(--disp);text-transform:uppercase;font-size:1.1rem;font-weight:800}
+.block{padding:.9rem 1.05rem;border-bottom:1px solid var(--line)}
+.block:last-child{border-bottom:none}
+.block-label{
+  font-family:var(--label);font-weight:700;text-transform:uppercase;letter-spacing:.15em;
+  font-size:.7rem;color:var(--metal);margin-bottom:.5rem;display:flex;align-items:center;gap:.55rem;
+}
+.block-label::before{content:"";width:14px;height:8px;
+  background-image:repeating-linear-gradient(90deg,var(--red) 0 2px,transparent 2px 6px)}
+.exline{display:flex;gap:.7rem;align-items:baseline;padding:.34rem 0;flex-wrap:wrap;border-radius:4px}
+.exline .nm{font-weight:600}
+.exline .nm a{transition:color .12s}
+.exline .nm a:hover{color:var(--red-hot)}
+.exline .rx{font-family:var(--label);color:var(--ash);font-size:.85rem;letter-spacing:.03em}
+.exline .note{flex-basis:100%;font-size:.82rem;color:var(--ash-dim)}
+.exline button.vid{
+  margin-left:auto;background:none;border:1px solid var(--line-2);border-radius:4px;color:var(--ash);
+  font-family:var(--label);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;padding:.22rem .55rem;
+  transition:color .15s,border-color .15s,background .15s;
+}
+.exline button.vid:hover{color:var(--chalk);border-color:var(--red);background:rgba(230,60,47,.08)}
+
+/* ---------- modal ---------- */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(3,4,6,.72);z-index:90;display:none;
+  align-items:flex-start;justify-content:center;padding:5vh 14px;overflow-y:auto;
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+.modal-bg.open{display:flex;animation:fadeIn .18s ease}
+@keyframes fadeIn{from{opacity:0}}
+.modal{
+  background:linear-gradient(180deg,var(--panel-2),var(--panel) 30%);
+  border:1px solid var(--line-2);border-radius:12px;max-width:720px;width:100%;
+  padding:1.5rem;position:relative;box-shadow:var(--shadow-2);
+}
+.modal::before{
+  content:"";position:absolute;top:-1px;left:16px;right:16px;height:2px;
+  background:linear-gradient(90deg,transparent,var(--red) 30%,var(--red-hot) 50%,var(--red) 70%,transparent);
+}
+.modal-bg.open .modal{animation:modalIn .26s var(--ease)}
+@keyframes modalIn{from{opacity:0;transform:translateY(16px) scale(.985)}to{opacity:1;transform:none}}
+.modal .x{
+  position:absolute;top:.8rem;right:.8rem;background:none;border:1px solid var(--line-2);
+  color:var(--ash);border-radius:6px;width:32px;height:32px;font-size:1rem;
+  transition:color .15s,border-color .15s,transform .15s;
+}
+.modal .x:hover{color:var(--chalk);border-color:var(--ash);transform:rotate(90deg)}
+.vid-slot{
+  border:1px dashed var(--ash-dim);border-radius:8px;background:var(--turf);
+  padding:1.2rem;text-align:center;margin:.9rem 0;
+}
+.vid-slot b{font-family:var(--label);text-transform:uppercase;letter-spacing:.12em;font-size:.75rem;color:var(--warn);display:block;margin-bottom:.35rem}
+.vid-frame{aspect-ratio:16/9;width:100%;border:0;border-radius:8px;margin:.9rem 0;background:#000}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:.4rem .8rem;font-size:.9rem;margin:.8rem 0}
+.kv dt{font-family:var(--label);text-transform:uppercase;letter-spacing:.1em;font-size:.68rem;color:var(--ash);padding-top:.18rem}
+.kv dd{margin:0}
+
+/* ---------- quiz ---------- */
+.quiz-q{margin-bottom:1.2rem}
+.quiz-q p{font-family:var(--disp);text-transform:uppercase;font-weight:800;font-size:1.15rem;margin-bottom:.6rem}
+.quiz-opts{display:flex;flex-wrap:wrap;gap:.45rem}
+.quiz-opts button{
+  background:var(--turf);border:1px solid var(--line-2);color:var(--chalk);border-radius:6px;
+  padding:.55rem .85rem;font-size:.88rem;
+  transition:border-color .15s,background .15s,transform .15s var(--ease);
+}
+.quiz-opts button:hover{border-color:var(--red);background:rgba(230,60,47,.08);transform:translateY(-1px)}
+.quiz-opts button.sel{border-color:var(--red);background:rgba(230,60,47,.14)}
+.quiz-progress{height:6px;background:var(--turf);border-radius:3px;overflow:hidden;margin-bottom:1.2rem}
+.quiz-progress i{display:block;height:100%;background:linear-gradient(90deg,var(--red-deep),var(--red),var(--red-hot));transition:width .3s var(--ease);box-shadow:0 0 10px rgba(230,60,47,.5)}
+
+/* ---------- misc sections ---------- */
+.split{display:grid;gap:2rem;grid-template-columns:1.1fr .9fr;align-items:start}
+@media(max-width:860px){.split{grid-template-columns:1fr}}
+.callout{
+  border-left:3px solid var(--red);
+  background:linear-gradient(90deg,rgba(230,60,47,.06),var(--panel) 45%);
+  border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding:1rem 1.15rem;border-radius:0 8px 8px 0;margin:1rem 0;
+}
+.callout.warn{border-left-color:var(--warn);background:linear-gradient(90deg,rgba(224,172,51,.06),var(--panel) 45%)}
+.callout.ok{border-left-color:var(--ok);background:linear-gradient(90deg,rgba(67,181,115,.06),var(--panel) 45%)}
+.callout b{font-family:var(--label);text-transform:uppercase;letter-spacing:.12em;font-size:.74rem;display:block;margin-bottom:.3rem;color:var(--metal)}
+.checklist{list-style:none;display:grid;gap:.5rem;margin:.7rem 0}
+.checklist li{padding-left:1.5rem;position:relative;color:var(--ash)}
+.checklist li::before{content:"›";position:absolute;left:.35rem;color:var(--red-hot);font-weight:700}
+.checklist li b{color:var(--chalk)}
+.cite{
+  background:linear-gradient(180deg,var(--panel-2),var(--panel));
+  border:1px solid var(--line);border-radius:var(--radius);
+  padding:.95rem 1.05rem;font-size:.88rem;transition:border-color .2s;
+}
+.cite:hover{border-color:var(--line-2)}
+.cite b{display:block;font-weight:600;margin-bottom:.15rem}
+.cite span{color:var(--ash);font-size:.8rem}
+.cite a{color:var(--metal);font-size:.8rem;word-break:break-all}
+footer.site{border-top:1px solid var(--line);padding:2.6rem 0 3.2rem;margin-top:3.5rem;color:var(--ash);font-size:.85rem;background:linear-gradient(180deg,transparent,rgba(0,0,0,.35))}
+footer.site .cols{display:grid;gap:1.8rem;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+footer.site h5{font-family:var(--label);text-transform:uppercase;letter-spacing:.16em;font-size:.72rem;color:var(--chalk);margin-bottom:.55rem}
+footer.site a{color:var(--ash);text-decoration:none;display:block;padding:.16rem 0;transition:color .12s,transform .15s var(--ease)}
+footer.site a:hover{color:var(--chalk);transform:translateX(2px)}
+
+/* toast */
+#toast{
+  position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:rgba(21,28,36,.92);backdrop-filter:blur(10px);
+  border:1px solid var(--line-2);border-left:3px solid var(--red);
+  padding:.75rem 1.2rem;border-radius:8px;z-index:120;opacity:0;pointer-events:none;
+  transition:opacity .22s,transform .22s var(--ease);font-size:.9rem;max-width:90vw;
+  box-shadow:var(--shadow-2);
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* progress tracker */
+.track-grid{display:grid;gap:.7rem;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.track-row{display:flex;gap:.5rem;align-items:center}
+.track-row input{flex:1;background:var(--turf);border:1px solid var(--line-2);color:var(--chalk);border-radius:6px;padding:.5rem}
+
+/* scroll-reveal */
+.rv{opacity:0;transform:translateY(16px)}
+.rv.in{opacity:1;transform:none;transition:opacity .55s ease,transform .55s var(--ease)}
+
+/* ---------- print ---------- */
+@media print{
+  body::before,body::after,header.site,footer.site,.nav-actions,.filters,.btn,.fav,button.vid,.hamb,#toast,.skip,.hero-ghost{display:none!important}
+  body{background:#fff;color:#111}
+  .rv{opacity:1!important;transform:none!important}
+  .card,.day,.tblwrap,.callout,.cite,.hstat{background:#fff;border-color:#bbb;color:#111;box-shadow:none}
+  .day-head{background:#f2f2f2}
+  .sub,.small,.meta-row,.exline .rx,.exline .note{color:#444}
+  h1,h2,h3,.day-num{color:#111;text-shadow:none}
+  a{text-decoration:none;color:#111}
+  section{padding:14px 0}
+}
+@media(max-width:640px){
+  section{padding:44px 0}
+  .hero{padding:64px 0 56px}
+  .hero-stats{display:grid;grid-template-columns:1fr 1fr;width:100%}
+  .kv{grid-template-columns:1fr}
+  .wrap{padding:0 18px}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#view">Skip to content</a>
+<header class="site">
+  <div class="navbar">
+    <a class="logo" href="#/" onclick="return go('home')">
+      <span class="logo-mark">G</span>
+      <span class="logo-type">Gridiron<br><span>Performance Lab</span></span>
+    </a>
+    <button class="hamb" id="hamb" aria-label="Open menu" onclick="document.getElementById('mainnav').classList.toggle('open')">☰</button>
+    <nav class="main" id="mainnav" aria-label="Main">
+      <a href="#/" data-nav="home">Home</a>
+      <a href="#/programs" data-nav="programs">Programs</a>
+      <a href="#/positions" data-nav="positions">Positions</a>
+      <a href="#/exercises" data-nav="exercises">Exercises</a>
+      <a href="#/fieldwork" data-nav="fieldwork">Field Work</a>
+      <a href="#/testing" data-nav="testing">Testing</a>
+      <a href="#/myweek" data-nav="myweek">My Week</a>
+      <a href="#/methodology" data-nav="methodology">Methodology</a>
+      <a href="#/safety" data-nav="safety">Safety</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="btn btn-red btn-sm" onclick="openQuiz()">Find My Program</button>
+    </div>
+  </div>
+  <div id="scrollbar" aria-hidden="true"></div>
+</header>
+
+<main id="view" tabindex="-1"></main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <a class="logo" href="#/" onclick="return go('home')" style="margin-bottom:.8rem">
+          <span class="logo-mark">G</span>
+          <span class="logo-type">Gridiron<br><span>Performance Lab</span></span>
+        </a>
+        <p style="margin-top:.8rem">Position-specific strength, speed, and conditioning for football athletes. Built on evidence-informed programming — not guesswork.</p>
+      </div>
+      <div>
+        <h5>Train</h5>
+        <a href="#/programs">Program Library</a>
+        <a href="#/positions">Position Training</a>
+        <a href="#/exercises">Exercise Library</a>
+        <a href="#/fieldwork">Field Work</a>
+      </div>
+      <div>
+        <h5>Learn</h5>
+        <a href="#/testing">Testing Standards</a>
+        <a href="#/methodology">Methodology &amp; Research</a>
+        <a href="#/safety">Safety Disclaimer</a>
+      </div>
+      <div>
+        <h5>Disclaimer</h5>
+        <p class="small">Educational content only. Consult a qualified coach, athletic trainer, or healthcare provider before beginning any program. <a href="#/safety" style="display:inline;color:var(--metal)">Read the full disclaimer →</a></p>
+      </div>
+    </div>
+    <div class="hashrule" style="margin-top:2rem"></div>
+    <p class="small">© 2026 Gridiron Performance Lab. All programs are general templates and must be adapted to the individual athlete.</p>
+  </div>
+</footer>
+
+<!-- exercise / video modal -->
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()">
+  <div class="modal" role="dialog" aria-modal="true" id="modalBox"></div>
+</div>
+
+<div id="toast" role="status"></div>
+
+<script>
+/* ============================================================
+   DATA LAYER
+   Structured like an API response — port straight into Next.js.
+   Admin note: to add an exercise or program, append an object
+   to EXERCISES / PROGRAMS below. To attach a video, paste a
+   YouTube embed URL into video_url (format:
+   https://www.youtube.com/embed/VIDEO_ID). Until then the card
+   shows a "Video needed" slot with a demo-search shortcut.
+   ============================================================ */
+
+const POS_LIST = ["QB","RB","FB","WR","TE","OL","C","DL","EDGE","LB","CB","S","K","P","LS","Multi"];
+
+const EXERCISES = [
+/* ---------------- LOWER BODY ---------------- */
+{exercise_id:"ex-back-squat",name:"Back Squat",category:"Lower Body",movement_pattern:"Squat",equipment:"Barbell, rack",
+ primary_muscles:"Quads, glutes, adductors, spinal erectors",
+ football_benefit:"Foundation of leg strength for blocking, tackling, driving through contact, and jump/sprint force output.",
+ position_relevance:["OL","DL","LB","TE","RB","EDGE","Multi"],
+ coaching_cues:["Big brace before descent","Knees track over toes","Hit at least parallel with control","Drive the floor apart on the way up"],
+ common_mistakes:["Heels rising / weight drifting to toes","Losing brace and folding forward","Cutting depth as load increases"],
+ regression:"Goblet squat or box squat to a consistent depth target.",
+ progression:"Pause squat, or add load following the program's progression rule.",
+ sets_reps_guideline:"Strength: 3–5 x 3–6. Size: 3–4 x 6–10.",rest_guideline:"2–4 min heavy, 90 s accessory ranges",
+ video_url:null,thumbnail_url:null,safety_notes:"Use safety pins/spotter arms. Never max out alone. Technique before load."},
+{exercise_id:"ex-front-squat",name:"Front Squat",category:"Lower Body",movement_pattern:"Squat",equipment:"Barbell, rack",
+ primary_muscles:"Quads, glutes, upper back, core",
+ football_benefit:"Upright torso strength that transfers to clean catch positions, contact posture, and knee-dominant power.",
+ position_relevance:["QB","RB","WR","LB","TE","Multi"],
+ coaching_cues:["Elbows up the whole rep","Rack the bar on shoulders, not wrists","Stay tall out of the hole"],
+ common_mistakes:["Elbows dropping and bar rolling forward","Shallow depth","Wrist-only rack position"],
+ regression:"Goblet squat.",progression:"Pause front squat; heavier clean-grip work.",
+ sets_reps_guideline:"3–5 x 3–5",rest_guideline:"2–3 min",
+ video_url:null,thumbnail_url:null,safety_notes:"Dump the bar forward if a rep fails — never fight it down."},
+{exercise_id:"ex-trapbar-dl",name:"Trap Bar Deadlift",category:"Lower Body",movement_pattern:"Hinge/Squat hybrid",equipment:"Trap bar",
+ primary_muscles:"Glutes, hamstrings, quads, traps, grip",
+ football_benefit:"High force output with lower technical demand and lower back stress than straight-bar pulling — a staple for football lower-body power.",
+ position_relevance:["OL","DL","LB","RB","TE","EDGE","Multi"],
+ coaching_cues:["Hips between knees and shoulders","Push the floor away","Lock out tall, no lean-back"],
+ common_mistakes:["Jerking the bar off the floor","Rounding under fatigue","Turning it into a squat with no hinge"],
+ regression:"Elevated-handle trap bar pull or kettlebell deadlift.",
+ progression:"Speed pulls at 60–70% or heavier top sets per program.",
+ sets_reps_guideline:"Strength: 4–5 x 3–5. Power intent: 5 x 3 fast at moderate load.",rest_guideline:"2–4 min",
+ video_url:null,thumbnail_url:null,safety_notes:"Neutral spine is non-negotiable. Cut the set when bar speed dies."},
+{exercise_id:"ex-rdl",name:"Romanian Deadlift",category:"Lower Body",movement_pattern:"Hinge",equipment:"Barbell or dumbbells",
+ primary_muscles:"Hamstrings, glutes, spinal erectors",
+ football_benefit:"Builds hamstring strength through length — a key factor in sprint performance and hamstring-strain resistance.",
+ position_relevance:["WR","RB","CB","S","LB","QB","Multi"],
+ coaching_cues:["Push hips back, soft knees","Bar stays on the thighs","Feel the hamstrings load, stop before the back rounds"],
+ common_mistakes:["Squatting the movement","Overreaching range with a rounded back","Bar drifting away from the legs"],
+ regression:"Dumbbell RDL or hip hinge with dowel.",progression:"Single-leg RDL; heavier loads with strict tempo.",
+ sets_reps_guideline:"3–4 x 6–10",rest_guideline:"90 s – 2 min",
+ video_url:null,thumbnail_url:null,safety_notes:"Range is set by hamstring flexibility, not by the floor."},
+{exercise_id:"ex-bss",name:"Bulgarian Split Squat",category:"Lower Body",movement_pattern:"Single-leg squat",equipment:"Dumbbells, bench",
+ primary_muscles:"Quads, glutes, adductors, hip stabilizers",
+ football_benefit:"Single-leg strength and stability — football is played one leg at a time in cuts, drives, and open-field movement.",
+ position_relevance:["RB","WR","CB","S","LB","QB","TE","Multi"],
+ coaching_cues:["Long stance, front shin near vertical","Drop the back knee straight down","Drive through the front whole foot"],
+ common_mistakes:["Stance too short","Bouncing off the back leg","Torso collapsing forward"],
+ regression:"Split squat with rear foot on floor.",progression:"Front-rack loading or deficit.",
+ sets_reps_guideline:"3 x 6–8 each leg",rest_guideline:"60–90 s per side",
+ video_url:null,thumbnail_url:null,safety_notes:"Balance first, load second."},
+{exercise_id:"ex-lunge",name:"Walking Lunge",category:"Lower Body",movement_pattern:"Single-leg / locomotion",equipment:"Dumbbells or bodyweight",
+ primary_muscles:"Quads, glutes, hamstrings",
+ football_benefit:"Strength through stride positions; builds deceleration capacity used in cutting and open-field tackling.",
+ position_relevance:["RB","WR","CB","S","LB","Multi"],
+ coaching_cues:["Step long enough to keep the front shin vertical","Knee tracks the toes","Tall chest through the step"],
+ common_mistakes:["Short choppy steps","Knee caving inward","Pushing off the back toe only"],
+ regression:"Reverse lunge in place.",progression:"Weighted walking lunge; deficit reverse lunge.",
+ sets_reps_guideline:"3 x 8–10 steps per leg",rest_guideline:"60–90 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Use open space; control every step."},
+{exercise_id:"ex-stepup",name:"Step-Up",category:"Lower Body",movement_pattern:"Single-leg",equipment:"Box, dumbbells",
+ primary_muscles:"Quads, glutes",
+ football_benefit:"Concentric single-leg drive that mimics acceleration positions out of a stance.",
+ position_relevance:["RB","LB","DL","EDGE","Multi"],
+ coaching_cues:["Whole foot on the box","Drive through the top leg — don't jump off the bottom","Stand fully tall at the top"],
+ common_mistakes:["Bouncing off the floor leg","Box too high for control","Knee collapse"],
+ regression:"Lower box height.",progression:"Explosive step-up or heavier dumbbells.",
+ sets_reps_guideline:"3 x 6–8 each leg",rest_guideline:"60–90 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Box height: knee at or slightly below hip."},
+{exercise_id:"ex-hipthrust",name:"Hip Thrust",category:"Lower Body",movement_pattern:"Hinge / hip extension",equipment:"Barbell, bench, pad",
+ primary_muscles:"Glutes, hamstrings",
+ football_benefit:"Direct horizontal hip-extension strength — the engine of acceleration and finishing through contact.",
+ position_relevance:["RB","OL","DL","LB","WR","Multi"],
+ coaching_cues:["Chin tucked, ribs down","Full lockout with a squeeze","Shins vertical at the top"],
+ common_mistakes:["Hyperextending the low back at lockout","Partial range","Feet too far out"],
+ regression:"Glute bridge from the floor.",progression:"Single-leg hip thrust; heavier barbell loading.",
+ sets_reps_guideline:"3–4 x 6–10",rest_guideline:"90 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Pad the bar; set the bench so it can't slide."},
+{exercise_id:"ex-nordic",name:"Nordic Hamstring Curl",category:"Lower Body",movement_pattern:"Knee flexion (eccentric)",equipment:"Partner or Nordic bench",
+ primary_muscles:"Hamstrings",
+ football_benefit:"Eccentric hamstring strength associated with reduced hamstring strain risk in sprinting athletes.",
+ position_relevance:["WR","CB","S","RB","LB","QB","Multi"],
+ coaching_cues:["Hips stay extended — one straight line","Fight the descent as long as possible","Use hands to push back up"],
+ common_mistakes:["Breaking at the hips","Free-falling past the sticking point","Doing too much volume too soon"],
+ regression:"Band-assisted Nordic or hamstring slider curls.",progression:"Slower eccentrics; small added range.",
+ sets_reps_guideline:"2–3 x 3–6",rest_guideline:"90 s – 2 min",
+ video_url:null,thumbnail_url:null,safety_notes:"Expect soreness at first — start with low volume and build over weeks."},
+{exercise_id:"ex-ghr",name:"Glute-Ham Raise",category:"Lower Body",movement_pattern:"Hip + knee posterior chain",equipment:"GHD machine",
+ primary_muscles:"Hamstrings, glutes, erectors",
+ football_benefit:"Posterior-chain strength through both hip and knee actions used in sprinting and tackling posture.",
+ position_relevance:["LB","RB","S","DL","Multi"],
+ coaching_cues:["Squeeze glutes to lock the hips","Pull with the hamstrings, don't swing","Control the lowering"],
+ common_mistakes:["Hyperextending the low back","Using momentum","Setup pad too far forward/back"],
+ regression:"Back extension or slider curl.",progression:"Add plate to chest; slow eccentric.",
+ sets_reps_guideline:"3 x 5–8",rest_guideline:"90 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Adjust the pad so knees sit just behind it."},
+{exercise_id:"ex-calf",name:"Standing Calf Raise",category:"Lower Body",movement_pattern:"Ankle plantarflexion",equipment:"Machine, step, or dumbbells",
+ primary_muscles:"Gastrocnemius, soleus",
+ football_benefit:"Ankle stiffness and calf capacity for sprinting, jumping, and repeated ground contacts.",
+ position_relevance:["WR","CB","S","RB","K","P","Multi"],
+ coaching_cues:["Full stretch at the bottom","Pause at the top","No bouncing"],
+ common_mistakes:["Partial reps","Bouncing out of the stretch","Rushing tempo"],
+ regression:"Two-leg bodyweight raises.",progression:"Single-leg loaded raises; seated soleus work.",
+ sets_reps_guideline:"3 x 8–15",rest_guideline:"60 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Progress volume gradually to protect the Achilles."},
+{exercise_id:"ex-sledpush",name:"Sled Push",category:"Lower Body",movement_pattern:"Horizontal drive",equipment:"Sled, turf",
+ primary_muscles:"Quads, glutes, calves, hip flexors",
+ football_benefit:"Acceleration-specific horizontal force with almost zero eccentric cost — great for drive phase and lineman get-off.",
+ position_relevance:["OL","DL","LB","RB","EDGE","TE","Multi"],
+ coaching_cues:["45° body lean","Punch the knees forward","Full hip extension every step"],
+ common_mistakes:["Hips too high, choppy steps","Load so heavy the posture breaks","Arms bent and dead"],
+ regression:"Lighter sled or wall drill marching.",progression:"Heavier loads for strength, lighter for speed.",
+ sets_reps_guideline:"4–6 x 10–20 yd",rest_guideline:"60–120 s (full recovery for speed intent)",
+ video_url:null,thumbnail_url:null,safety_notes:"Grip low handles for drive work; keep the runway clear."},
+{exercise_id:"ex-sleddrag",name:"Sled Drag (Backward)",category:"Lower Body",movement_pattern:"Locomotion",equipment:"Sled, harness or straps",
+ primary_muscles:"Quads, VMO, calves",
+ football_benefit:"Knee-friendly quad capacity and deceleration strength; useful for return-to-play and in-season joint-sparing volume.",
+ position_relevance:["OL","DL","LB","CB","S","Multi"],
+ coaching_cues:["Small quick steps","Stay low, chest up","Constant tension on the strap"],
+ common_mistakes:["Standing too upright","Steps too long","Jerky pulls"],
+ regression:"Lighter load, shorter distance.",progression:"Heavier drags or timed distance.",
+ sets_reps_guideline:"3–5 x 20–30 yd",rest_guideline:"60–90 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Walk the path first; watch behind you."},
+/* ---------------- UPPER BODY ---------------- */
+{exercise_id:"ex-bench",name:"Bench Press",category:"Upper Body",movement_pattern:"Horizontal press",equipment:"Barbell, bench, rack",
+ primary_muscles:"Chest, triceps, front delts",
+ football_benefit:"Upper-body pressing strength for blocking, stiff-arms, punch, and shedding blocks. Also the combine 225 test base.",
+ position_relevance:["OL","DL","TE","LB","EDGE","FB","Multi"],
+ coaching_cues:["Feet planted, upper back tight","Bar touches lower chest","Press slightly back toward the rack"],
+ common_mistakes:["Bouncing off the chest","Flared elbows at 90°","Butt lifting off the bench"],
+ regression:"Dumbbell bench press.",progression:"Pause bench, close grip, or heavier waves.",
+ sets_reps_guideline:"Strength: 4–5 x 3–5. Size: 3–4 x 6–10.",rest_guideline:"2–4 min",
+ video_url:null,thumbnail_url:null,safety_notes:"Always use a spotter or safety arms. No thumbless grip."},
+{exercise_id:"ex-incline",name:"Incline Bench Press",category:"Upper Body",movement_pattern:"Incline press",equipment:"Barbell or dumbbells, incline bench",
+ primary_muscles:"Upper chest, delts, triceps",
+ football_benefit:"Pressing at an angle closer to the strike/punch line used by linemen and defenders.",
+ position_relevance:["OL","DL","EDGE","TE","LB"],
+ coaching_cues:["30–45° bench angle","Wrists stacked over elbows","Control the descent"],
+ common_mistakes:["Excessive arch turning it flat","Bouncing","Overly wide grip"],
+ regression:"Dumbbell incline press.",progression:"Heavier barbell waves or tempo work.",
+ sets_reps_guideline:"3–4 x 5–8",rest_guideline:"2 min",
+ video_url:null,thumbnail_url:null,safety_notes:"Spotter for barbell work."},
+{exercise_id:"ex-dbbench",name:"Dumbbell Bench Press",category:"Upper Body",movement_pattern:"Horizontal press",equipment:"Dumbbells, bench",
+ primary_muscles:"Chest, triceps, shoulder stabilizers",
+ football_benefit:"Independent-arm pressing builds shoulder stability for one-arm strikes and stiff-arms.",
+ position_relevance:["QB","WR","RB","TE","LB","Multi"],
+ coaching_cues:["Kick the bells up safely","Slight arc path","Full range without shoulder pinch"],
+ common_mistakes:["Dropping dumbbells at the end","Uneven pressing","Cutting range"],
+ regression:"Lighter bells or floor press.",progression:"Alternating or single-arm press.",
+ sets_reps_guideline:"3–4 x 6–10",rest_guideline:"90 s – 2 min",
+ video_url:null,thumbnail_url:null,safety_notes:"Never twist to drop bells; lower to chest and sit up."},
+{exercise_id:"ex-pushpress",name:"Push Press",category:"Upper Body",movement_pattern:"Vertical press (leg drive)",equipment:"Barbell, rack",
+ primary_muscles:"Shoulders, triceps, legs, core",
+ football_benefit:"Total-body power transfer from legs through arms — the same chain as a lineman's punch.",
+ position_relevance:["OL","DL","TE","LB","EDGE","FB"],
+ coaching_cues:["Short dip, vertical torso","Drive legs then punch the bar","Lock out over the ears"],
+ common_mistakes:["Deep slow dip","Pressing early before leg drive finishes","Bar path forward"],
+ regression:"Strict overhead press.",progression:"Heavier loads or push jerk.",
+ sets_reps_guideline:"4–5 x 3–5",rest_guideline:"2–3 min",
+ video_url:null,thumbnail_url:null,safety_notes:"Clear overhead space; keep ribs down at lockout."},
+{exercise_id:"ex-ohp",name:"Overhead Press",category:"Upper Body",movement_pattern:"Vertical press",equipment:"Barbell or dumbbells",
+ primary_muscles:"Shoulders, triceps, upper chest, core",
+ football_benefit:"Shoulder strength and overhead stability; core stiffness under load.",
+ position_relevance:["QB","OL","DL","TE","LB","Multi"],
+ coaching_cues:["Squeeze glutes, brace","Bar travels straight up, head through at the top","No leg drive on strict reps"],
+ common_mistakes:["Leaning back through the lumbar spine","Pressing around the face","Flared ribs"],
+ regression:"Seated dumbbell press or landmine press.",progression:"Push press.",
+ sets_reps_guideline:"3–4 x 5–8",rest_guideline:"2 min",
+ video_url:null,thumbnail_url:null,safety_notes:"Shoulder mobility first — use landmine variations if overhead range is limited."},
+{exercise_id:"ex-pullup",name:"Pull-Up",category:"Upper Body",movement_pattern:"Vertical pull",equipment:"Pull-up bar",
+ primary_muscles:"Lats, biceps, mid-back, grip",
+ football_benefit:"Pulling strength and grip for tackling, block shedding, and controlling opponents.",
+ position_relevance:["LB","DL","EDGE","S","CB","TE","Multi"],
+ coaching_cues:["Full hang to chest-to-bar intent","Drive elbows down","No kipping"],
+ common_mistakes:["Half range","Swinging","Shrugged dead-hang position"],
+ regression:"Band-assisted pull-ups or lat pulldown.",progression:"Weighted pull-ups.",
+ sets_reps_guideline:"3–4 x 5–10 (or weighted 4 x 4–6)",rest_guideline:"90 s – 2 min",
+ video_url:null,thumbnail_url:null,safety_notes:"Control the lowering; avoid dropping from the top."},
+{exercise_id:"ex-chinup",name:"Chin-Up",category:"Upper Body",movement_pattern:"Vertical pull (supinated)",equipment:"Pull-up bar",
+ primary_muscles:"Lats, biceps",
+ football_benefit:"Elbow-flexor and lat strength for ball security, tackling wrap, and grappling at the line.",
+ position_relevance:["RB","LB","TE","S","Multi"],
+ coaching_cues:["Palms toward you","Chest to the bar","Slow negative"],
+ common_mistakes:["Chin poke instead of chest rise","Partial reps"],
+ regression:"Band assistance.",progression:"Weighted chin-ups.",
+ sets_reps_guideline:"3–4 x 6–10",rest_guideline:"90 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Same as pull-up."},
+{exercise_id:"ex-bbrow",name:"Barbell Row",category:"Upper Body",movement_pattern:"Horizontal pull",equipment:"Barbell",
+ primary_muscles:"Lats, rhomboids, rear delts, erectors",
+ football_benefit:"Back thickness and pulling strength that balances pressing volume and supports tackling posture.",
+ position_relevance:["OL","DL","LB","TE","EDGE","Multi"],
+ coaching_cues:["Hinge to ~45°, brace","Pull to the lower ribs","Squeeze, then control down"],
+ common_mistakes:["Standing too upright","Yanking with momentum","Rounding the back"],
+ regression:"Chest-supported row.",progression:"Pendlay row from the floor.",
+ sets_reps_guideline:"3–4 x 6–10",rest_guideline:"90 s – 2 min",
+ video_url:null,thumbnail_url:null,safety_notes:"Back position beats load. Reset if form drifts."},
+{exercise_id:"ex-dbrow",name:"Dumbbell Row",category:"Upper Body",movement_pattern:"Horizontal pull (unilateral)",equipment:"Dumbbell, bench",
+ primary_muscles:"Lats, rhomboids, rear delts",
+ football_benefit:"One-arm pulling strength with anti-rotation demand — mirrors shedding and rip moves.",
+ position_relevance:["DL","EDGE","LB","TE","WR","Multi"],
+ coaching_cues:["Flat back, square shoulders","Row the elbow to the hip","Full stretch at the bottom"],
+ common_mistakes:["Torso rotation to cheat","Shrugging the rep","Short range"],
+ regression:"Lighter load, strict tempo.",progression:"Heavier 'kroc'-style higher-rep sets late offseason.",
+ sets_reps_guideline:"3–4 x 8–12 each",rest_guideline:"60–90 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Support with the free hand on the bench."},
+{exercise_id:"ex-landmine",name:"Landmine Press",category:"Upper Body",movement_pattern:"Angled press",equipment:"Barbell + landmine anchor",
+ primary_muscles:"Shoulders, chest, triceps, core",
+ football_benefit:"Shoulder-friendly pressing at a punch-like angle; ideal for QBs and athletes with cranky shoulders.",
+ position_relevance:["QB","WR","OL","DL","Multi"],
+ coaching_cues:["Half-kneeling or split stance","Press up and slightly forward","Ribs stacked over hips"],
+ common_mistakes:["Arching to finish the press","Shrugging into the neck"],
+ regression:"Two-hand landmine press.",progression:"Single-arm from split stance with rotation.",
+ sets_reps_guideline:"3 x 6–10 each",rest_guideline:"60–90 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Anchor the bar securely in a corner or landmine unit."},
+{exercise_id:"ex-facepull",name:"Face Pull",category:"Upper Body",movement_pattern:"Horizontal pull / external rotation",equipment:"Cable or band",
+ primary_muscles:"Rear delts, rotator cuff, mid traps",
+ football_benefit:"Shoulder health insurance against heavy pressing and contact volume.",
+ position_relevance:["QB","OL","DL","WR","Multi"],
+ coaching_cues:["Pull to the forehead","Thumbs back at the finish","Light load, perfect reps"],
+ common_mistakes:["Too heavy, turning it into a row","No external rotation at the end"],
+ regression:"Band pull-apart.",progression:"Half-kneeling single-arm variations.",
+ sets_reps_guideline:"3 x 12–15",rest_guideline:"45–60 s",
+ video_url:null,thumbnail_url:null,safety_notes:"This is a quality movement — never grind it."},
+{exercise_id:"ex-farmer",name:"Farmer's Carry",category:"Upper Body",movement_pattern:"Loaded carry",equipment:"Heavy dumbbells or handles",
+ primary_muscles:"Grip, traps, core, hips",
+ football_benefit:"Grip, trunk stiffness, and posture under load — carries over to tackling, blocking, and ball security.",
+ position_relevance:["OL","DL","LB","TE","RB","Multi"],
+ coaching_cues:["Tall posture, ribs down","Quick controlled steps","Crush the handles"],
+ common_mistakes:["Leaning or waddling","Shrugging the whole walk","Load too light to matter"],
+ regression:"Lighter bells, shorter distance.",progression:"Heavier loads or longer distance.",
+ sets_reps_guideline:"3–4 x 30–40 yd",rest_guideline:"90 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Set bells down with a squat, not a drop."},
+{exercise_id:"ex-suitcase",name:"Suitcase Carry",category:"Core",movement_pattern:"Unilateral carry (anti-lateral flexion)",equipment:"One dumbbell or kettlebell",
+ primary_muscles:"Obliques, QL, grip, hips",
+ football_benefit:"Anti-lean trunk strength for absorbing hits and staying balanced through contact and cuts.",
+ position_relevance:["RB","WR","LB","CB","S","Multi"],
+ coaching_cues:["Stay perfectly level — no lean","Ribs stacked","Walk a straight line"],
+ common_mistakes:["Hiking the loaded hip","Speed-walking through form"],
+ regression:"Lighter load.",progression:"Heavier load or bottoms-up KB.",
+ sets_reps_guideline:"3 x 30 yd each side",rest_guideline:"60 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Swap sides evenly."},
+/* ---------------- POWER ---------------- */
+{exercise_id:"ex-powerclean",name:"Power Clean",category:"Olympic Lift",movement_pattern:"Explosive pull",equipment:"Barbell, bumpers, platform",
+ primary_muscles:"Glutes, hamstrings, traps, whole posterior chain",
+ football_benefit:"Trains rapid triple extension — the hip-knee-ankle snap behind sprinting, jumping, and striking.",
+ position_relevance:["RB","LB","TE","DL","OL","EDGE","FB","Multi"],
+ coaching_cues:["Bar close, patient off the floor","Explode at the pockets","Fast elbows into the catch"],
+ common_mistakes:["Arm-pulling early","Bar looping away","Catching on wrists with slow elbows"],
+ regression:"Hang clean or clean pull.",progression:"Full (squat) clean if mobility allows.",
+ sets_reps_guideline:"4–6 x 2–3 (never to grind)",rest_guideline:"2–3 min",
+ video_url:null,thumbnail_url:null,safety_notes:"Learn from a qualified coach. Bail forward, never save a bad catch."},
+{exercise_id:"ex-hangclean",name:"Hang Clean",category:"Olympic Lift",movement_pattern:"Explosive pull (hang)",equipment:"Barbell, bumpers",
+ primary_muscles:"Glutes, hamstrings, traps",
+ football_benefit:"Simplified clean that isolates the explosive second pull — easier to teach in team settings.",
+ position_relevance:["QB","WR","RB","LB","TE","Multi"],
+ coaching_cues:["Hinge to mid-thigh","Jump and shrug","Elbows whip around fast"],
+ common_mistakes:["Squatting the dip instead of hinging","Reverse-curling the bar"],
+ regression:"High pull from the hang.",progression:"Power clean from the floor.",
+ sets_reps_guideline:"4–5 x 2–3",rest_guideline:"2–3 min",
+ video_url:null,thumbnail_url:null,safety_notes:"Same as power clean."},
+{exercise_id:"ex-cleanpull",name:"Clean Pull",category:"Olympic Lift",movement_pattern:"Explosive pull (no catch)",equipment:"Barbell",
+ primary_muscles:"Posterior chain, traps",
+ football_benefit:"Explosive pulling with heavier loads and no catch technique required — great force-development tool.",
+ position_relevance:["OL","DL","TE","LB","Multi"],
+ coaching_cues:["Identical setup to the clean","Finish tall with a violent shrug","Reset each rep"],
+ common_mistakes:["Early arm bend","Cutting the extension short"],
+ regression:"Trap bar jump shrug intent work.",progression:"Load above clean max (105–110%).",
+ sets_reps_guideline:"4 x 3",rest_guideline:"2–3 min",
+ video_url:null,thumbnail_url:null,safety_notes:"Straps allowed; hook grip preferred."},
+{exercise_id:"ex-highpull",name:"High Pull",category:"Olympic Lift",movement_pattern:"Explosive pull",equipment:"Barbell or dumbbells",
+ primary_muscles:"Traps, posterior chain, upper back",
+ football_benefit:"Aggressive extension plus upper-body pull — simple power tool for big groups.",
+ position_relevance:["DL","OL","LB","EDGE"],
+ coaching_cues:["Elbows high and outside","Power from the hips, not the arms","Bar stays close"],
+ common_mistakes:["Rowing instead of exploding","Standing too upright at the start"],
+ regression:"Hang high pull.",progression:"Heavier loads or from the floor.",
+ sets_reps_guideline:"4 x 3–5",rest_guideline:"2 min",
+ video_url:null,thumbnail_url:null,safety_notes:"Stop the set when speed drops."},
+{exercise_id:"ex-trapjump",name:"Trap Bar Jump",category:"Olympic Lift",movement_pattern:"Loaded jump",equipment:"Trap bar (light)",
+ primary_muscles:"Glutes, quads, calves",
+ football_benefit:"Loaded jump training without catch technique — high power output, minimal learning curve.",
+ position_relevance:["RB","WR","LB","TE","S","Multi"],
+ coaching_cues:["Light load (≈20–30% of trap bar max)","Jump through the bar, land soft","Reset every rep"],
+ common_mistakes:["Loading too heavy and killing speed","Stiff-leg landings"],
+ regression:"Bodyweight countermovement jump.",progression:"Contrast with heavy pulls (French contrast style).",
+ sets_reps_guideline:"4 x 3",rest_guideline:"90 s – 2 min",
+ video_url:null,thumbnail_url:null,safety_notes:"Land quiet. Loud landings mean poor absorption."},
+{exercise_id:"ex-boxjump",name:"Box Jump",category:"Power",movement_pattern:"Vertical jump",equipment:"Plyo box",
+ primary_muscles:"Glutes, quads, calves",
+ football_benefit:"Vertical power expression with reduced landing forces — a staple for explosive lower-body output.",
+ position_relevance:POS_LIST,
+ coaching_cues:["Big arm swing","Land soft in a quarter squat on top","Step down, never jump down"],
+ common_mistakes:["Chasing box height with tucked knees","Jumping off the box","Sloppy landings"],
+ regression:"Lower box; squat jump to target.",progression:"Seated box jump; weighted vest (advanced only).",
+ sets_reps_guideline:"4 x 3 (fresh, early in session)",rest_guideline:"90 s – 2 min",
+ video_url:null,thumbnail_url:null,safety_notes:"Box height is a landing-position test, not an ego test. Step down every rep."},
+{exercise_id:"ex-broadjump",name:"Broad Jump",category:"Power",movement_pattern:"Horizontal jump",equipment:"Open floor or turf",
+ primary_muscles:"Glutes, hamstrings, quads",
+ football_benefit:"Horizontal power that transfers directly to first-step acceleration; also a combine test.",
+ position_relevance:POS_LIST,
+ coaching_cues:["Throw the arms back then through","Full extension in the air","Stick the landing — hips back, chest up"],
+ common_mistakes:["Falling forward on landing","No arm action","High-volume broad jumping (joint stress)"],
+ regression:"Non-countermovement standing jump.",progression:"Repeat broad jumps (advanced, low dose).",
+ sets_reps_guideline:"3–4 x 3",rest_guideline:"90 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Land on a forgiving surface; keep doses low."},
+{exercise_id:"ex-mbslam",name:"Medicine Ball Slam",category:"Power",movement_pattern:"Total-body ballistic",equipment:"Slam ball",
+ primary_muscles:"Lats, core, hips",
+ football_benefit:"Aggressive full-body force finish; teaches violent intent safely.",
+ position_relevance:POS_LIST,
+ coaching_cues:["Ball overhead with full reach","Slam through the floor","Hips help, not just arms"],
+ common_mistakes:["All-arms slams","Rounding the back to pick up"],
+ regression:"Lighter ball.",progression:"Heavier ball or slam-to-sprawl.",
+ sets_reps_guideline:"3 x 5",rest_guideline:"60–90 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Use a non-bouncing slam ball."},
+{exercise_id:"ex-mbrot",name:"Medicine Ball Rotational Throw",category:"Power",movement_pattern:"Rotational ballistic",equipment:"Med ball, wall",
+ primary_muscles:"Obliques, hips, T-spine",
+ football_benefit:"Rotational power for throwing, stiff-arms, hand fighting, and tackling angles. Core work QBs actually need.",
+ position_relevance:["QB","LB","DL","EDGE","WR","Multi"],
+ coaching_cues:["Load the back hip","Drive rotation from the ground up","Throw through the wall"],
+ common_mistakes:["Arm-only throws","No hip turn","Standing too far/close to the wall"],
+ regression:"Half-kneeling rotational throw.",progression:"Step-behind shot-put style throw.",
+ sets_reps_guideline:"3 x 4 each side",rest_guideline:"60–90 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Solid wall only; check surroundings."},
+{exercise_id:"ex-plyopush",name:"Plyometric Push-Up",category:"Power",movement_pattern:"Ballistic press",equipment:"Bodyweight",
+ primary_muscles:"Chest, triceps, shoulders",
+ football_benefit:"Upper-body rate of force development — the speed component of a punch or strike.",
+ position_relevance:["OL","DL","EDGE","LB","TE"],
+ coaching_cues:["Rigid plank the whole rep","Explode hands off the floor","Absorb softly into the next rep"],
+ common_mistakes:["Sagging hips","Slow grinding reps","Excessive volume"],
+ regression:"Hands-elevated plyo push-up.",progression:"Clap push-up or MB chest pass.",
+ sets_reps_guideline:"3 x 3–5",rest_guideline:"90 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Wrists take load — build up gradually."},
+/* ---------------- CORE ---------------- */
+{exercise_id:"ex-plank",name:"Plank",category:"Core",movement_pattern:"Anti-extension",equipment:"Bodyweight",
+ primary_muscles:"Abs, obliques, glutes",
+ football_benefit:"Baseline trunk stiffness for force transfer between the lower and upper body.",
+ position_relevance:POS_LIST,
+ coaching_cues:["Squeeze glutes, tuck ribs","One straight line ear to ankle","Breathe behind the brace"],
+ common_mistakes:["Sagging hips","Hips piked high","Holding past the point of quality"],
+ regression:"Incline plank.",progression:"Weighted plank or body saw.",
+ sets_reps_guideline:"3 x 30–45 s of perfect position",rest_guideline:"45–60 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Quality beats duration."},
+{exercise_id:"ex-sideplank",name:"Side Plank",category:"Core",movement_pattern:"Anti-lateral flexion",equipment:"Bodyweight",
+ primary_muscles:"Obliques, QL, glute med",
+ football_benefit:"Lateral trunk and hip stability for cutting, contact balance, and single-leg stance.",
+ position_relevance:POS_LIST,
+ coaching_cues:["Elbow under shoulder","Stack feet or stagger","Push the hip tall"],
+ common_mistakes:["Hips dropping","Rolling forward or back"],
+ regression:"Knees-bent side plank.",progression:"Top-leg raised or loaded side plank.",
+ sets_reps_guideline:"3 x 20–40 s each side",rest_guideline:"45 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Even time both sides."},
+{exercise_id:"ex-deadbug",name:"Dead Bug",category:"Core",movement_pattern:"Anti-extension (dynamic)",equipment:"Bodyweight",
+ primary_muscles:"Deep core, hip flexors",
+ football_benefit:"Trunk control while the limbs move — the actual job of the core in sprinting.",
+ position_relevance:POS_LIST,
+ coaching_cues:["Low back gently pressed down","Opposite arm and leg reach","Slow exhale each rep"],
+ common_mistakes:["Back arching off the floor","Rushing reps"],
+ regression:"Legs-only dead bug.",progression:"Band-resisted or weighted dead bug.",
+ sets_reps_guideline:"3 x 6–8 each side",rest_guideline:"45 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Great warm-up piece too."},
+{exercise_id:"ex-pallof",name:"Pallof Press",category:"Core",movement_pattern:"Anti-rotation",equipment:"Cable or band",
+ primary_muscles:"Obliques, deep core",
+ football_benefit:"Resisting rotation — staying square through contact, arm tackles, and press coverage hand fighting.",
+ position_relevance:POS_LIST,
+ coaching_cues:["Press straight out, resist the pull","Ribs down, hips square","Pause at full extension"],
+ common_mistakes:["Twisting toward the anchor","Standing too close (no tension)"],
+ regression:"Tall-kneeling Pallof.",progression:"Split-stance or walking Pallof.",
+ sets_reps_guideline:"3 x 8–10 each side",rest_guideline:"45–60 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Smooth tempo, no jerking."},
+{exercise_id:"ex-kneeraise",name:"Hanging Knee Raise",category:"Core",movement_pattern:"Hip flexion / anti-extension",equipment:"Pull-up bar",
+ primary_muscles:"Abs, hip flexors, grip",
+ football_benefit:"Hip-flexor strength for knee drive in sprinting plus grip endurance.",
+ position_relevance:["WR","RB","CB","S","LB","Multi"],
+ coaching_cues:["Posterior tilt to start each rep","Knees to chest, no swing","Control the lowering"],
+ common_mistakes:["Swinging momentum","Only lifting to 90° with an arched back"],
+ regression:"Captain's chair knee raise.",progression:"Straight-leg raise or toes-to-bar.",
+ sets_reps_guideline:"3 x 8–12",rest_guideline:"60 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Full grip on the bar."},
+{exercise_id:"ex-abwheel",name:"Ab Wheel Rollout",category:"Core",movement_pattern:"Anti-extension (long lever)",equipment:"Ab wheel",
+ primary_muscles:"Abs, lats, hip flexors",
+ football_benefit:"High-tension trunk strength for absorbing extension forces in blocking and tackling.",
+ position_relevance:["OL","DL","LB","TE","EDGE","Multi"],
+ coaching_cues:["Start from knees, ribs tucked","Roll only as far as the back stays flat","Pull back with lats and abs"],
+ common_mistakes:["Hips sagging into extension","Range beyond control"],
+ regression:"Stability-ball rollout.",progression:"Standing rollout (elite only).",
+ sets_reps_guideline:"3 x 5–8",rest_guideline:"60–90 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Stop shy of any low-back strain."},
+{exercise_id:"ex-cablechop",name:"Cable Chop",category:"Core",movement_pattern:"Rotation",equipment:"Cable stack",
+ primary_muscles:"Obliques, hips, T-spine",
+ football_benefit:"Producing rotation with control — throwing, tackling angles, and hand combat.",
+ position_relevance:["QB","LB","EDGE","DL","Multi"],
+ coaching_cues:["Rotate from hips and T-spine","Arms stay long","Control the return"],
+ common_mistakes:["All-arms chopping","Lumbar rotation instead of hips"],
+ regression:"Half-kneeling chop.",progression:"Faster concentric with controlled return.",
+ sets_reps_guideline:"3 x 8–10 each side",rest_guideline:"60 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Smooth arcs, no whipping."},
+{exercise_id:"ex-birddog",name:"Bird Dog",category:"Core",movement_pattern:"Anti-rotation / spinal control",equipment:"Bodyweight",
+ primary_muscles:"Erectors, glutes, deep core",
+ football_benefit:"Low-cost spinal control drill for warm-ups and recovery days.",
+ position_relevance:POS_LIST,
+ coaching_cues:["Reach long, not high","Hips stay level — balance a water bottle","Pause 2 s each rep"],
+ common_mistakes:["Rocking hips","Arching to lift the leg high"],
+ regression:"Arm-only or leg-only.",progression:"Bird dog row with light dumbbell.",
+ sets_reps_guideline:"2–3 x 6–8 each side",rest_guideline:"30–45 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Warm-up staple."},
+/* ---------------- SPEED & FIELD ---------------- */
+{exercise_id:"ex-walldrill",name:"Wall Drill (Acceleration Posture)",category:"Sprint",movement_pattern:"Acceleration mechanics",equipment:"Wall or fence",
+ primary_muscles:"Hip flexors, glutes, calves",
+ football_benefit:"Grooves the 45° body lean and piston knee drive of the first 10 yards.",
+ position_relevance:POS_LIST,
+ coaching_cues:["Straight line head to heel","Punch the knee up, big toe up","Drive the ground back, don't cycle"],
+ common_mistakes:["Hips sagging away from the wall","Slow lazy exchanges","Looking down"],
+ regression:"Single-exchange holds.",progression:"Rapid-fire 3-count exchanges.",
+ sets_reps_guideline:"3–4 x 5 exchanges per leg",rest_guideline:"45–60 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Warm up before any sprint mechanics work."},
+{exercise_id:"ex-askip",name:"A-Skip",category:"Sprint",movement_pattern:"Sprint mechanics",equipment:"None",
+ primary_muscles:"Hip flexors, calves, coordination",
+ football_benefit:"Rhythm, knee drive, and stiff ground contact — the alphabet of sprinting.",
+ position_relevance:POS_LIST,
+ coaching_cues:["Knee up, toe up, heel to butt","Snap the foot down under the hip","Stay tall and rhythmic"],
+ common_mistakes:["Reaching in front of the body","Flat, mushy contacts","Leaning back"],
+ regression:"Marching A-drill.",progression:"A-run (continuous).",
+ sets_reps_guideline:"2–3 x 15–20 yd",rest_guideline:"walk back",
+ video_url:null,thumbnail_url:null,safety_notes:"Part of every warm-up."},
+{exercise_id:"ex-bskip",name:"B-Skip",category:"Sprint",movement_pattern:"Sprint mechanics",equipment:"None",
+ primary_muscles:"Hamstrings, hip flexors",
+ football_benefit:"Adds the pawing leg extension of upright sprinting; teaches active foot strike.",
+ position_relevance:["WR","CB","S","RB","QB","Multi"],
+ coaching_cues:["A-skip knee lift, then extend and paw back","Foot lands under the hips","Keep the rhythm"],
+ common_mistakes:["Kicking out and landing in front","Losing posture"],
+ regression:"Master the A-skip first.",progression:"Faster tempo B-skips.",
+ sets_reps_guideline:"2–3 x 15–20 yd",rest_guideline:"walk back",
+ video_url:null,thumbnail_url:null,safety_notes:"Hamstring warm-up first."},
+{exercise_id:"ex-fallstart",name:"Falling Start",category:"Sprint",movement_pattern:"Acceleration",equipment:"Open field",
+ primary_muscles:"Total body",
+ football_benefit:"Teaches the forward lean and violent first steps without thinking — gravity does the coaching.",
+ position_relevance:POS_LIST,
+ coaching_cues:["Tall, then fall as one unit","Catch yourself with a big first step","Stay low for 8–10 yd"],
+ common_mistakes:["Breaking at the hips instead of falling whole","Popping upright immediately"],
+ regression:"Lean-fall-walk.",progression:"Falling start into 20 yd sprint.",
+ sets_reps_guideline:"4–6 x 10–15 yd",rest_guideline:"60–90 s (full recovery)",
+ video_url:null,thumbnail_url:null,safety_notes:"Speed work is done fresh — never as conditioning."},
+{exercise_id:"ex-10start",name:"10-Yard Start",category:"Sprint",movement_pattern:"Acceleration",equipment:"Field, cones",
+ primary_muscles:"Glutes, quads, calves",
+ football_benefit:"The most football-specific sprint distance — nearly every play is won or lost in the first 10 yards.",
+ position_relevance:POS_LIST,
+ coaching_cues:["Push, don't pull — project the body forward","Big pistoning steps","Low heel recovery early"],
+ common_mistakes:["Standing straight up by step two","Overstriding","Treating starts as conditioning"],
+ regression:"Falling starts.",progression:"From position-specific stance (3-point, pedal, split).",
+ sets_reps_guideline:"6–8 x 10 yd, full recovery",rest_guideline:"60–90 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Full rest between reps preserves quality and reduces strain risk."},
+{exercise_id:"ex-20accel",name:"20-Yard Acceleration",category:"Sprint",movement_pattern:"Acceleration",equipment:"Field, cones",
+ primary_muscles:"Total body",
+ football_benefit:"Extends the drive phase; builds the transition from push mechanics to upright speed.",
+ position_relevance:POS_LIST,
+ coaching_cues:["Gradual rise — no popping up","Arms drive cheek-to-cheek","Relax the face and hands"],
+ common_mistakes:["Tension in shoulders and jaw","Upright by 5 yards"],
+ regression:"10-yard starts.",progression:"Flying 10s.",
+ sets_reps_guideline:"4–6 x 20 yd",rest_guideline:"90 s – 2 min",
+ video_url:null,thumbnail_url:null,safety_notes:"Quality over quantity — stop when times slow."},
+{exercise_id:"ex-flying10",name:"Flying 10",category:"Sprint",movement_pattern:"Max velocity",equipment:"20–30 yd build zone + 10 yd timing zone",
+ primary_muscles:"Hamstrings, glutes, calves",
+ football_benefit:"Trains and measures true top-end speed — the trait that separates good from elite at skill positions.",
+ position_relevance:["WR","CB","RB","S","K","Multi"],
+ coaching_cues:["Build smoothly through the run-in","Tall hips, bouncy contacts","Float fast — don't strain"],
+ common_mistakes:["Pressing/straining in the fly zone","Insufficient rest between reps","Doing max velocity work cold"],
+ regression:"Sprint build-ups.",progression:"Longer build-in (30 yd) for faster entry speed.",
+ sets_reps_guideline:"3–5 reps, 3–5 min rest",rest_guideline:"3–5 min (yes, really)",
+ video_url:null,thumbnail_url:null,safety_notes:"Highest hamstring demand of any drill. Thorough warm-up and full recovery are mandatory."},
+{exercise_id:"ex-buildup",name:"Sprint Build-Up",category:"Sprint",movement_pattern:"Progressive velocity",equipment:"40–60 yd of field",
+ primary_muscles:"Total body",
+ football_benefit:"Bridges warm-up and sprinting; grooves relaxed upright mechanics at rising speeds.",
+ position_relevance:POS_LIST,
+ coaching_cues:["Accelerate over the first 20, hold near-max 10–20, decelerate gradually","Smooth gears, no jumps"],
+ common_mistakes:["Slamming the brakes at the end","Maxing out every rep"],
+ regression:"Shorter builds at lower top speed.",progression:"Higher percentage holds.",
+ sets_reps_guideline:"3–4 x 40–60 yd at 80–95%",rest_guideline:"90 s – 2 min",
+ video_url:null,thumbnail_url:null,safety_notes:"Decelerate over at least 15 yards."},
+{exercise_id:"ex-proagility",name:"Pro Agility Shuttle (5-10-5)",category:"Agility",movement_pattern:"Change of direction",equipment:"3 cones / lines, 5 yd apart",
+ primary_muscles:"Glutes, adductors, calves",
+ football_benefit:"Combine-standard short-area change of direction; measures stop-start ability in both directions.",
+ position_relevance:POS_LIST,
+ coaching_cues:["Sink hips into each cut","Touch the line with the near hand","Shins angled into the new direction"],
+ common_mistakes:["Rounding the turns","Standing tall through the cut","Slipping from bad foot placement"],
+ regression:"Half-speed pattern rehearsal.",progression:"Timed reps; react-to-signal starts.",
+ sets_reps_guideline:"4–6 timed reps",rest_guideline:"90 s – 2 min",
+ video_url:null,thumbnail_url:null,safety_notes:"Dry surface and good footwear; cuts are high-load events."},
+{exercise_id:"ex-3cone",name:"3-Cone Drill (L-Drill)",category:"Agility",movement_pattern:"Change of direction + bend",equipment:"3 cones in an L, 5 yd apart",
+ primary_muscles:"Total body",
+ football_benefit:"Combine-standard test of cornering, bend, and re-acceleration — highly valued for edge players and DBs.",
+ position_relevance:["EDGE","LB","CB","S","RB","WR","TE","Multi"],
+ coaching_cues:["Low pad level around the corner","Tight lines — shave every step","Eyes up through the turn"],
+ common_mistakes:["Drifting wide around cones","Reaching with the wrong hand at lines","Upright turns"],
+ regression:"Walk-through pattern learning.",progression:"Timed reps.",
+ sets_reps_guideline:"4–6 timed reps",rest_guideline:"90 s – 2 min",
+ video_url:null,thumbnail_url:null,safety_notes:"Learn the pattern before adding speed."},
+{exercise_id:"ex-wdrill",name:"W-Drill (Backpedal to Drive)",category:"Agility",movement_pattern:"Backpedal + break",equipment:"5 cones in a W",
+ primary_muscles:"Quads, glutes, hip flexors",
+ football_benefit:"DB-specific transition from pedal to downhill drive — the money movement in coverage.",
+ position_relevance:["CB","S","LB"],
+ coaching_cues:["Nose over toes in the pedal","Plant off the front third of the foot","Drive out low, gain ground on step one"],
+ common_mistakes:["Sitting back on the heels","False steps on the break","Rising out of the pedal"],
+ regression:"Pedal-only reps, then single break.",progression:"React to a coach's point instead of cones.",
+ sets_reps_guideline:"4–6 patterns",rest_guideline:"60–90 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Groin/hip warm-up before break work."},
+{exercise_id:"ex-backpedal",name:"Backpedal Break",category:"Agility",movement_pattern:"Backpedal + transition",equipment:"Cones",
+ primary_muscles:"Quads, hip flexors, glutes",
+ football_benefit:"The core DB skill: keep cushion, then close instantly on the break.",
+ position_relevance:["CB","S","LB"],
+ coaching_cues:["Pedal with rhythm, arms compact","Plant and rip the elbow to redirect","No hop before the break"],
+ common_mistakes:["Overstriding the pedal","Standing up before the break","Rounded closing path"],
+ regression:"Half-speed pedal to break.",progression:"Break on visual cue; break to 45°, 90°, and post angles.",
+ sets_reps_guideline:"6–8 breaks per direction",rest_guideline:"45–75 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Progress the intensity of plants over weeks."},
+{exercise_id:"ex-hipflip",name:"DB Hip Flip (Speed Turn)",category:"Agility",movement_pattern:"Hip rotation",equipment:"Cones or line",
+ primary_muscles:"Hips, adductors, core",
+ football_benefit:"Opening the hips to run with vertical routes without losing speed — a make-or-break corner trait.",
+ position_relevance:["CB","S"],
+ coaching_cues:["Snap the elbow and flip the hips as one","Lose no ground on the turn","Eyes stay on the landmark (receiver)"],
+ common_mistakes:["Two-step turns","Popping tall in the flip","Crossing feet"],
+ regression:"Stationary hip flips on a line.",progression:"Pedal → flip → sprint on cue.",
+ sets_reps_guideline:"3–4 x 4 each direction",rest_guideline:"60 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Hip mobility work supports this pattern."},
+{exercise_id:"ex-lbshuffle",name:"Linebacker Shuffle",category:"Agility",movement_pattern:"Lateral movement",equipment:"Cones or bags",
+ primary_muscles:"Adductors, glutes, quads",
+ football_benefit:"Staying square while moving laterally — the base of run-fit pursuit and zone drops.",
+ position_relevance:["LB","S","DL"],
+ coaching_cues:["Shoulders square to the line","No crossing feet, no hopping","Stay in your hips (knees bent)"],
+ common_mistakes:["Clicking heels together","Rising up between bags","Turning shoulders"],
+ regression:"Slow-cadence shuffle.",progression:"Shuffle-to-sprint alley pursuit on cue.",
+ sets_reps_guideline:"4 x 10–15 yd each direction",rest_guideline:"45–60 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Adductor warm-up first."},
+{exercise_id:"ex-getoff",name:"Pass Rush Get-Off",category:"Agility",movement_pattern:"Reaction + acceleration",equipment:"Ball or cadence cue, line",
+ primary_muscles:"Total body",
+ football_benefit:"First-step explosion off the snap — the single biggest separator for defensive linemen.",
+ position_relevance:["DL","EDGE"],
+ coaching_cues:["Load the front foot in the stance","Move on ball movement, not sound","First step gains ground upfield"],
+ common_mistakes:["False-stepping","Standing up out of the stance","Guessing the count"],
+ regression:"Rehearsed-count get-offs.",progression:"React to a partner moving a ball; add a hoop/bend finish.",
+ sets_reps_guideline:"6–10 x 5 yd bursts",rest_guideline:"45–75 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Cleats + turf; full recovery keeps it explosive."},
+{exercise_id:"ex-kickslide",name:"Offensive Line Kick Slide",category:"Agility",movement_pattern:"Pass set footwork",equipment:"Line of scrimmage marking",
+ primary_muscles:"Adductors, glutes, quads",
+ football_benefit:"The OL pass-protection base: gaining depth and width while staying square and balanced.",
+ position_relevance:["OL","C"],
+ coaching_cues:["Kick with the outside foot, slide the inside","Never click the heels","Weight on insteps, chest over knees"],
+ common_mistakes:["Hopping instead of sliding","Overextending the kick and getting long","Leaning/lunging at rushers"],
+ regression:"Slow-cadence sets for depth only.",progression:"Mirror sets vs. a partner; vertical-set variations.",
+ sets_reps_guideline:"4–6 x 5 sets each side",rest_guideline:"45–60 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Groin warm-up; quality footwork beats speed early."},
+{exercise_id:"ex-handfight",name:"DL Hand-Fighting Drill",category:"Agility",movement_pattern:"Hand combat",equipment:"Partner or bag",
+ primary_muscles:"Hands, shoulders, core",
+ football_benefit:"Strike timing, wrist control, and shed mechanics for defeating blocks.",
+ position_relevance:["DL","EDGE","LB","OL"],
+ coaching_cues:["Thumbs up on the strike","Win the wrist, then rip or swipe","Tight elbows — long arms lose"],
+ common_mistakes:["Wide looping hands","Striking without footwork","Standing tall"],
+ regression:"Bag strikes with rehearsed patterns.",progression:"Live 1-on-1 hand fighting with a partner.",
+ sets_reps_guideline:"3–4 x 20–30 s rounds",rest_guideline:"60 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Controlled intensity with partners; no head contact."},
+{exercise_id:"ex-routestem",name:"Route Stem Drill",category:"Agility",movement_pattern:"Route running",equipment:"Cones, ball optional",
+ primary_muscles:"Total body",
+ football_benefit:"Selling vertical speed then snapping off breaks — separation is created at the stem.",
+ position_relevance:["WR","TE","RB"],
+ coaching_cues:["Same stem speed every route","Sink and stack the break foot under you","Snap the head and hands around on the break"],
+ common_mistakes:["Rounding breaks","Telegraphing with tempo changes","Drifting upfield through cuts"],
+ regression:"Walk-through break footwork.",progression:"Full-speed routes vs. air, then vs. a defender.",
+ sets_reps_guideline:"6–10 routes, full recovery",rest_guideline:"45–75 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Route work counts as speed work — keep it fresh."},
+{exercise_id:"ex-pursuit",name:"Pursuit Angle Drill",category:"Agility",movement_pattern:"Angle tracking",equipment:"Cones, partner or coach point",
+ primary_muscles:"Total body",
+ football_benefit:"Taking the correct intercept angle to a moving ball carrier — effort plus geometry.",
+ position_relevance:["LB","S","CB","DL","EDGE"],
+ coaching_cues:["Aim for where they'll be, not where they are","Stay inside-out on the ball","Sprint through the intercept point"],
+ common_mistakes:["Flat angles that get outflanked","Slowing before the intersect","Overrunning the ball"],
+ regression:"Pre-set cone angles.",progression:"Live tracking of a moving partner.",
+ sets_reps_guideline:"4–6 pursuits",rest_guideline:"60–90 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Tag or landmark finishes — no live tackling in speed sessions."},
+{exercise_id:"ex-ldrill-lat",name:"Lateral Bound (Skater)",category:"Agility",movement_pattern:"Lateral power",equipment:"Open floor",
+ primary_muscles:"Glutes, adductors, ankles",
+ football_benefit:"Side-to-side push-off power and single-leg landing control for cutting.",
+ position_relevance:["RB","WR","CB","S","LB","Multi"],
+ coaching_cues:["Push sideways off the whole foot","Stick each landing for a beat","Stay low and level"],
+ common_mistakes:["Wobbly landings","Bounding for distance before control exists"],
+ regression:"Small line hops.",progression:"Continuous bounds; bound-to-sprint.",
+ sets_reps_guideline:"3 x 4 each side",rest_guideline:"60–90 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Land quiet, knee tracking the toes."},
+{exercise_id:"ex-tempo",name:"Tempo Runs",category:"Conditioning",movement_pattern:"Sub-max running",equipment:"Field",
+ primary_muscles:"Aerobic system, legs",
+ football_benefit:"Builds the aerobic base that powers recovery between plays and practices — without the wear of constant sprinting.",
+ position_relevance:POS_LIST,
+ coaching_cues:["~70–75% effort — smooth, tall, relaxed","Consistent times every rep","Walk the rest intervals"],
+ common_mistakes:["Racing the reps (defeats the purpose)","Sloppy jogging mechanics"],
+ regression:"Shorter reps (60 yd).",progression:"100-yd reps; larger volumes.",
+ sets_reps_guideline:"8–12 x 80–100 yd, walk 30–40 s between",rest_guideline:"30–40 s walk",
+ video_url:null,thumbnail_url:null,safety_notes:"This is conditioning, not speed — do it on separate days from max-velocity work when possible."},
+{exercise_id:"ex-110s",name:"Sprint Repeatability (Half-Gassers / 110s)",category:"Conditioning",movement_pattern:"Repeated sprint",equipment:"Field",
+ primary_muscles:"Total body, anaerobic systems",
+ football_benefit:"Repeating high-intensity efforts on short rest — the actual conditioning demand of a football game.",
+ position_relevance:POS_LIST,
+ coaching_cues:["Hit the target time, then recover with purpose","Position-specific targets (linemen ≠ corners)","Maintain mechanics when tired"],
+ common_mistakes:["Turning it into punishment volume","No target times (just 'run more')","Doing it in extreme heat without modification"],
+ regression:"Fewer reps, longer rest.",progression:"Tighter rest ratios as preseason nears.",
+ sets_reps_guideline:"Example: 8–12 x 110 yd, target time by position, 45–60 s rest",rest_guideline:"45–60 s",
+ video_url:null,thumbnail_url:null,safety_notes:"Follow heat guidelines, hydrate, and never use conditioning as punishment. See the Safety page."},
+/* ---------------- MOBILITY / RECOVERY ---------------- */
+{exercise_id:"ex-hipflexor",name:"Half-Kneeling Hip Flexor Stretch",category:"Mobility",movement_pattern:"Hip extension mobility",equipment:"Pad",
+ primary_muscles:"Hip flexors, quads",
+ football_benefit:"Restores hip extension range lost to sitting and sprint volume — supports stride length and low-back comfort.",
+ position_relevance:POS_LIST,
+ coaching_cues:["Squeeze the back-leg glute","Tuck the pelvis, then shift forward slightly","Stay tall — no lumbar arch"],
+ common_mistakes:["Lunging far forward and arching","Holding without glute engagement"],
+ regression:"Shorter range hold.",progression:"Couch stretch.",
+ sets_reps_guideline:"2 x 30–45 s each side",rest_guideline:"n/a",
+ video_url:null,thumbnail_url:null,safety_notes:"Mild stretch only, never pain."},
+{exercise_id:"ex-9090",name:"90/90 Hip Switch",category:"Mobility",movement_pattern:"Hip internal/external rotation",equipment:"Floor",
+ primary_muscles:"Hip rotators, glutes",
+ football_benefit:"Internal/external hip rotation for cutting, hip flips, and squat depth.",
+ position_relevance:POS_LIST,
+ coaching_cues:["Both legs at 90°","Rotate knees side to side with a tall chest","Pause where it's stiff"],
+ common_mistakes:["Collapsing the torso","Rushing through the sticky range"],
+ regression:"Hands behind for support.",progression:"Hands-free switches; 90/90 get-ups.",
+ sets_reps_guideline:"2 x 6–8 switches",rest_guideline:"n/a",
+ video_url:null,thumbnail_url:null,safety_notes:"Smooth and controlled."},
+{exercise_id:"ex-couch",name:"Couch Stretch",category:"Mobility",movement_pattern:"Hip flexor/quad mobility",equipment:"Wall or bench",
+ primary_muscles:"Rectus femoris, hip flexors",
+ football_benefit:"Deeper quad/hip-flexor range for sprinters and anyone squatting heavy.",
+ position_relevance:POS_LIST,
+ coaching_cues:["Back foot up the wall, knee in the corner","Glute tight, ribs down","Work up to a taller torso over time"],
+ common_mistakes:["Arching the low back to fake range","Forcing depth day one"],
+ regression:"Half-kneeling hip flexor stretch.",progression:"Longer holds, taller torso.",
+ sets_reps_guideline:"1–2 x 45–60 s each side",rest_guideline:"n/a",
+ video_url:null,thumbnail_url:null,safety_notes:"Intense stretch — ease in."},
+{exercise_id:"ex-tspine",name:"T-Spine Rotation (Open Book)",category:"Mobility",movement_pattern:"Thoracic rotation",equipment:"Floor",
+ primary_muscles:"Thoracic spine, pecs",
+ football_benefit:"Upper-back rotation for throwing, looking the ball in, and separating hips from shoulders.",
+ position_relevance:["QB","WR","LB","S","Multi"],
+ coaching_cues:["Knees stacked and pinned","Follow the moving hand with your eyes","Exhale into the end range"],
+ common_mistakes:["Letting the knees fly open","Rotating from the low back"],
+ regression:"Smaller range with a pause.",progression:"Reach-throughs (thread the needle).",
+ sets_reps_guideline:"2 x 6–8 each side",rest_guideline:"n/a",
+ video_url:null,thumbnail_url:null,safety_notes:"Slow breathing tempo."},
+{exercise_id:"ex-anklerock",name:"Ankle Rocks",category:"Mobility",movement_pattern:"Ankle dorsiflexion",equipment:"Wall optional",
+ primary_muscles:"Ankles, calves",
+ football_benefit:"Dorsiflexion range for squat depth, acceleration angles, and cut mechanics.",
+ position_relevance:POS_LIST,
+ coaching_cues:["Knee tracks over the little toe","Heel stays down","Rock rhythmically to the end range"],
+ common_mistakes:["Heel lifting","Knee caving inward"],
+ regression:"Smaller range.",progression:"Weighted ankle rocks (plate on knee).",
+ sets_reps_guideline:"2 x 10 each side",rest_guideline:"n/a",
+ video_url:null,thumbnail_url:null,safety_notes:"Pre-lift and pre-sprint staple."},
+{exercise_id:"ex-hamfloss",name:"Hamstring Floss",category:"Mobility",movement_pattern:"Neural glide",equipment:"Floor or box",
+ primary_muscles:"Hamstrings, sciatic nerve pathway",
+ football_benefit:"Gentle hamstring mobility that calms post-sprint tightness without aggressive stretching.",
+ position_relevance:POS_LIST,
+ coaching_cues:["Extend the knee, flex the ankle, then release","Rhythmic, pain-free reps","Light tension only"],
+ common_mistakes:["Cranking into a deep stretch","Holding breath"],
+ regression:"Smaller range.",progression:"Elevated-leg flossing.",
+ sets_reps_guideline:"2 x 10 each side",rest_guideline:"n/a",
+ video_url:null,thumbnail_url:null,safety_notes:"Should feel relieving, never sharp."},
+{exercise_id:"ex-dislocates",name:"Shoulder Dislocates (Pass-Throughs)",category:"Mobility",movement_pattern:"Shoulder circumduction",equipment:"Dowel or band",
+ primary_muscles:"Shoulders, pecs, lats",
+ football_benefit:"Overhead shoulder range for pressing, catching high balls, and healthy throwing shoulders.",
+ position_relevance:["QB","WR","TE","OL","Multi"],
+ coaching_cues:["Wide grip, straight arms","Ribs down as the band passes over","Narrow the grip only as mobility improves"],
+ common_mistakes:["Bending elbows to cheat","Arching the low back overhead"],
+ regression:"Wider grip.",progression:"Gradually narrower grip.",
+ sets_reps_guideline:"2 x 8–10",rest_guideline:"n/a",
+ video_url:null,thumbnail_url:null,safety_notes:"Use a band before a rigid dowel."},
+{exercise_id:"ex-pecstretch",name:"Doorway Pec Stretch",category:"Mobility",movement_pattern:"Pec/anterior shoulder",equipment:"Doorway or rack",
+ primary_muscles:"Pecs, anterior delts",
+ football_benefit:"Counters heavy pressing and shoulder-pad posture; supports throwing and punch range.",
+ position_relevance:POS_LIST,
+ coaching_cues:["Forearm on the frame, elbow at shoulder height","Rotate the torso gently away","Breathe into the stretch"],
+ common_mistakes:["Shrugging into the stretch","Forcing range with the low back"],
+ regression:"Lower arm angle.",progression:"Multiple arm angles (low/mid/high).",
+ sets_reps_guideline:"2 x 30 s each side",rest_guideline:"n/a",
+ video_url:null,thumbnail_url:null,safety_notes:"Mild stretch only."},
+{exercise_id:"ex-latstretch",name:"Lat Stretch (Rack Hang)",category:"Mobility",movement_pattern:"Lat/overhead mobility",equipment:"Rack or bench",
+ primary_muscles:"Lats, T-spine",
+ football_benefit:"Overhead range and mid-back length for pressing, tackling reach, and catch radius.",
+ position_relevance:POS_LIST,
+ coaching_cues:["Hinge back with hands anchored","Sink the chest toward the floor","Side-bend slightly to bias each lat"],
+ common_mistakes:["Arching the lumbar instead of lengthening the lats"],
+ regression:"Child's pose reach.",progression:"Weighted assisted stretch (light).",
+ sets_reps_guideline:"2 x 30–40 s",rest_guideline:"n/a",
+ video_url:null,thumbnail_url:null,safety_notes:"Gentle, breathing-led."},
+{exercise_id:"ex-breathing",name:"Breathing Reset (90/90 Wall Breathing)",category:"Recovery",movement_pattern:"Diaphragmatic breathing",equipment:"Wall, floor",
+ primary_muscles:"Diaphragm, deep core",
+ football_benefit:"Down-regulates the nervous system after hard sessions; improves brace quality over time.",
+ position_relevance:POS_LIST,
+ coaching_cues:["Feet on wall, hips and knees at 90°","Long exhale — twice as long as the inhale","5 slow breaths minimum"],
+ common_mistakes:["Chest-only breathing","Rushing it"],
+ regression:"Any quiet supine breathing.",progression:"Exhale-hold variations.",
+ sets_reps_guideline:"2 x 5 breaths",rest_guideline:"n/a",
+ video_url:null,thumbnail_url:null,safety_notes:"End every hard session down-regulated."}
+];
+
+/* ============================================================
+   PROGRAMS
+   Each day = { name, blocks:[{label, items:[{ex|name, rx, rest, tempo, note}]}] }
+   "ex" references EXERCISES by id (gets the video button automatically).
+   ============================================================ */
+const PROGRAMS = [
+{program_id:"pg-offseason-strength",name:"8-Week Offseason Strength Program",positions:["Multi","OL","DL","LB","TE","RB"],
+ length:"8 weeks",days_per_week:4,goal:"Strength",level:"Intermediate",phase:"Offseason",equipment:"Full gym",
+ overview:"A four-day upper/lower split built around big-bar strength with power primers and two short field sessions layered in. This is the block where you build the engine for next season.",
+ who_for:"Players with at least one year of consistent lifting who want a bigger strength base in the offseason. Beginners should run the same template with simpler variations (goblet squats, DB pressing) and 2 fewer working sets.",
+ schedule_note:"Mon Lower Strength · Tue Upper Strength · Thu Lower Power/Speed · Fri Upper Volume. Optional Sat: tempo runs. Two full rest days.",
+ progression:"Weeks 1–3: add a small amount of load each week at the same sets/reps (RPE 7–8, 1–3 reps left in the tank). Week 4: deload — cut working sets by half. Weeks 5–7: rebuild heavier than weeks 1–3. Week 8: deload plus benchmark testing (trap bar 3RM, bench 5RM, vertical jump).",
+ benchmarks:"Retest in week 8: trap bar deadlift 3RM, bench press 5RM, vertical jump, 10-yd start (timed). Aim for measurable improvement, not maximal grinding.",
+ days:[
+  {name:"Day 1 — Lower Body Strength + Acceleration",blocks:[
+    {label:"Warm-Up",items:[{name:"Dynamic warm-up (5–8 min)",rx:""},{ex:"ex-anklerock",rx:"2 x 10/side"},{ex:"ex-hipflexor",rx:"2 x 30 s/side"},{ex:"ex-askip",rx:"2 x 15 yd"}]},
+    {label:"Power",items:[{ex:"ex-boxjump",rx:"4 x 3",rest:"90 s",note:"Fresh and fast — step down every rep."},{ex:"ex-mbslam",rx:"3 x 5",rest:"60 s"}]},
+    {label:"Main Strength",items:[{ex:"ex-trapbar-dl",rx:"5 x 3",rest:"3 min",note:"Top sets at RPE 8. Bar speed stays crisp."},{ex:"ex-bss",rx:"3 x 6/leg",rest:"90 s"}]},
+    {label:"Accessory",items:[{ex:"ex-nordic",rx:"3 x 5",rest:"90 s"},{ex:"ex-sledpush",rx:"5 x 15 yd",rest:"75 s"},{ex:"ex-farmer",rx:"4 x 30 yd",rest:"90 s"}]},
+    {label:"Field Work",items:[{ex:"ex-10start",rx:"6 x 10 yd",rest:"60–90 s",note:"Full recovery. This is speed, not conditioning."},{ex:"ex-20accel",rx:"4 x 20 yd",rest:"90 s"}]},
+    {label:"Recovery",items:[{ex:"ex-hipflexor",rx:"1 x 45 s/side"},{ex:"ex-hamfloss",rx:"2 x 10/side"},{ex:"ex-breathing",rx:"2 x 5 breaths"}]}
+  ]},
+  {name:"Day 2 — Upper Body Strength",blocks:[
+    {label:"Warm-Up",items:[{name:"Band pull-aparts + arm circles",rx:"2 x 15"},{ex:"ex-dislocates",rx:"2 x 8"},{ex:"ex-plyopush",rx:"2 x 3",note:"Primer — crisp and easy."}]},
+    {label:"Main Strength",items:[{ex:"ex-bench",rx:"5 x 3",rest:"3 min",note:"RPE 8 top sets."},{ex:"ex-pullup",rx:"4 x 6–8",rest:"2 min",note:"Add weight when 4 x 8 is clean."}]},
+    {label:"Accessory",items:[{ex:"ex-ohp",rx:"3 x 6",rest:"2 min"},{ex:"ex-bbrow",rx:"3 x 8",rest:"90 s"},{ex:"ex-facepull",rx:"3 x 15",rest:"45 s"}]},
+    {label:"Core",items:[{ex:"ex-pallof",rx:"3 x 8/side",rest:"45 s"},{ex:"ex-suitcase",rx:"3 x 30 yd/side",rest:"60 s"}]},
+    {label:"Recovery",items:[{ex:"ex-pecstretch",rx:"2 x 30 s/side"},{ex:"ex-latstretch",rx:"2 x 30 s"}]}
+  ]},
+  {name:"Day 3 — Lower Power + Speed",blocks:[
+    {label:"Warm-Up",items:[{name:"Dynamic warm-up",rx:"8 min"},{ex:"ex-walldrill",rx:"3 x 5/leg"},{ex:"ex-bskip",rx:"2 x 15 yd"}]},
+    {label:"Speed (before lifting)",items:[{ex:"ex-fallstart",rx:"3 x 10 yd",rest:"75 s"},{ex:"ex-buildup",rx:"3 x 40 yd @ 85%",rest:"2 min"}]},
+    {label:"Power",items:[{ex:"ex-powerclean",rx:"5 x 2",rest:"2–3 min",note:"Speed of the bar rules the load. Sub hang clean or trap bar jump if unlearned."},{ex:"ex-broadjump",rx:"3 x 3",rest:"90 s"}]},
+    {label:"Main Strength",items:[{ex:"ex-back-squat",rx:"4 x 5",rest:"3 min",tempo:"Controlled down, fast up"}]},
+    {label:"Accessory",items:[{ex:"ex-hipthrust",rx:"3 x 8",rest:"90 s"},{ex:"ex-calf",rx:"3 x 12",rest:"60 s"}]},
+    {label:"Recovery",items:[{ex:"ex-9090",rx:"2 x 6 switches"},{ex:"ex-breathing",rx:"2 x 5 breaths"}]}
+  ]},
+  {name:"Day 4 — Upper Volume + Carries",blocks:[
+    {label:"Warm-Up",items:[{name:"Band circuit (pull-apart, press, row)",rx:"2 rounds"},{ex:"ex-deadbug",rx:"2 x 6/side"}]},
+    {label:"Main",items:[{ex:"ex-incline",rx:"4 x 6",rest:"2 min"},{ex:"ex-dbrow",rx:"4 x 10/side",rest:"90 s"}]},
+    {label:"Accessory",items:[{ex:"ex-dbbench",rx:"3 x 10",rest:"90 s"},{ex:"ex-chinup",rx:"3 x 8",rest:"90 s"},{ex:"ex-landmine",rx:"3 x 8/side",rest:"75 s"}]},
+    {label:"Core + Carries",items:[{ex:"ex-abwheel",rx:"3 x 6",rest:"75 s"},{ex:"ex-farmer",rx:"3 x 40 yd",rest:"90 s"}]},
+    {label:"Optional Conditioning (Sat)",items:[{ex:"ex-tempo",rx:"8–10 x 80 yd @ 70–75%",rest:"walk 35 s",note:"Separate day preferred. Skip if beat up."}]}
+  ]}
+ ]},
+
+{program_id:"pg-speed-power",name:"6-Week Speed & Power Program",positions:["WR","RB","CB","S","Multi"],
+ length:"6 weeks",days_per_week:4,goal:"Speed",level:"Intermediate",phase:"Offseason",equipment:"Full gym",
+ overview:"Two dedicated speed days (acceleration + max velocity) paired with two explosive lifting days. Volume is low, intensity is high, and everything is done fresh.",
+ who_for:"Skill players chasing a faster 40 and better burst who already have a base of strength training. Not a beginner lifting program — pair with the Offseason Strength template first if you're new.",
+ schedule_note:"Mon Acceleration + Lower Power · Tue Upper Power · Thu Max Velocity · Fri Total-Body Strength. 48 h between sprint days.",
+ progression:"Weeks 1–2: establish mechanics, sprint volumes stay small (under 150 total sprint yards/day). Weeks 3–4: add 1–2 reps per sprint session, add small load to lifts. Week 5: highest week. Week 6: taper volume ~40% and time a 40 or flying 10 at the end of the week.",
+ benchmarks:"Timed 10-yd start, flying 10, vertical jump — test in week 1 and week 6 under the same conditions.",
+ days:[
+  {name:"Day 1 — Acceleration + Lower Power",blocks:[
+    {label:"Warm-Up",items:[{name:"Dynamic warm-up",rx:"10 min"},{ex:"ex-walldrill",rx:"3 x 5/leg"},{ex:"ex-askip",rx:"2 x 15 yd"},{ex:"ex-buildup",rx:"2 x 40 yd @ 80%"}]},
+    {label:"Speed",items:[{ex:"ex-fallstart",rx:"3 x 10 yd",rest:"90 s"},{ex:"ex-10start",rx:"4 x 10 yd",rest:"90 s"},{ex:"ex-20accel",rx:"3 x 20 yd",rest:"2 min"}]},
+    {label:"Power",items:[{ex:"ex-trapjump",rx:"4 x 3",rest:"2 min"},{ex:"ex-ldrill-lat",rx:"3 x 4/side",rest:"90 s"}]},
+    {label:"Strength (short)",items:[{ex:"ex-trapbar-dl",rx:"4 x 3 fast @ ~70%",rest:"2 min",note:"Move it violently. No grinders."},{ex:"ex-nordic",rx:"2 x 4",rest:"90 s"}]},
+    {label:"Recovery",items:[{ex:"ex-hamfloss",rx:"2 x 10/side"},{ex:"ex-breathing",rx:"2 x 5 breaths"}]}
+  ]},
+  {name:"Day 2 — Upper Power",blocks:[
+    {label:"Warm-Up",items:[{ex:"ex-dislocates",rx:"2 x 8"},{name:"Band pull-aparts",rx:"2 x 15"}]},
+    {label:"Power",items:[{ex:"ex-plyopush",rx:"4 x 3",rest:"90 s"},{ex:"ex-mbrot",rx:"3 x 4/side",rest:"90 s"}]},
+    {label:"Strength",items:[{ex:"ex-dbbench",rx:"4 x 6",rest:"2 min"},{ex:"ex-pullup",rx:"4 x 6",rest:"2 min"}]},
+    {label:"Accessory",items:[{ex:"ex-landmine",rx:"3 x 8/side",rest:"75 s"},{ex:"ex-facepull",rx:"3 x 15",rest:"45 s"},{ex:"ex-kneeraise",rx:"3 x 10",rest:"60 s"}]}
+  ]},
+  {name:"Day 3 — Max Velocity",blocks:[
+    {label:"Warm-Up (extended)",items:[{name:"Dynamic warm-up",rx:"12 min",note:"Longest warm-up of the week — this day has the highest hamstring demand."},{ex:"ex-askip",rx:"2 x 20 yd"},{ex:"ex-bskip",rx:"2 x 20 yd"},{ex:"ex-buildup",rx:"3 x 50 yd @ 80/85/90%"}]},
+    {label:"Speed",items:[{ex:"ex-flying10",rx:"3–4 reps",rest:"4 min",note:"Full recovery between reps. Relaxed face, tall hips."}]},
+    {label:"Low-Dose Support",items:[{ex:"ex-rdl",rx:"3 x 6 light-moderate",rest:"90 s"},{ex:"ex-sideplank",rx:"2 x 30 s/side"}]},
+    {label:"Recovery",items:[{ex:"ex-couch",rx:"1 x 45 s/side"},{ex:"ex-breathing",rx:"2 x 5 breaths"}]}
+  ]},
+  {name:"Day 4 — Total-Body Strength",blocks:[
+    {label:"Warm-Up",items:[{name:"Dynamic warm-up",rx:"8 min"},{ex:"ex-boxjump",rx:"3 x 3",note:"Primer."}]},
+    {label:"Main",items:[{ex:"ex-back-squat",rx:"4 x 4",rest:"3 min"},{ex:"ex-bench",rx:"4 x 4",rest:"3 min"}]},
+    {label:"Accessory",items:[{ex:"ex-bss",rx:"3 x 6/leg",rest:"90 s"},{ex:"ex-dbrow",rx:"3 x 10/side",rest:"90 s"},{ex:"ex-hipthrust",rx:"3 x 8",rest:"90 s"}]},
+    {label:"Core",items:[{ex:"ex-pallof",rx:"3 x 8/side"},{ex:"ex-suitcase",rx:"2 x 30 yd/side"}]}
+  ]}
+ ]},
+
+{program_id:"pg-preseason-cond",name:"4-Week Preseason Conditioning Program",positions:["Multi"],
+ length:"4 weeks",days_per_week:3,goal:"Conditioning",level:"Intermediate",phase:"Preseason",equipment:"Field only",
+ overview:"Three field sessions per week that build game-ready conditioning: one repeat-sprint day, one tempo/aerobic day, and one change-of-direction circuit day. Designed to arrive at camp fit — not fried.",
+ who_for:"Any position in the 4–6 weeks before camp. Linemen use longer target times and shorter distances where noted. Pair with 2 short maintenance lifts per week.",
+ schedule_note:"Mon Repeat Sprints · Wed Tempo + Mobility · Fri COD Circuits. Never stack this with a max-velocity day.",
+ progression:"Week 1: baseline volumes at conservative target times. Weeks 2–3: add 2 reps per session OR tighten rest by ~10%, never both in the same week. Week 4: hold volume, sharpen target times. All sessions follow heat-safety modifications (see Safety page).",
+ benchmarks:"Pick one conditioning test (see Testing page) and run it in week 1 and week 4.",
+ days:[
+  {name:"Day 1 — Repeat Sprint Ability",blocks:[
+    {label:"Warm-Up",items:[{name:"Dynamic warm-up",rx:"10 min"},{ex:"ex-askip",rx:"2 x 15 yd"},{ex:"ex-buildup",rx:"2 x 40 yd @ 80%"}]},
+    {label:"Conditioning",items:[{ex:"ex-110s",rx:"Week 1: 8 x 110 yd · Week 4: 12 x 110 yd",rest:"45–60 s",note:"Target times: skill ≤16 s, big skill ≤18 s, line ≤20 s. Adjust to your level; the point is repeatable quality."}]},
+    {label:"Cooldown",items:[{ex:"ex-hamfloss",rx:"2 x 10/side"},{ex:"ex-breathing",rx:"2 x 5 breaths"}]}
+  ]},
+  {name:"Day 2 — Tempo + Mobility",blocks:[
+    {label:"Warm-Up",items:[{name:"Dynamic warm-up",rx:"8 min"}]},
+    {label:"Tempo",items:[{ex:"ex-tempo",rx:"10 x 80 yd @ 70–75%",rest:"walk 35 s",note:"Smooth and tall. Same time every rep."}]},
+    {label:"Mobility Circuit",items:[{ex:"ex-9090",rx:"2 x 6 switches"},{ex:"ex-hipflexor",rx:"2 x 30 s/side"},{ex:"ex-anklerock",rx:"2 x 10/side"},{ex:"ex-tspine",rx:"2 x 6/side"}]}
+  ]},
+  {name:"Day 3 — Change-of-Direction Circuits",blocks:[
+    {label:"Warm-Up",items:[{name:"Dynamic warm-up",rx:"10 min"},{ex:"ex-ldrill-lat",rx:"2 x 3/side",note:"Primer."}]},
+    {label:"COD Work",items:[{ex:"ex-proagility",rx:"4 reps (timed)",rest:"90 s"},{ex:"ex-wdrill",rx:"3 patterns",rest:"75 s"},{ex:"ex-lbshuffle",rx:"3 x 10 yd/side",rest:"60 s"}]},
+    {label:"Finisher",items:[{ex:"ex-sledpush",rx:"4 x 15 yd (moderate)",rest:"75 s",note:"No sled? Sub 4 x 20 yd hill or resisted partner pushes."}]},
+    {label:"Cooldown",items:[{ex:"ex-couch",rx:"1 x 45 s/side"},{ex:"ex-breathing",rx:"2 x 5 breaths"}]}
+  ]}
+ ]},
+
+{program_id:"pg-inseason",name:"In-Season Maintenance Program",positions:["Multi"],
+ length:"Season-long",days_per_week:2,goal:"Strength",level:"Beginner",phase:"In-season",equipment:"Full gym",
+ overview:"Two short, sharp full-body lifts per week that keep strength and power topped up without stealing from practice and game recovery. Every session is 40–45 minutes.",
+ who_for:"Every position, every level, during the competitive season. This is the program most high school athletes skip — and it's why they're weaker in November than August.",
+ schedule_note:"Lift 1: 24–48 h after the game. Lift 2: 72+ h before the next game (e.g., Mon + Wed for a Friday game).",
+ progression:"Hold loads at RPE 7 (2–3 reps in reserve at all times). If you feel strong, add a little weight; if the week was brutal, cut a set from everything. Never chase PRs in-season. Reassess only in bye weeks.",
+ benchmarks:"Success = maintaining week-1 lifts and jump numbers through the final game.",
+ days:[
+  {name:"Lift 1 — Post-Game Full Body (24–48 h after game)",blocks:[
+    {label:"Warm-Up",items:[{name:"Bike or jog",rx:"4 min"},{ex:"ex-deadbug",rx:"2 x 6/side"},{ex:"ex-anklerock",rx:"1 x 10/side"}]},
+    {label:"Power (light)",items:[{ex:"ex-boxjump",rx:"3 x 3",rest:"75 s",note:"Crisp, low box. Nervous-system tune-up, not a test."}]},
+    {label:"Strength",items:[{ex:"ex-trapbar-dl",rx:"3 x 3 @ RPE 7",rest:"2 min"},{ex:"ex-dbbench",rx:"3 x 6",rest:"90 s"},{ex:"ex-chinup",rx:"3 x 6",rest:"90 s"}]},
+    {label:"Health",items:[{ex:"ex-nordic",rx:"2 x 3",rest:"90 s",note:"Keep the hamstring insurance in year-round, at low doses."},{ex:"ex-facepull",rx:"2 x 15"}]},
+    {label:"Recovery",items:[{ex:"ex-breathing",rx:"2 x 5 breaths"}]}
+  ]},
+  {name:"Lift 2 — Midweek Power (72+ h before game)",blocks:[
+    {label:"Warm-Up",items:[{name:"Dynamic warm-up",rx:"6 min"},{ex:"ex-askip",rx:"2 x 10 yd"}]},
+    {label:"Power",items:[{ex:"ex-hangclean",rx:"4 x 2 @ RPE 7",rest:"2 min",note:"Or trap bar jump 4 x 3 if cleans aren't in your toolbox."},{ex:"ex-mbrot",rx:"2 x 4/side"}]},
+    {label:"Strength (short)",items:[{ex:"ex-back-squat",rx:"3 x 3 @ RPE 7",rest:"2 min"},{ex:"ex-ohp",rx:"3 x 5",rest:"90 s"},{ex:"ex-dbrow",rx:"2 x 8/side",rest:"75 s"}]},
+    {label:"Core",items:[{ex:"ex-pallof",rx:"2 x 8/side"},{ex:"ex-sideplank",rx:"2 x 25 s/side"}]}
+  ]}
+ ]},
+
+{program_id:"pg-lineman-mass",name:"Lineman Strength & Mass Program",positions:["OL","C","DL"],
+ length:"10 weeks",days_per_week:4,goal:"Size",level:"Intermediate",phase:"Offseason",equipment:"Full gym",
+ overview:"A hypertrophy-plus-strength block for the trenches: heavy pressing and pulling, big lower-body volume, carries, and short anaerobic finishers. Eat like it's your job — mass programs fail in the kitchen, not the gym.",
+ who_for:"Offensive and defensive linemen who need functional size and strength. High school linemen should get technique cleared by a coach before loading heavy.",
+ schedule_note:"Mon Lower · Tue Upper Press · Thu Lower + Sled · Fri Upper Pull. Conditioning stays short — you're trying to grow.",
+ progression:"Double progression: work within the rep range (e.g., 6–10). When you hit the top of the range on all sets, add load and start again at the bottom. Deload every 5th week (weeks 5 and 10) by dropping ~40% of sets.",
+ benchmarks:"Bodyweight (weekly), bench 5RM, trap bar 5RM, sled push quality. Gaining more than ~0.5–1% bodyweight per week usually means too much fat gain — talk to a coach or dietitian.",
+ days:[
+  {name:"Day 1 — Lower Strength",blocks:[
+    {label:"Warm-Up",items:[{name:"Dynamic warm-up",rx:"8 min"},{ex:"ex-anklerock",rx:"2 x 10/side"},{ex:"ex-boxjump",rx:"3 x 3",note:"Primer."}]},
+    {label:"Main",items:[{ex:"ex-back-squat",rx:"4 x 6–8",rest:"3 min"},{ex:"ex-rdl",rx:"3 x 8",rest:"2 min"}]},
+    {label:"Accessory",items:[{ex:"ex-lunge",rx:"3 x 8/leg",rest:"90 s"},{ex:"ex-calf",rx:"4 x 12",rest:"60 s"},{ex:"ex-abwheel",rx:"3 x 6",rest:"75 s"}]}
+  ]},
+  {name:"Day 2 — Upper Press",blocks:[
+    {label:"Warm-Up",items:[{ex:"ex-dislocates",rx:"2 x 8"},{ex:"ex-plyopush",rx:"3 x 3",note:"Punch speed primer."}]},
+    {label:"Main",items:[{ex:"ex-bench",rx:"4 x 6–8",rest:"3 min"},{ex:"ex-pushpress",rx:"4 x 4",rest:"2–3 min",note:"The lineman lift: legs into hands."}]},
+    {label:"Accessory",items:[{ex:"ex-incline",rx:"3 x 8–10",rest:"90 s"},{ex:"ex-facepull",rx:"3 x 15",rest:"45 s"},{ex:"ex-suitcase",rx:"3 x 30 yd/side"}]}
+  ]},
+  {name:"Day 3 — Lower Volume + Sled",blocks:[
+    {label:"Warm-Up",items:[{name:"Dynamic warm-up",rx:"8 min"},{ex:"ex-kickslide",rx:"3 x 5 sets/side",note:"OL: pass-set footwork while fresh. DL: sub get-offs (6 x 5 yd)."}]},
+    {label:"Main",items:[{ex:"ex-trapbar-dl",rx:"4 x 5",rest:"3 min"},{ex:"ex-hipthrust",rx:"3 x 8–10",rest:"90 s"}]},
+    {label:"Sled Block",items:[{ex:"ex-sledpush",rx:"6 x 15 yd heavy",rest:"90 s"},{ex:"ex-sleddrag",rx:"3 x 25 yd",rest:"75 s"}]},
+    {label:"Recovery",items:[{ex:"ex-couch",rx:"1 x 45 s/side"},{ex:"ex-breathing",rx:"2 x 5 breaths"}]}
+  ]},
+  {name:"Day 4 — Upper Pull + Arms",blocks:[
+    {label:"Warm-Up",items:[{name:"Band circuit",rx:"2 rounds"}]},
+    {label:"Main",items:[{ex:"ex-bbrow",rx:"4 x 8",rest:"2 min"},{ex:"ex-pullup",rx:"4 x 6–8",rest:"2 min"}]},
+    {label:"Accessory",items:[{ex:"ex-dbrow",rx:"3 x 10/side",rest:"90 s"},{ex:"ex-dbbench",rx:"3 x 10",rest:"90 s"},{ex:"ex-highpull",rx:"3 x 5",rest:"2 min"}]},
+    {label:"Carries + Finisher",items:[{ex:"ex-farmer",rx:"4 x 40 yd heavy",rest:"90 s"},{ex:"ex-handfight",rx:"3 x 20 s rounds",note:"Hands are a lineman's paycheck."}]}
+  ]}
+ ]},
+
+{program_id:"pg-skill-speed",name:"Skill Position Speed Program",positions:["WR","RB","CB","S"],
+ length:"6 weeks",days_per_week:3,goal:"Speed",level:"Beginner",phase:"Offseason",equipment:"Field only",
+ overview:"A field-only speed build for athletes without gym access: sprint mechanics, acceleration, max velocity, and plyometrics using nothing but a field and cones.",
+ who_for:"Skill players (and any athlete) who want a structured speed program with zero equipment. Great summer program for high schoolers.",
+ schedule_note:"Mon Acceleration · Wed Mechanics + Plyos · Fri Max Velocity. At least one full rest day between sessions.",
+ progression:"Weeks 1–2: learn positions, keep sprint volume under 120 yd/session. Weeks 3–4: add 1 rep to each sprint block. Weeks 5–6: add a small amount of distance to fly work and retest. If quality drops mid-session, the session is over.",
+ benchmarks:"Hand-timed (or app-timed) 10-yd and flying 10 in week 1 and week 6, same surface, same shoes.",
+ days:[
+  {name:"Day 1 — Acceleration",blocks:[
+    {label:"Warm-Up",items:[{name:"Dynamic warm-up",rx:"10 min"},{ex:"ex-walldrill",rx:"3 x 5/leg"},{ex:"ex-askip",rx:"2 x 15 yd"}]},
+    {label:"Speed",items:[{ex:"ex-fallstart",rx:"4 x 10 yd",rest:"90 s"},{ex:"ex-10start",rx:"4 x 10 yd",rest:"90 s"},{ex:"ex-20accel",rx:"3 x 20 yd",rest:"2 min"}]},
+    {label:"Strength (bodyweight)",items:[{ex:"ex-lunge",rx:"3 x 8/leg"},{ex:"ex-plank",rx:"3 x 35 s"},{ex:"ex-birddog",rx:"2 x 6/side"}]},
+    {label:"Recovery",items:[{ex:"ex-hamfloss",rx:"2 x 10/side"},{ex:"ex-breathing",rx:"2 x 5 breaths"}]}
+  ]},
+  {name:"Day 2 — Mechanics + Plyos",blocks:[
+    {label:"Warm-Up",items:[{name:"Dynamic warm-up",rx:"10 min"}]},
+    {label:"Mechanics",items:[{ex:"ex-askip",rx:"3 x 20 yd"},{ex:"ex-bskip",rx:"3 x 20 yd"},{ex:"ex-walldrill",rx:"3 x 5/leg"}]},
+    {label:"Plyometrics",items:[{ex:"ex-broadjump",rx:"3 x 3",rest:"90 s"},{ex:"ex-ldrill-lat",rx:"3 x 4/side",rest:"90 s"}]},
+    {label:"COD Intro",items:[{ex:"ex-proagility",rx:"3 sub-max patterns",rest:"75 s"}]},
+    {label:"Core",items:[{ex:"ex-sideplank",rx:"2 x 30 s/side"},{ex:"ex-deadbug",rx:"2 x 8/side"}]}
+  ]},
+  {name:"Day 3 — Max Velocity",blocks:[
+    {label:"Warm-Up (extended)",items:[{name:"Dynamic warm-up",rx:"12 min"},{ex:"ex-bskip",rx:"2 x 20 yd"},{ex:"ex-buildup",rx:"3 x 50 yd @ 80/85/90%"}]},
+    {label:"Speed",items:[{ex:"ex-flying10",rx:"3 reps",rest:"4 min",note:"Weeks 5–6: 4 reps."}]},
+    {label:"Support",items:[{ex:"ex-nordic",rx:"2 x 4 (band-assisted OK)",note:"No partner? Slider or towel hamstring curls."},{ex:"ex-hipthrust",rx:"3 x 12 (bodyweight, 1-leg if easy)"}]},
+    {label:"Recovery",items:[{ex:"ex-couch",rx:"1 x 45 s/side"},{ex:"ex-breathing",rx:"2 x 5 breaths"}]}
+  ]}
+ ]},
+
+{program_id:"pg-db-cod",name:"Defensive Back Change-of-Direction Program",positions:["CB","S"],
+ length:"5 weeks",days_per_week:3,goal:"Speed",level:"Advanced",phase:"Offseason",equipment:"Limited gym",
+ overview:"A DB-specific movement block: pedal-to-drive transitions, hip flips, breaks at every angle, and the single-leg strength that makes those cuts safe and sharp.",
+ who_for:"Corners and safeties with solid training history who want cleaner transitions and faster closes. Linebackers in coverage-heavy schemes can run it too.",
+ schedule_note:"Mon Transitions · Wed Strength + Landing · Fri Breaks + Reaction. Cleats for field days.",
+ progression:"Weeks 1–2: pattern quality at 80% intensity, pre-planned directions. Weeks 3–4: full speed, add reactive cues (coach points, partner movement). Week 5: reduce volume ~30%, test pro agility and W-drill times.",
+ benchmarks:"Pro agility (both directions — the gap between sides matters), W-drill time, single-leg hop distance symmetry.",
+ days:[
+  {name:"Day 1 — Transitions",blocks:[
+    {label:"Warm-Up",items:[{name:"Dynamic warm-up + adductor focus",rx:"10 min"},{ex:"ex-9090",rx:"2 x 6 switches"},{ex:"ex-lbshuffle",rx:"2 x 10 yd/side",note:"Primer tempo."}]},
+    {label:"Movement",items:[{ex:"ex-backpedal",rx:"6 breaks per direction",rest:"60 s"},{ex:"ex-hipflip",rx:"3 x 4/direction",rest:"60 s"},{ex:"ex-wdrill",rx:"4 patterns",rest:"90 s"}]},
+    {label:"Power",items:[{ex:"ex-ldrill-lat",rx:"3 x 4/side",rest:"90 s"}]},
+    {label:"Recovery",items:[{ex:"ex-hipflexor",rx:"2 x 30 s/side"},{ex:"ex-breathing",rx:"2 x 5 breaths"}]}
+  ]},
+  {name:"Day 2 — Strength + Landing Control",blocks:[
+    {label:"Warm-Up",items:[{name:"Dynamic warm-up",rx:"8 min"},{ex:"ex-boxjump",rx:"3 x 3 with stuck landings"}]},
+    {label:"Strength",items:[{ex:"ex-bss",rx:"4 x 6/leg",rest:"90 s",note:"The DB money lift — single-leg everything."},{ex:"ex-rdl",rx:"3 x 8",rest:"2 min"},{ex:"ex-stepup",rx:"3 x 6/leg",rest:"90 s"}]},
+    {label:"Hamstring Insurance",items:[{ex:"ex-nordic",rx:"3 x 4",rest:"90 s"}]},
+    {label:"Core",items:[{ex:"ex-pallof",rx:"3 x 8/side"},{ex:"ex-suitcase",rx:"3 x 30 yd/side"}]}
+  ]},
+  {name:"Day 3 — Breaks + Reaction",blocks:[
+    {label:"Warm-Up",items:[{name:"Dynamic warm-up",rx:"10 min"},{ex:"ex-buildup",rx:"2 x 40 yd @ 85%"}]},
+    {label:"Reactive Work",items:[{ex:"ex-backpedal",rx:"6 breaks on visual cue",rest:"75 s",note:"Partner or coach points the break."},{ex:"ex-pursuit",rx:"4 pursuits",rest:"90 s"},{ex:"ex-proagility",rx:"3 timed reps",rest:"2 min"}]},
+    {label:"Speed Finish",items:[{ex:"ex-20accel",rx:"3 x 20 yd",rest:"2 min"}]},
+    {label:"Recovery",items:[{ex:"ex-9090",rx:"2 x 6 switches"},{ex:"ex-breathing",rx:"2 x 5 breaths"}]}
+  ]}
+ ]},
+
+{program_id:"pg-qb-power",name:"Quarterback Power & Durability Program",positions:["QB"],
+ length:"8 weeks",days_per_week:3,goal:"Power",level:"Intermediate",phase:"Offseason",equipment:"Full gym",
+ overview:"Rotational power, shoulder-friendly pressing, single-leg strength, and the mobility that keeps a throwing shoulder healthy across a long season. No max bench contests here.",
+ who_for:"Quarterbacks at any level who throw year-round. Prioritizes the traits that show up on tape: velocity from the ground up, pocket movement, and durability.",
+ schedule_note:"Mon Lower + Rotation · Wed Upper (shoulder-safe) · Fri Power + Movement. Schedule throwing sessions before lifting, never after heavy rotation work.",
+ progression:"Weeks 1–3 build, week 4 deload, weeks 5–7 build heavier, week 8 deload + retest. Med-ball throw intent increases before load does.",
+ benchmarks:"Rotational med-ball throw distance, broad jump, single-leg RDL control, and — the real one — how the shoulder feels after high-volume throwing weeks.",
+ days:[
+  {name:"Day 1 — Lower + Rotation",blocks:[
+    {label:"Warm-Up",items:[{name:"Dynamic warm-up",rx:"8 min"},{ex:"ex-tspine",rx:"2 x 6/side"},{ex:"ex-9090",rx:"2 x 6 switches"}]},
+    {label:"Power",items:[{ex:"ex-mbrot",rx:"4 x 4/side",rest:"90 s",note:"Throw violently. This is your throwing-velocity work."},{ex:"ex-broadjump",rx:"3 x 3",rest:"90 s"}]},
+    {label:"Strength",items:[{ex:"ex-front-squat",rx:"4 x 5",rest:"2–3 min"},{ex:"ex-rdl",rx:"3 x 8",rest:"2 min"}]},
+    {label:"Accessory",items:[{ex:"ex-bss",rx:"3 x 6/leg",rest:"90 s"},{ex:"ex-cablechop",rx:"3 x 8/side",rest:"60 s"}]},
+    {label:"Recovery",items:[{ex:"ex-hipflexor",rx:"2 x 30 s/side"},{ex:"ex-breathing",rx:"2 x 5 breaths"}]}
+  ]},
+  {name:"Day 2 — Upper (Shoulder-Safe)",blocks:[
+    {label:"Warm-Up",items:[{ex:"ex-dislocates",rx:"2 x 8 (band)"},{ex:"ex-facepull",rx:"2 x 15",note:"Warm-up dose."}]},
+    {label:"Main",items:[{ex:"ex-landmine",rx:"4 x 6/side",rest:"90 s",note:"Primary press — friendlier angle for throwing shoulders."},{ex:"ex-chinup",rx:"4 x 6–8",rest:"2 min"}]},
+    {label:"Accessory",items:[{ex:"ex-dbrow",rx:"3 x 10/side",rest:"90 s"},{ex:"ex-dbbench",rx:"3 x 8 (neutral grip)",rest:"90 s"},{ex:"ex-facepull",rx:"3 x 15",rest:"45 s"}]},
+    {label:"Core",items:[{ex:"ex-pallof",rx:"3 x 8/side"},{ex:"ex-deadbug",rx:"2 x 8/side"}]}
+  ]},
+  {name:"Day 3 — Power + Movement",blocks:[
+    {label:"Warm-Up",items:[{name:"Dynamic warm-up",rx:"10 min"},{ex:"ex-askip",rx:"2 x 15 yd"}]},
+    {label:"Speed",items:[{ex:"ex-10start",rx:"4 x 10 yd",rest:"90 s",note:"Escape-the-pocket burst."},{ex:"ex-proagility",rx:"3 sub-max reps",rest:"90 s"}]},
+    {label:"Power",items:[{ex:"ex-hangclean",rx:"4 x 2 (light-moderate)",rest:"2 min",note:"Or trap bar jump 4 x 3."},{ex:"ex-mbslam",rx:"3 x 5",rest:"60 s"}]},
+    {label:"Strength (short)",items:[{ex:"ex-trapbar-dl",rx:"3 x 4",rest:"2–3 min"},{ex:"ex-suitcase",rx:"3 x 30 yd/side"}]},
+    {label:"Recovery",items:[{ex:"ex-tspine",rx:"2 x 6/side"},{ex:"ex-pecstretch",rx:"2 x 30 s/side"},{ex:"ex-breathing",rx:"2 x 5 breaths"}]}
+  ]}
+ ]},
+
+{program_id:"pg-dl-explosion",name:"Defensive Line Explosion Program",positions:["DL","EDGE"],
+ length:"6 weeks",days_per_week:4,goal:"Power",level:"Advanced",phase:"Offseason",equipment:"Full gym",
+ overview:"Get-off, strike, and bend. Heavy-fast lifting contrasted with jumps, sled work paired with reaction starts, and dedicated hand-fighting rounds. Built to make the first step and first strike violent.",
+ who_for:"Interior linemen and edge rushers with a real strength base (roughly: comfortable squatting well past bodyweight for reps). This block sharpens the strength you already have.",
+ schedule_note:"Mon Max Strength + Contrast · Tue Get-Off + Hands · Thu Upper Power · Fri Lower Power + Sled.",
+ progression:"Contrast pairs (heavy lift → explosive movement) progress by bar speed: when the heavy set moves crisply, add load. Get-off volume rises from 6 to 10 reps across weeks 1–5; week 6 tapers and tests 10-yd time from a 3-point stance.",
+ benchmarks:"10-yd split from a 3-point stance, broad jump, pro agility, strike quality on bag (coach's eye).",
+ days:[
+  {name:"Day 1 — Max Strength + Contrast",blocks:[
+    {label:"Warm-Up",items:[{name:"Dynamic warm-up",rx:"8 min"},{ex:"ex-anklerock",rx:"2 x 10/side"}]},
+    {label:"Contrast A",items:[{ex:"ex-back-squat",rx:"4 x 3 heavy",rest:"20 s to pair",note:"Pair with jumps below — 20 s between, 3 min between pairs."},{ex:"ex-boxjump",rx:"4 x 3 (paired)",rest:"3 min"}]},
+    {label:"Contrast B",items:[{ex:"ex-bench",rx:"4 x 3 heavy",rest:"20 s to pair"},{ex:"ex-plyopush",rx:"4 x 3 (paired)",rest:"3 min"}]},
+    {label:"Accessory",items:[{ex:"ex-rdl",rx:"3 x 6",rest:"2 min"},{ex:"ex-abwheel",rx:"3 x 6",rest:"75 s"}]}
+  ]},
+  {name:"Day 2 — Get-Off + Hands",blocks:[
+    {label:"Warm-Up",items:[{name:"Dynamic warm-up",rx:"10 min"},{ex:"ex-walldrill",rx:"2 x 5/leg"}]},
+    {label:"Get-Off",items:[{ex:"ex-getoff",rx:"Week 1: 6 x 5 yd → Week 5: 10 x 5 yd",rest:"60 s",note:"React to ball movement, never sound."},{ex:"ex-10start",rx:"3 x 10 yd from 3-point",rest:"90 s"}]},
+    {label:"Hand Combat",items:[{ex:"ex-handfight",rx:"4 x 25 s rounds",rest:"60 s"},{ex:"ex-mbrot",rx:"3 x 4/side",rest:"75 s",note:"Rotational strike power."}]},
+    {label:"Recovery",items:[{ex:"ex-hipflexor",rx:"2 x 30 s/side"},{ex:"ex-breathing",rx:"2 x 5 breaths"}]}
+  ]},
+  {name:"Day 3 — Upper Power",blocks:[
+    {label:"Warm-Up",items:[{ex:"ex-dislocates",rx:"2 x 8"},{name:"Band pull-aparts",rx:"2 x 15"}]},
+    {label:"Power + Strength",items:[{ex:"ex-pushpress",rx:"5 x 3",rest:"2–3 min"},{ex:"ex-highpull",rx:"4 x 4",rest:"2 min"}]},
+    {label:"Accessory",items:[{ex:"ex-incline",rx:"3 x 6",rest:"2 min"},{ex:"ex-pullup",rx:"4 x 6 (weighted if able)",rest:"2 min"},{ex:"ex-facepull",rx:"3 x 15"}]},
+    {label:"Carries",items:[{ex:"ex-farmer",rx:"4 x 30 yd heavy",rest:"90 s"}]}
+  ]},
+  {name:"Day 4 — Lower Power + Sled",blocks:[
+    {label:"Warm-Up",items:[{name:"Dynamic warm-up",rx:"8 min"},{ex:"ex-askip",rx:"2 x 15 yd"}]},
+    {label:"Power",items:[{ex:"ex-powerclean",rx:"5 x 2",rest:"2–3 min"},{ex:"ex-broadjump",rx:"3 x 3",rest:"90 s"}]},
+    {label:"Strength",items:[{ex:"ex-trapbar-dl",rx:"4 x 3 fast @ ~75%",rest:"2–3 min"}]},
+    {label:"Sled",items:[{ex:"ex-sledpush",rx:"6 x 10 yd explosive",rest:"90 s"},{ex:"ex-sleddrag",rx:"3 x 25 yd",rest:"75 s"}]},
+    {label:"Recovery",items:[{ex:"ex-couch",rx:"1 x 45 s/side"},{ex:"ex-9090",rx:"2 x 6 switches"}]}
+  ]}
+ ]},
+
+{program_id:"pg-combine",name:"Combine Prep Program",positions:["Multi"],
+ length:"8 weeks",days_per_week:5,goal:"Combine Prep",level:"College/Elite",phase:"Postseason",equipment:"Full gym",
+ overview:"Test-specific preparation for the 40, pro agility, 3-cone, jumps, and the 225 bench test. Every session rehearses a test skill, builds its underlying quality, or recovers from both.",
+ who_for:"Athletes preparing for a combine, pro day, or camp testing battery. This program assumes a strong training base and full recovery capacity — it's a peaking block, not a development block.",
+ schedule_note:"Mon 40/Accel · Tue Bench + Upper · Wed Recovery/Mobility · Thu Agility + Jumps · Fri Max Velocity + Lower.",
+ progression:"Weeks 1–4: technique volume high, intensity 85–95%. Weeks 5–6: intensity peaks, volume drops. Weeks 7–8: taper — every rep is a dress rehearsal at full quality with full rest. Test day should feel easy because you've done it fifty times.",
+ benchmarks:"Weekly timed reps of every test. Track starts (10-yd split) separately from full 40s — most 40 time is won in the first 10.",
+ days:[
+  {name:"Day 1 — 40-Yard Dash / Acceleration",blocks:[
+    {label:"Warm-Up",items:[{name:"Dynamic warm-up",rx:"12 min"},{ex:"ex-walldrill",rx:"3 x 5/leg"},{ex:"ex-buildup",rx:"2 x 40 yd @ 85%"}]},
+    {label:"Test Skill",items:[{name:"40-yd stance & start rehearsal",rx:"5 starts (first 5 steps only)",rest:"90 s",note:"Coil the stance, violent first punch, stay low."},{ex:"ex-10start",rx:"4 x 10 yd timed",rest:"2 min"},{name:"Full 40-yd dash",rx:"1–2 timed (weeks 3+)",rest:"5 min"}]},
+    {label:"Strength (short)",items:[{ex:"ex-trapbar-dl",rx:"3 x 3 fast",rest:"2–3 min"},{ex:"ex-nordic",rx:"2 x 4",rest:"90 s"}]},
+    {label:"Recovery",items:[{ex:"ex-hamfloss",rx:"2 x 10/side"},{ex:"ex-breathing",rx:"2 x 5 breaths"}]}
+  ]},
+  {name:"Day 2 — 225 Bench Test + Upper",blocks:[
+    {label:"Warm-Up",items:[{ex:"ex-dislocates",rx:"2 x 8"},{name:"Band pull-aparts",rx:"2 x 15"}]},
+    {label:"Test Skill",items:[{name:"225 rep-test rehearsal",rx:"Weeks 1–4: 2 x 60% of best reps · Weeks 5–6: 1 x 80% · Week 7: rest",rest:"4 min",note:"Practice breathing rhythm and smooth touch-and-go pacing legal for your event."}]},
+    {label:"Strength",items:[{ex:"ex-bench",rx:"4 x 4",rest:"3 min"},{ex:"ex-pullup",rx:"4 x 6",rest:"2 min"},{ex:"ex-dbrow",rx:"3 x 10/side",rest:"90 s"}]},
+    {label:"Health",items:[{ex:"ex-facepull",rx:"3 x 15"},{ex:"ex-pecstretch",rx:"2 x 30 s/side"}]}
+  ]},
+  {name:"Day 3 — Recovery + Mobility",blocks:[
+    {label:"Flush",items:[{name:"Easy bike or pool",rx:"15–20 min"},{ex:"ex-tempo",rx:"6 x 60 yd @ 65% (optional)",rest:"walk"}]},
+    {label:"Mobility Circuit",items:[{ex:"ex-9090",rx:"2 x 8 switches"},{ex:"ex-couch",rx:"1 x 60 s/side"},{ex:"ex-tspine",rx:"2 x 8/side"},{ex:"ex-anklerock",rx:"2 x 10/side"},{ex:"ex-latstretch",rx:"2 x 40 s"}]},
+    {label:"Down-Regulate",items:[{ex:"ex-breathing",rx:"3 x 5 breaths"}]}
+  ]},
+  {name:"Day 4 — Agility Tests + Jumps",blocks:[
+    {label:"Warm-Up",items:[{name:"Dynamic warm-up",rx:"10 min"},{ex:"ex-lbshuffle",rx:"2 x 10 yd/side"}]},
+    {label:"Jumps",items:[{name:"Vertical jump practice",rx:"4 attempts",rest:"90 s",note:"Rhythm and arm timing — don't muscle it."},{ex:"ex-broadjump",rx:"4 attempts",rest:"90 s"}]},
+    {label:"Agility",items:[{ex:"ex-proagility",rx:"4 timed (2 each direction)",rest:"2 min"},{ex:"ex-3cone",rx:"3 timed",rest:"2–3 min"}]},
+    {label:"Strength (short)",items:[{ex:"ex-bss",rx:"3 x 5/leg",rest:"90 s"},{ex:"ex-pallof",rx:"2 x 8/side"}]}
+  ]},
+  {name:"Day 5 — Max Velocity + Lower",blocks:[
+    {label:"Warm-Up (extended)",items:[{name:"Dynamic warm-up",rx:"12 min"},{ex:"ex-bskip",rx:"2 x 20 yd"},{ex:"ex-buildup",rx:"3 x 50 yd @ 80/85/90%"}]},
+    {label:"Speed",items:[{ex:"ex-flying10",rx:"3 reps",rest:"4–5 min",note:"This is where the back half of your 40 is built."}]},
+    {label:"Strength",items:[{ex:"ex-back-squat",rx:"3 x 3 (weeks 1–5) / 2 x 2 (weeks 6–7)",rest:"3 min"},{ex:"ex-hipthrust",rx:"3 x 6",rest:"90 s"}]},
+    {label:"Recovery",items:[{ex:"ex-hipflexor",rx:"2 x 30 s/side"},{ex:"ex-breathing",rx:"2 x 5 breaths"}]}
+  ]}
+ ]},
+
+{program_id:"pg-bigskill-power",name:"Big Skill Power Program (TE / LB / EDGE)",positions:["TE","LB","EDGE","FB"],
+ length:"6 weeks",days_per_week:4,goal:"Power",level:"Intermediate",phase:"Offseason",equipment:"Full gym",
+ overview:"For the hybrid athletes who have to run like skill players and hit like linemen: cleans, contrast work, sled drive, coverage/pursuit movement, and enough pressing to win at the point of attack.",
+ who_for:"Tight ends, linebackers, edge players, and fullbacks with at least a year of lifting who need power in traffic without losing range speed.",
+ schedule_note:"Mon Total Power · Tue Upper Strength · Thu Speed + Movement · Fri Lower Strength.",
+ progression:"Weeks 1–2 at RPE 7, weeks 3–5 build to RPE 8–9 on main lifts while jump/sprint quality is monitored, week 6 deloads and retests broad jump + 10-yd start.",
+ benchmarks:"Broad jump, 10-yd start, pro agility, chin-up strength.",
+ days:[
+  {name:"Day 1 — Total Power",blocks:[
+    {label:"Warm-Up",items:[{name:"Dynamic warm-up",rx:"8 min"},{ex:"ex-askip",rx:"2 x 15 yd"}]},
+    {label:"Power",items:[{ex:"ex-powerclean",rx:"5 x 2",rest:"2–3 min"},{ex:"ex-boxjump",rx:"4 x 3",rest:"90 s"},{ex:"ex-mbslam",rx:"3 x 5",rest:"60 s"}]},
+    {label:"Strength",items:[{ex:"ex-trapbar-dl",rx:"4 x 4",rest:"3 min"}]},
+    {label:"Core",items:[{ex:"ex-abwheel",rx:"3 x 6"},{ex:"ex-suitcase",rx:"3 x 30 yd/side"}]}
+  ]},
+  {name:"Day 2 — Upper Strength",blocks:[
+    {label:"Warm-Up",items:[{ex:"ex-dislocates",rx:"2 x 8"},{ex:"ex-plyopush",rx:"2 x 3"}]},
+    {label:"Main",items:[{ex:"ex-bench",rx:"4 x 5",rest:"3 min"},{ex:"ex-pullup",rx:"4 x 6–8",rest:"2 min"}]},
+    {label:"Accessory",items:[{ex:"ex-pushpress",rx:"3 x 4",rest:"2 min"},{ex:"ex-bbrow",rx:"3 x 8",rest:"90 s"},{ex:"ex-facepull",rx:"3 x 15"}]}
+  ]},
+  {name:"Day 3 — Speed + Movement",blocks:[
+    {label:"Warm-Up",items:[{name:"Dynamic warm-up",rx:"10 min"},{ex:"ex-walldrill",rx:"2 x 5/leg"}]},
+    {label:"Speed",items:[{ex:"ex-10start",rx:"5 x 10 yd",rest:"90 s"},{ex:"ex-20accel",rx:"3 x 20 yd",rest:"2 min"}]},
+    {label:"Position Movement",items:[{ex:"ex-lbshuffle",rx:"3 x 10 yd/side",rest:"60 s"},{ex:"ex-pursuit",rx:"4 pursuits",rest:"90 s"},{ex:"ex-routestem",rx:"TE/FB: 5 routes",rest:"60 s",note:"LB/EDGE: sub 5 x get-off bursts."}]},
+    {label:"Recovery",items:[{ex:"ex-hipflexor",rx:"2 x 30 s/side"},{ex:"ex-breathing",rx:"2 x 5 breaths"}]}
+  ]},
+  {name:"Day 4 — Lower Strength",blocks:[
+    {label:"Warm-Up",items:[{name:"Dynamic warm-up",rx:"8 min"},{ex:"ex-broadjump",rx:"2 x 3",note:"Primer."}]},
+    {label:"Main",items:[{ex:"ex-back-squat",rx:"4 x 5",rest:"3 min"},{ex:"ex-rdl",rx:"3 x 8",rest:"2 min"}]},
+    {label:"Accessory",items:[{ex:"ex-bss",rx:"3 x 6/leg",rest:"90 s"},{ex:"ex-nordic",rx:"3 x 4",rest:"90 s"},{ex:"ex-sledpush",rx:"4 x 15 yd",rest:"75 s"}]},
+    {label:"Recovery",items:[{ex:"ex-9090",rx:"2 x 6 switches"},{ex:"ex-breathing",rx:"2 x 5 breaths"}]}
+  ]}
+ ]}
+];
+
+/* ============================================================
+   POSITION GROUPS
+   ============================================================ */
+const POSITIONS = [
+{pos_id:"qb",tag:"QB",name:"Quarterback",positions:["QB"],
+ demands:"Rotational power from the ground up, pocket burst, durable throwing shoulder, and the trunk control to throw accurately off any platform.",
+ traits:["Rotational power (hips → trunk → arm)","Short-area burst and escape quickness","Shoulder durability under year-round throwing volume","Single-leg stability for off-platform throws","Decision-speed stamina — conditioning that keeps the mind sharp"],
+ best_lifts:["ex-mbrot","ex-front-squat","ex-landmine","ex-chinup","ex-bss","ex-cablechop","ex-trapbar-dl"],
+ best_drills:["ex-10start","ex-proagility","ex-tspine","ex-dislocates","ex-buildup"],
+ weekly:"3 lifts (lower+rotation, shoulder-safe upper, power+movement) scheduled around throwing sessions. Throw first, lift after — never heavy rotation work before a throwing day.",
+ programs:["pg-qb-power","pg-inseason"],
+ mistakes:["Max-effort barbell bench chasing — the throwing shoulder pays the bill","Skipping lower-body work because 'QBs don't hit' — velocity comes from the legs","Endless distance running for conditioning instead of repeat short bursts","No rotator cuff / rear delt maintenance during the season"]},
+{pos_id:"skill",tag:"RB·WR·DB",name:"Skill Positions",positions:["RB","WR","CB","S"],
+ demands:"Elite acceleration and top-end speed, sharp change of direction, single-leg strength for cuts, and hamstrings built to survive max-velocity sprinting.",
+ traits:["First-step acceleration (0–10 yd)","True max velocity — the separator trait","Deceleration and re-acceleration through cuts","Single-leg strength and landing control","Eccentric hamstring capacity (strain insurance)"],
+ best_lifts:["ex-trapbar-dl","ex-bss","ex-rdl","ex-nordic","ex-hipthrust","ex-trapjump","ex-chinup"],
+ best_drills:["ex-10start","ex-flying10","ex-proagility","ex-routestem","ex-backpedal","ex-ldrill-lat"],
+ weekly:"2 speed days (one acceleration, one max velocity — 48 h apart) + 2 lifts. Speed work always fresh, always first, never as conditioning.",
+ programs:["pg-speed-power","pg-skill-speed","pg-db-cod"],
+ mistakes:["Sprinting tired — speed trained under fatigue is conditioning, not speed","Ignoring Nordic/eccentric hamstring work until the first strain","Bodybuilder splits with no jumping or sprinting in them","Only cutting off pre-planned cones — add reactive work"]},
+{pos_id:"bigskill",tag:"TE·LB·EDGE",name:"Big Skill",positions:["TE","LB","EDGE","FB"],
+ demands:"The hybrid job: run with skill players, strike with linemen. Requires power at bodyweights of 220–260, contact balance, and range in pursuit or routes.",
+ traits:["Explosive triple extension (cleans, jumps) at a big bodyweight","Point-of-attack pressing and pulling strength","Lateral movement while staying square","Pursuit speed and angle discipline","Grip and wrap strength for finishing"],
+ best_lifts:["ex-powerclean","ex-trapbar-dl","ex-bench","ex-pullup","ex-pushpress","ex-back-squat","ex-farmer"],
+ best_drills:["ex-10start","ex-lbshuffle","ex-pursuit","ex-proagility","ex-getoff","ex-routestem"],
+ weekly:"4 days: total power, upper strength, speed + position movement, lower strength. Movement day mixes shared speed work with position-split drills (routes for TE/FB, get-offs for LB/EDGE).",
+ programs:["pg-bigskill-power","pg-offseason-strength"],
+ mistakes:["Training like a pure lineman and losing range speed","Training like a receiver and getting moved at the point of attack","Skipping loaded carries — contact balance is trainable","No reactive agility (all cones, no chaos)"]},
+{pos_id:"ol",tag:"OL",name:"Offensive Line",positions:["OL","C"],
+ demands:"Maximal strength with a fast first punch, pass-set footwork that never crosses over, and the anaerobic capacity to fire out 60+ times a game.",
+ traits:["Absolute strength (squat, deadlift, press)","Punch speed — strength delivered in milliseconds","Kick-slide footwork and adductor durability","Core stiffness against bull rushes and twists","Play-after-play repeatability"],
+ best_lifts:["ex-back-squat","ex-trapbar-dl","ex-bench","ex-pushpress","ex-cleanpull","ex-farmer","ex-abwheel"],
+ best_drills:["ex-kickslide","ex-sledpush","ex-getoff","ex-plyopush","ex-lbshuffle"],
+ weekly:"4 lifts with footwork woven into warm-ups (kick slides while fresh), sled drive twice a week, short anaerobic finishers instead of long runs.",
+ programs:["pg-lineman-mass","pg-offseason-strength"],
+ mistakes:["Mass at any cost — sloppy weight gain slows the feet","Long slow distance conditioning that trains the wrong energy system","Skipping adductor/groin prep before kick-slide volume","Bench-only upper days with no pulling to balance the shoulder"]},
+{pos_id:"dl",tag:"DL",name:"Defensive Line",positions:["DL","EDGE"],
+ demands:"The most explosive first step on the field, violent hands, bend around the edge, and the ability to reset and do it again every 25 seconds.",
+ traits:["Get-off — reaction plus first-step distance","Strike power and hand-fighting skill","Hip flexibility to bend and flatten to the QB","Shed strength (pull, rip, press)","Repeat-effort capacity"],
+ best_lifts:["ex-powerclean","ex-back-squat","ex-bench","ex-highpull","ex-pushpress","ex-dbrow","ex-mbrot"],
+ best_drills:["ex-getoff","ex-handfight","ex-10start","ex-3cone","ex-sledpush","ex-proagility"],
+ weekly:"4 days: max strength + contrast pairs, get-off + hands, upper power, lower power + sled. Reaction starts on ball movement at least twice weekly.",
+ programs:["pg-dl-explosion","pg-lineman-mass"],
+ mistakes:["Training strength without ever converting it to speed (no jumps, no contrast)","Guessing snap counts instead of training visual reaction","Neglecting hip mobility, then wondering why the edge bend isn't there","Zero hand-fighting reps outside of practice"]},
+{pos_id:"spec",tag:"K·P·LS",name:"Specialists",positions:["K","P","LS"],
+ demands:"Single-leg rotational power for kicking and punting, hip mobility through extreme ranges, snap precision under fatigue, and lower-limb durability across thousands of reps.",
+ traits:["Hip flexor and swing-leg power","Hip and hamstring mobility through the kicking arc","Single-leg plant stability","Trunk rotation control","Consistency under fatigue and pressure"],
+ best_lifts:["ex-bss","ex-hipthrust","ex-rdl","ex-cablechop","ex-mbrot","ex-suitcase","ex-calf"],
+ best_drills:["ex-askip","ex-9090","ex-hipflexor","ex-hamfloss","ex-buildup","ex-ldrill-lat"],
+ weekly:"2–3 lifts built around single-leg and rotational work, daily hip mobility, and kicking volume managed like pitching volume — tracked and capped.",
+ programs:["pg-inseason","pg-skill-speed"],
+ mistakes:["Unlimited kicking volume — swing legs break down like throwing arms","Ignoring the plant leg (it absorbs the most force)","Heavy bilateral maxing with no single-leg or rotational work","No mobility routine despite the most mobility-dependent job on the roster"]}
+];
+
+/* ============================================================
+   TESTING STANDARDS
+   Reference ranges are general guidelines compiled from commonly
+   published combine/HS testing data — use them for context, not
+   as pass/fail lines. Retest under identical conditions.
+   ============================================================ */
+const TESTS = [
+{test_id:"t-40",name:"40-Yard Dash",measures:"Linear speed (acceleration + max velocity)",
+ setup:"Timed 40 yd on turf or track. Start from a 3-point or track stance; timing starts on first movement (hand-timed) or via gates.",
+ how:["Thorough sprint warm-up (12+ min)","2–3 build-ups before any timed rep","Max 2–3 timed attempts, full rest (4–5 min)","Record surface, shoes, and timing method — they change results"],
+ ranges:[["Position","HS Varsity Solid","College-Level","Elite"],["Skill (WR/DB/RB)","4.9–5.1","4.5–4.7","≤4.45"],["Big Skill (TE/LB)","5.1–5.3","4.7–4.9","≤4.65"],["Line (OL/DL)","5.5–5.8","5.0–5.3","≤4.95"]],
+ improve:"Most 40 time lives in the first 10 yards. Train starts and acceleration 2x/week, add flying 10s for the back half, and get stronger relative to bodyweight.",
+ note:"Hand times run ~0.2 s faster than electronic. Compare only same-method times."},
+{test_id:"t-10",name:"10-Yard Split",measures:"Acceleration / first-step burst",
+ setup:"First 10 yd of the 40, or standalone. Same start rules.",
+ how:["Warm up as for the 40","4–6 attempts allowed — it's short enough to repeat","Full recovery between reps (90 s+)"],
+ ranges:[["Position","HS Varsity Solid","College-Level","Elite"],["Skill","1.75–1.85","1.60–1.70","≤1.55"],["Big Skill","1.80–1.90","1.65–1.75","≤1.62"],["Line","1.95–2.10","1.80–1.90","≤1.75"]],
+ improve:"Heavy sled pushes, trap bar pulls moved fast, wall drills, and falling starts. Film your first three steps — most athletes pop up too early.",
+ note:"For linemen and LBs this number matters more than the full 40."},
+{test_id:"t-proagility",name:"Pro Agility (5-10-5)",measures:"Short-area change of direction",
+ setup:"Three lines 5 yd apart. Straddle the middle line, sprint 5 yd, touch, reverse 10 yd, touch, finish through the middle.",
+ how:["Rehearse the pattern sub-max first","Run both directions — record both","2–3 timed reps per side, 2 min rest"],
+ ranges:[["Position","HS Varsity Solid","College-Level","Elite"],["Skill","4.5–4.7","4.2–4.4","≤4.15"],["Big Skill","4.7–4.9","4.35–4.55","≤4.3"],["Line","5.0–5.3","4.7–4.9","≤4.6"]],
+ improve:"Single-leg strength (split squats), lateral bounds, and cut mechanics — sink the hips, angle the shins, push out of the cut instead of stepping around it.",
+ note:"A big left-right time gap flags an asymmetry worth training."},
+{test_id:"t-3cone",name:"3-Cone Drill (L-Drill)",measures:"Change of direction + bend + re-acceleration",
+ setup:"Three cones in an L, 5 yd apart. Sprint-touch-return, sprint around the second cone, figure-eight the third, sprint back.",
+ how:["Walk the pattern until it's automatic","2–3 timed attempts, full rest","Stay low around every corner"],
+ ranges:[["Position","HS Varsity Solid","College-Level","Elite"],["Skill","7.4–7.7","7.0–7.2","≤6.9"],["Big Skill","7.6–7.9","7.1–7.4","≤7.0"],["Line","8.1–8.5","7.7–8.0","≤7.5"]],
+ improve:"Tight lines and low pad level are technique wins available immediately; lateral bounds and get-off work build the physical side.",
+ note:"Edge rushers: scouts watch this one — it predicts corner-bending ability."},
+{test_id:"t-vert",name:"Vertical Jump",measures:"Lower-body vertical power",
+ setup:"Standing two-foot jump measured by Vertec or jump mat. No steps into the jump.",
+ how:["Measure standing reach accurately first","3–4 attempts, 90 s rest","Big arm swing, full hip extension"],
+ ranges:[["Position","HS Varsity Solid","College-Level","Elite"],["Skill","26–30 in","33–37 in","≥38 in"],["Big Skill","24–28 in","31–35 in","≥36 in"],["Line","20–24 in","26–30 in","≥31 in"]],
+ improve:"Squat strength + jump practice + trap bar jumps. Power = force x velocity: most young athletes need the force side first.",
+ note:"Track it monthly — it's the cheapest fatigue/readiness monitor there is."},
+{test_id:"t-broad",name:"Broad Jump",measures:"Horizontal power",
+ setup:"Standing two-foot jump for distance; measure from the takeoff line to the rearmost heel. Must stick the landing.",
+ how:["3–4 attempts, 90 s rest","Full arm throw and extension","Landing counts — practice sticking it"],
+ ranges:[["Position","HS Varsity Solid","College-Level","Elite"],["Skill","8'0\"–8'8\"","9'6\"–10'2\"","≥10'4\""],["Big Skill","7'8\"–8'4\"","9'2\"–9'10\"","≥10'0\""],["Line","7'0\"–7'8\"","8'4\"–8'10\"","≥9'2\""]],
+ improve:"Hip thrusts, trap bar pulls, and broad jump practice at low volumes. The test correlates strongly with acceleration ability.",
+ note:"Low volume in training — 6–10 quality jumps beat 30 sloppy ones."},
+{test_id:"t-bench",name:"225 lb Bench Press Test",measures:"Upper-body strength endurance",
+ setup:"Max reps at 225 lb with full lockout and controlled touch. Spotter mandatory.",
+ how:["Only attempt if 225 is well under your 1RM (roughly: 1RM ≥ 280)","Warm up in jumps: bar, 135, 185, then test","Smooth rhythm — herky-jerky reps get no-repped"],
+ ranges:[["Position","College Walk-On Range","College Contributor","Elite"],["Skill","8–13 reps","14–19","≥20"],["Big Skill","13–18 reps","19–24","≥25"],["Line","18–23 reps","24–29","≥30"]],
+ improve:"Raise the 1RM ceiling first, then add rep-work at 70–80% in the final month. Pacing and breathing rehearsal add 2–3 reps for free.",
+ note:"High schoolers: test 185 or bodyweight instead if 225 is near max — rep tests near 1RM are an injury risk."},
+{test_id:"t-flying10",name:"Flying 10",measures:"True max velocity",
+ setup:"20–30 yd build-in, then a timed 10 yd zone at full speed (gates ideal, video-frame timing workable).",
+ how:["Longest warm-up of any test","2–4 attempts, 3–5 min rest","Relaxed at speed — straining slows you down"],
+ ranges:[["Level","MPH (approx)","10 yd Fly Time"],["HS Varsity Solid","17–19 mph","1.08–1.20 s"],["College-Level","19–21 mph","0.98–1.08 s"],["Elite","21+ mph","≤0.97 s"]],
+ improve:"Flying 10s, sprint build-ups, hamstring eccentrics, and improving elastic ankle stiffness (skips, low hops).",
+ note:"GPS or radar speeds from practice are motivating but not comparable to gated times."},
+{test_id:"t-cond",name:"Conditioning Test (Position-Adjusted 110s)",measures:"Repeat-sprint ability / game fitness",
+ setup:"Example battery: 10 x 110 yd with 45–60 s rest, each rep under a position target time (skill ≤16 s, big skill ≤18 s, line ≤20 s). Programs and schools vary — use your team's test if one exists.",
+ how:["Never run it in extreme heat without modification","Hydrate and acclimatize in the weeks prior","Passing = all reps under target, form intact"],
+ ranges:[["Group","Target/110 yd","Reps","Rest"],["Skill","≤16 s","10","45–60 s"],["Big Skill","≤18 s","10","45–60 s"],["Line","≤20 s","10","45–60 s"]],
+ improve:"Tempo runs build the aerobic base; repeat-sprint sessions sharpen it in the final 4 weeks. Don't cram conditioning in the last week — that's how camps start with soft-tissue injuries.",
+ note:"Conditioning tests must follow heat-safety and acclimatization guidance — see the Safety page. Never as punishment."}
+];
+
+/* ============================================================
+   FIELD WORK MODULES
+   ============================================================ */
+const FIELDWORK = [
+{fw_id:"fw-accel",name:"Acceleration",who:"All positions",drills:["ex-walldrill","ex-fallstart","ex-10start","ex-20accel","ex-sledpush"],
+ blurb:"The first 10 yards decide most football plays. Acceleration work is short, violent, and done completely fresh — 6–10 quality reps beat 20 tired ones."},
+{fw_id:"fw-maxv",name:"Max Velocity",who:"Skill, big skill",drills:["ex-askip","ex-bskip","ex-buildup","ex-flying10"],
+ blurb:"Top-end speed is trained at top-end speed. Long warm-up, tiny volumes, huge rest. This is also the highest hamstring-demand work on the site — respect the recovery rules."},
+{fw_id:"fw-cod",name:"Change of Direction",who:"All positions",drills:["ex-proagility","ex-3cone","ex-ldrill-lat","ex-lbshuffle"],
+ blurb:"Closed-pattern cutting builds the mechanics; add reactive cues once patterns are clean. Cuts are high-load events — build volume gradually."},
+{fw_id:"fw-db",name:"DB Footwork",who:"CB, S",drills:["ex-backpedal","ex-wdrill","ex-hipflip","ex-pursuit"],
+ blurb:"Pedal, break, flip, close. Transitions win coverage reps. Start pre-planned, finish reactive — the game never tells you the route in advance."},
+{fw_id:"fw-route",name:"Route Running",who:"WR, TE, RB",drills:["ex-routestem","ex-10start","ex-ldrill-lat"],
+ blurb:"Separation is created at the stem and the break. Same stem speed every route, sink into breaks, snap the eyes and hands around."},
+{fw_id:"fw-trench",name:"Trench Work",who:"OL, DL, EDGE",drills:["ex-getoff","ex-kickslide","ex-handfight","ex-sledpush"],
+ blurb:"Get-off for the defense, kick slide for the offense, hands for everyone. Five focused minutes of footwork while fresh beats twenty at the end of practice."},
+{fw_id:"fw-cond",name:"Conditioning",who:"All positions",drills:["ex-tempo","ex-110s","ex-sleddrag"],
+ blurb:"Tempo runs build the base; repeat sprints sharpen game fitness. Conditioning has target times and planned rest — 'run until someone quits' is not a program, and it isn't safe."}
+];
+
+/* ============================================================
+   METHODOLOGY SOURCES
+   ============================================================ */
+const SOURCES = [
+{t:"Essentials of Strength Training and Conditioning (4th ed.), NSCA — Haff & Triplett",d:"The core textbook behind this site's programming principles: progressive overload, periodization, power development, and testing protocols.",u:"https://www.nsca.com"},
+{t:"NSCA Position Statements & Guidelines",d:"Peer-reviewed position stands on youth resistance training, long-term athletic development, and safety in the weight room.",u:"https://www.nsca.com/about-us/position-statements/"},
+{t:"CSCCa & NSCA Joint Consensus Guidelines for Transition Periods",d:"Safety framework for returning to training after breaks — the basis for this site's ramp-up and acclimatization rules.",u:"https://www.nsca.com"},
+{t:"Korey Stringer Institute (UConn)",d:"Heat-illness prevention, hydration, and acclimatization guidance referenced throughout the conditioning and safety pages.",u:"https://ksi.uconn.edu"},
+{t:"NCAA Sport Science Institute",d:"Inter-association consensus documents on preventing catastrophic injury and death in collegiate athletes, including conditioning-session safety.",u:"https://www.ncaa.org/sports/2016/7/27/sport-science-institute.aspx"},
+{t:"USA Football",d:"Youth and high school football development frameworks, practice guidelines, and coaching education.",u:"https://www.usafootball.com"}
+];
+
+/* ============================================================
+   APP — state, helpers, router, renderers
+   ============================================================ */
+const $=s=>document.querySelector(s);
+const VIEW=$("#view");
+const store={
+  get(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+};
+const FAVS=new Set(store.get("gpl-favs",[]));
+const WEEK=Object.assign({Mon:"",Tue:"",Wed:"",Thu:"",Fri:"",Sat:"",Sun:""},store.get("gpl-week",{}));
+const TRACK=store.get("gpl-track",{});
+function persist(){store.set("gpl-favs",[...FAVS]);store.set("gpl-week",WEEK);store.set("gpl-track",TRACK);}
+const exById=id=>EXERCISES.find(e=>e.exercise_id===id);
+const pgById=id=>PROGRAMS.find(p=>p.program_id===id);
+const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const yt=name=>"https://www.youtube.com/results?search_query="+encodeURIComponent(name+" exercise technique demo");
+function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("show");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("show"),2200);}
+function go(route){location.hash="#/"+(route==="home"?"":route);return false;}
+function closeModal(){$("#modalBg").classList.remove("open");$("#modalBox").innerHTML="";}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});
+
+/* ---------- exercise modal ---------- */
+function showExercise(id){
+  const e=exById(id); if(!e)return;
+  const vid=e.video_url
+    ? `<iframe class="vid-frame" src="${esc(e.video_url)}" title="${esc(e.name)} demo" allowfullscreen loading="lazy"></iframe>`
+    : `<div class="vid-slot"><b>▶ Video needed</b><span class="small">No demo attached yet. Site owner: paste a YouTube embed URL into this exercise's <code>video_url</code> field.</span><div style="margin-top:.6rem"><a class="btn btn-ghost btn-sm" target="_blank" rel="noopener" href="${yt(e.name)}">Find a demo on YouTube ↗</a></div></div>`;
+  $("#modalBox").innerHTML=`
+    <button class="x" onclick="closeModal()" aria-label="Close">✕</button>
+    <div class="badges" style="margin-bottom:.4rem"><span class="badge red">${esc(e.category)}</span><span class="badge">${esc(e.movement_pattern)}</span><span class="badge metal">${esc(e.equipment)}</span></div>
+    <h3 style="font-size:1.6rem">${esc(e.name)}</h3>
+    <p class="small" style="margin:.3rem 0 0">${esc(e.football_benefit)}</p>
+    ${vid}
+    <dl class="kv">
+      <dt>Muscles</dt><dd>${esc(e.primary_muscles)}</dd>
+      <dt>Positions</dt><dd>${e.position_relevance.map(p=>`<span class="badge">${esc(p)}</span>`).join(" ")}</dd>
+      <dt>Coaching cues</dt><dd>${e.coaching_cues.map(c=>"• "+esc(c)).join("<br>")}</dd>
+      <dt>Common mistakes</dt><dd>${e.common_mistakes.map(c=>"• "+esc(c)).join("<br>")}</dd>
+      <dt>Sets &amp; reps</dt><dd>${esc(e.sets_reps_guideline)}</dd>
+      <dt>Rest</dt><dd>${esc(e.rest_guideline)}</dd>
+      <dt>Easier</dt><dd>${esc(e.regression)}</dd>
+      <dt>Harder</dt><dd>${esc(e.progression)}</dd>
+    </dl>
+    <div class="callout warn"><b>Safety</b>${esc(e.safety_notes)}</div>
+    <div style="display:flex;gap:.5rem;margin-top:.6rem">
+      <button class="btn btn-ghost btn-sm" onclick="toggleFav('${e.exercise_id}');showExercise('${e.exercise_id}')">${FAVS.has(e.exercise_id)?"★ Saved":"☆ Save to favorites"}</button>
+    </div>`;
+  $("#modalBg").classList.add("open");
+}
+function toggleFav(id){
+  if(FAVS.has(id)){FAVS.delete(id);toast("Removed from favorites");}
+  else{FAVS.add(id);toast("Saved to favorites — see My Week");}
+  persist();
+  if(location.hash.includes("exercises")||location.hash.includes("myweek"))render();
+}
+
+/* ---------- shared render bits ---------- */
+function exLine(it){
+  if(it.ex){const e=exById(it.ex);
+    return `<div class="exline"><span class="nm"><a href="javascript:void(0)" onclick="showExercise('${it.ex}')" style="text-decoration:none;border-bottom:1px dotted var(--ash)">${esc(e?e.name:it.ex)}</a></span><span class="rx">${esc(it.rx||"")}${it.rest?" · rest "+esc(it.rest):""}${it.tempo?" · "+esc(it.tempo):""}</span><button class="vid" onclick="showExercise('${it.ex}')">Details ▸</button>${it.note?`<span class="note">${esc(it.note)}</span>`:""}</div>`;}
+  return `<div class="exline"><span class="nm">${esc(it.name)}</span><span class="rx">${esc(it.rx||"")}${it.rest?" · rest "+esc(it.rest):""}</span>${it.note?`<span class="note">${esc(it.note)}</span>`:""}</div>`;
+}
+function dayCard(d,i){
+  return `<div class="day"><div class="day-head"><span class="day-num">${String(i+1).padStart(2,"0")}</span><h4>${esc(d.name)}</h4></div>
+  ${d.blocks.map(b=>`<div class="block"><div class="block-label">${esc(b.label)}</div>${b.items.map(exLine).join("")}</div>`).join("")}</div>`;
+}
+function programCard(p){
+  return `<div class="card">
+    <div class="badges"><span class="badge red">${esc(p.goal)}</span><span class="badge">${esc(p.phase)}</span><span class="badge">${esc(p.level)}</span><span class="badge metal">${esc(p.equipment)}</span></div>
+    <h3>${esc(p.name)}</h3>
+    <div class="meta-row"><span><b>${esc(p.length)}</b></span><span><b>${p.days_per_week}</b> days/wk</span><span>${p.positions.map(esc).join(" · ")}</span></div>
+    <p class="small">${esc(p.overview)}</p>
+    <div class="card-foot"><a class="btn btn-red btn-sm" href="#/program/${p.program_id}">View Program</a></div>
+  </div>`;
+}
+function exCard(e){
+  return `<div class="card">
+    <div class="badges"><span class="badge red">${esc(e.category)}</span><span class="badge">${esc(e.movement_pattern)}</span></div>
+    <h3 style="font-size:1.15rem">${esc(e.name)}</h3>
+    <p class="small" style="min-height:2.4em">${esc(e.football_benefit)}</p>
+    <div class="meta-row"><span>${e.position_relevance.slice(0,5).map(esc).join(" · ")}${e.position_relevance.length>5?" +":""}</span></div>
+    <div class="card-foot"><button class="btn btn-ghost btn-sm" onclick="showExercise('${e.exercise_id}')">Details &amp; cues</button><button class="fav ${FAVS.has(e.exercise_id)?"on":""}" onclick="toggleFav('${e.exercise_id}')" aria-label="Save">${FAVS.has(e.exercise_id)?"★":"☆"}</button></div>
+  </div>`;
+}
+
+/* ---------- views ---------- */
+function vHome(){return `
+<div class="hero"><div class="hero-field"></div><div class="hero-ghost" aria-hidden="true">Gridiron</div><div class="wrap">
+  <p class="eyebrow">Position-Specific Football Training</p>
+  <h1>Train like your <em>position</em> demands.</h1>
+  <p class="sub">A corner and a center don't play the same game — they shouldn't train the same way. Gridiron Performance Lab gives every position group its own lifting, speed, and field-work system, built on the same principles used by college strength staffs.</p>
+  <div class="hero-cta"><button class="btn btn-red" onclick="openQuiz()">Find My Program</button><a class="btn btn-ghost" href="#/exercises">Explore Exercise Library</a></div>
+  <div class="hero-stats"><div class="hstat"><b>${EXERCISES.length}</b><span>Exercises w/ cues</span></div><div class="hstat"><b>${PROGRAMS.length}</b><span>Complete programs</span></div><div class="hstat"><b>6</b><span>Position systems</span></div><div class="hstat"><b>${TESTS.length}</b><span>Testing standards</span></div></div>
+</div></div>
+<section><div class="wrap">
+  <p class="eyebrow">Why position-specific</p>
+  <h2>General fitness makes you fit.<br>Football training makes you dangerous.</h2>
+  <div class="hashrule"></div>
+  <div class="split">
+    <div>
+      <p class="sub" style="max-width:none">Generic gym programs build generic athletes. Football is a game of 4–7 second collisions and sprints, repeated for three hours, with wildly different jobs by position. A receiver's season lives and dies on max velocity and hamstring durability. A guard's lives on punch speed, anchor strength, and the ability to fire out 60 times without fading.</p>
+      <ul class="checklist" style="margin-top:1rem">
+        <li><b>Speed is trained fresh</b> — never as conditioning. Every program here separates the two.</li>
+        <li><b>Power before strength before size</b> in-season; the reverse in the offseason. Phases matter.</li>
+        <li><b>Position drills built in</b> — kick slides, get-offs, breaks, and stems live next to the barbell work.</li>
+        <li><b>Testing with context</b> — position-adjusted standards, not one-size-fits-all numbers.</li>
+      </ul>
+    </div>
+    <div>
+      ${POSITIONS.map(p=>`<a href="#/position/${p.pos_id}" style="text-decoration:none"><div class="card" style="flex-direction:row;align-items:center;gap:.9rem;margin-bottom:.6rem"><span class="postag">${esc(p.tag)}</span><div><b>${esc(p.name)}</b><div class="small">${esc(p.demands.split(".")[0])}.</div></div></div></a>`).join("")}
+    </div>
+  </div>
+</div></section>
+<section style="border-top:1px solid var(--line)"><div class="wrap">
+  <p class="eyebrow">Start here</p>
+  <h2>Featured programs</h2>
+  <div class="hashrule"></div>
+  <div class="grid g3">${["pg-offseason-strength","pg-speed-power","pg-inseason"].map(id=>programCard(pgById(id))).join("")}</div>
+  <div style="margin-top:1.2rem"><a class="btn btn-ghost" href="#/programs">View all ${PROGRAMS.length} programs →</a></div>
+</div></section>`;}
+
+function vPrograms(){
+  const f=window._pf||(window._pf={q:"",pos:"",goal:"",level:"",phase:"",eq:"",days:""});
+  let list=PROGRAMS.filter(p=>{
+    if(f.pos&&!(p.positions.includes(f.pos)||p.positions.includes("Multi")))return false;
+    if(f.goal&&p.goal!==f.goal)return false;
+    if(f.level&&p.level!==f.level)return false;
+    if(f.phase&&p.phase!==f.phase)return false;
+    if(f.eq&&p.equipment!==f.eq)return false;
+    if(f.days&&String(p.days_per_week)!==f.days)return false;
+    if(f.q&&!(p.name+p.overview+p.goal).toLowerCase().includes(f.q.toLowerCase()))return false;
+    return true;});
+  const opts=(arr,cur)=>['<option value="">All</option>',...arr.map(v=>`<option ${v===cur?"selected":""}>${v}</option>`)].join("");
+  return `<section><div class="wrap">
+  <p class="eyebrow">Program Library</p><h2>Complete training programs</h2>
+  <p class="sub">Every program is a full plan: warm-ups, lifts, field work, progression rules, and benchmarks. Filter to your situation or <a href="javascript:openQuiz()" style="color:var(--red)">take the 60-second quiz</a>.</p>
+  <div class="filters">
+    <div class="search-row"><input placeholder="Search programs…" value="${esc(f.q)}" oninput="_pf.q=this.value;render()"></div>
+    <div><label>Position</label><select onchange="_pf.pos=this.value;render()">${opts(POS_LIST.filter(p=>p!=="Multi"),f.pos)}</select></div>
+    <div><label>Goal</label><select onchange="_pf.goal=this.value;render()">${opts(["Strength","Speed","Power","Size","Conditioning","Combine Prep"],f.goal)}</select></div>
+    <div><label>Level</label><select onchange="_pf.level=this.value;render()">${opts(["Beginner","Intermediate","Advanced","College/Elite"],f.level)}</select></div>
+    <div><label>Phase</label><select onchange="_pf.phase=this.value;render()">${opts(["Offseason","Preseason","In-season","Postseason"],f.phase)}</select></div>
+    <div><label>Equipment</label><select onchange="_pf.eq=this.value;render()">${opts(["Full gym","Limited gym","Field only"],f.eq)}</select></div>
+    <div><label>Days / week</label><select onchange="_pf.days=this.value;render()">${opts(["2","3","4","5"],f.days)}</select></div>
+  </div>
+  <div class="count">${list.length} program${list.length===1?"":"s"}</div>
+  ${list.length?`<div class="grid g3">${list.map(programCard).join("")}</div>`:`<div class="empty"><b>No matches</b>Loosen a filter or two — or take the quiz and let it pick for you.</div>`}
+</div></section>`;}
+
+function vProgram(id){
+  const p=pgById(id); if(!p)return vPrograms();
+  return `<section><div class="wrap">
+  <a class="small" href="#/programs" style="color:var(--metal);text-decoration:none">← All programs</a>
+  <div class="badges" style="margin:.7rem 0 .4rem"><span class="badge red">${esc(p.goal)}</span><span class="badge">${esc(p.phase)}</span><span class="badge">${esc(p.level)}</span><span class="badge metal">${esc(p.equipment)}</span></div>
+  <h1 style="font-size:clamp(2rem,5vw,3.4rem)">${esc(p.name)}</h1>
+  <div class="meta-row" style="margin:.6rem 0 0"><span><b>${esc(p.length)}</b></span><span><b>${p.days_per_week}</b> days/week</span><span>${p.positions.map(esc).join(" · ")}</span></div>
+  <div class="hashrule"></div>
+  <div class="split">
+    <div>
+      <p class="sub" style="max-width:none">${esc(p.overview)}</p>
+      <div class="callout"><b>Who it's for</b>${esc(p.who_for)}</div>
+      <div class="callout"><b>Weekly schedule</b>${esc(p.schedule_note)}</div>
+      <div class="callout"><b>How to progress</b>${esc(p.progression)}</div>
+      <div class="callout ok"><b>Benchmarks</b>${esc(p.benchmarks)}</div>
+    </div>
+    <div class="card">
+      <h3>Use this program</h3>
+      <p class="small">Add training days to <b>My Week</b> to build your schedule, or print the whole thing for the gym floor.</p>
+      ${p.days.map((d,i)=>`<button class="btn btn-ghost btn-sm btn-block" style="justify-content:flex-start" onclick="addToWeek('${p.program_id}',${i})">＋ Add: ${esc(d.name.split("—")[0].trim())}</button>`).join("")}
+      <button class="btn btn-metal btn-sm btn-block" onclick="window.print()">🖨 Print program sheet</button>
+    </div>
+  </div>
+  <div class="hashrule"></div>
+  <h2 style="margin-bottom:1rem">The training days</h2>
+  ${p.days.map(dayCard).join("")}
+  <div class="callout warn"><b>Before you start</b>This is a general template, not individual coaching. Get technique checked on the big lifts, scale loads to your level, and read the <a href="#/safety" style="color:var(--chalk)">safety guidelines</a> — especially the sections on ramping up after time off and training in heat.</div>
+</div></section>`;}
+
+function vPositions(){return `<section><div class="wrap">
+  <p class="eyebrow">Position Training</p><h2>Six systems, one game</h2>
+  <p class="sub">Pick your position group for its demands profile, priority lifts and drills, weekly structure, recommended programs, and the mistakes that hold that group back.</p>
+  <div class="hashrule"></div>
+  <div class="grid g2">${POSITIONS.map(p=>`<div class="card">
+    <div style="display:flex;align-items:center;gap:.8rem"><span class="postag">${esc(p.tag)}</span><h3>${esc(p.name)}</h3></div>
+    <p class="small">${esc(p.demands)}</p>
+    <div class="card-foot"><a class="btn btn-red btn-sm" href="#/position/${p.pos_id}">Open training system</a></div>
+  </div>`).join("")}</div>
+</div></section>`;}
+
+function vPosition(id){
+  const p=POSITIONS.find(x=>x.pos_id===id); if(!p)return vPositions();
+  const exList=ids=>ids.map(i=>{const e=exById(i);return e?`<div class="exline"><span class="nm"><a href="javascript:void(0)" onclick="showExercise('${i}')" style="text-decoration:none;border-bottom:1px dotted var(--ash)">${esc(e.name)}</a></span><span class="rx">${esc(e.sets_reps_guideline)}</span><button class="vid" onclick="showExercise('${i}')">Details ▸</button></div>`:""}).join("");
+  return `<section><div class="wrap">
+  <a class="small" href="#/positions" style="color:var(--metal);text-decoration:none">← All positions</a>
+  <div style="display:flex;align-items:center;gap:1rem;margin:.7rem 0 .3rem"><span class="postag" style="height:40px;font-size:1.3rem">${esc(p.tag)}</span><h1 style="font-size:clamp(2rem,5vw,3.2rem)">${esc(p.name)}</h1></div>
+  <p class="sub">${esc(p.demands)}</p>
+  <div class="hashrule"></div>
+  <div class="split">
+    <div>
+      <h3>What the position demands</h3>
+      <ul class="checklist">${p.traits.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>
+      <h3 style="margin-top:1.6rem">Priority lifts</h3>
+      <div class="card" style="margin-top:.6rem">${exList(p.best_lifts)}</div>
+      <h3 style="margin-top:1.6rem">Priority drills</h3>
+      <div class="card" style="margin-top:.6rem">${exList(p.best_drills)}</div>
+    </div>
+    <div>
+      <div class="callout"><b>Weekly structure</b>${esc(p.weekly)}</div>
+      <div class="card" style="margin:1rem 0"><h3>Recommended programs</h3>${p.programs.map(pid=>{const pg=pgById(pid);return pg?`<a class="btn btn-ghost btn-sm btn-block" style="justify-content:flex-start" href="#/program/${pid}">${esc(pg.name)} →</a>`:""}).join("")}</div>
+      <div class="callout warn"><b>Common mistakes</b>${p.mistakes.map(m=>"• "+esc(m)).join("<br>")}</div>
+    </div>
+  </div>
+</div></section>`;}
+
+function vExercises(){
+  const f=window._ef||(window._ef={q:"",cat:"",pos:"",fav:false});
+  let list=EXERCISES.filter(e=>{
+    if(f.cat&&e.category!==f.cat)return false;
+    if(f.pos&&!e.position_relevance.includes(f.pos))return false;
+    if(f.fav&&!FAVS.has(e.exercise_id))return false;
+    if(f.q&&!(e.name+e.category+e.primary_muscles+e.equipment+e.football_benefit).toLowerCase().includes(f.q.toLowerCase()))return false;
+    return true;});
+  const cats=[...new Set(EXERCISES.map(e=>e.category))];
+  const opts=(arr,cur)=>['<option value="">All</option>',...arr.map(v=>`<option ${v===cur?"selected":""}>${v}</option>`)].join("");
+  return `<section><div class="wrap">
+  <p class="eyebrow">Exercise Library</p><h2>${EXERCISES.length} exercises, fully coached</h2>
+  <p class="sub">Every entry includes cues, common mistakes, easier and harder versions, position relevance, and safety notes. Open any exercise for the full card.</p>
+  <div class="filters">
+    <div class="search-row"><input placeholder="Search exercises, muscles, equipment…" value="${esc(f.q)}" oninput="_ef.q=this.value;render()"></div>
+    <div><label>Category</label><select onchange="_ef.cat=this.value;render()">${opts(cats,f.cat)}</select></div>
+    <div><label>Position</label><select onchange="_ef.pos=this.value;render()">${opts(POS_LIST,f.pos)}</select></div>
+    <div><label>Favorites</label><select onchange="_ef.fav=this.value==='1';render()"><option value="">All exercises</option><option value="1" ${f.fav?"selected":""}>★ Favorites only</option></select></div>
+  </div>
+  <div class="count">${list.length} exercise${list.length===1?"":"s"}</div>
+  ${list.length?`<div class="grid g3">${list.map(exCard).join("")}</div>`:`<div class="empty"><b>Nothing here</b>Try clearing a filter${f.fav?" — you haven't saved any favorites matching this yet":""}.</div>`}
+</div></section>`;}
+
+function vFieldwork(){return `<section><div class="wrap">
+  <p class="eyebrow">Field Work</p><h2>Speed &amp; skill modules</h2>
+  <p class="sub">Grass-and-cones training organized by quality. Each module lists its drills — open any drill for full coaching cues. Golden rule: speed and skill work happen <b>fresh</b>; conditioning happens last or on its own day.</p>
+  <div class="hashrule"></div>
+  <div class="grid g2">${FIELDWORK.map(m=>`<div class="card">
+    <div class="badges"><span class="badge metal">${esc(m.who)}</span></div>
+    <h3>${esc(m.name)}</h3>
+    <p class="small">${esc(m.blurb)}</p>
+    <div>${m.drills.map(d=>{const e=exById(d);return e?`<div class="exline"><span class="nm"><a href="javascript:void(0)" onclick="showExercise('${d}')" style="text-decoration:none;border-bottom:1px dotted var(--ash)">${esc(e.name)}</a></span><span class="rx">${esc(e.sets_reps_guideline)}</span><button class="vid" onclick="showExercise('${d}')">Cues ▸</button></div>`:""}).join("")}</div>
+  </div>`).join("")}</div>
+  <div class="callout warn" style="margin-top:1.6rem"><b>Conditioning ≠ punishment</b>Every conditioning session on this site has target times, planned rest, and a stopping point. Open-ended "run 'til you drop" sessions are a documented cause of catastrophic injury — see the <a href="#/safety" style="color:var(--chalk)">Safety page</a> and the NCAA/KSI guidance on the <a href="#/methodology" style="color:var(--chalk)">Methodology page</a>.</div>
+</div></section>`;}
+
+function vTesting(){return `<section><div class="wrap">
+  <p class="eyebrow">Testing Standards</p><h2>Know your numbers</h2>
+  <p class="sub">How to run each test properly, general reference ranges by position group, and how to actually improve the score. Ranges are compiled reference guidelines — coaches and programs vary, so treat them as context, not verdicts.</p>
+  <div class="hashrule"></div>
+  ${TESTS.map(t=>`<div class="day"><div class="day-head"><span class="day-num" style="font-size:.95rem;min-width:auto;padding-right:.8rem">TEST</span><h4>${esc(t.name)} <span class="small" style="text-transform:none;font-family:var(--body);font-weight:400">— ${esc(t.measures)}</span></h4></div>
+    <div class="block"><div class="block-label">Setup</div><p class="small">${esc(t.setup)}</p></div>
+    <div class="block"><div class="block-label">Protocol</div><ul class="checklist">${t.how.map(h=>`<li>${esc(h)}</li>`).join("")}</ul></div>
+    <div class="block"><div class="block-label">Reference ranges</div><div class="tblwrap"><table class="tbl"><thead><tr>${t.ranges[0].map(h=>`<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${t.ranges.slice(1).map(r=>`<tr>${r.map((c,i)=>`<td>${i===0?"<b>"+esc(c)+"</b>":esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div></div>
+    <div class="block"><div class="block-label">How to improve it</div><p class="small">${esc(t.improve)}</p>${t.note?`<p class="small" style="margin-top:.4rem;color:var(--metal)">Note: ${esc(t.note)}</p>`:""}
+      <div style="margin-top:.6rem"><button class="btn btn-ghost btn-sm" onclick="logTest('${t.test_id}','${esc(t.name)}')">＋ Log a result in My Week tracker</button></div></div>
+  </div>`).join("")}
+</div></section>`;}
+
+function logTest(id,name){
+  const v=prompt("Enter your "+name+" result (any format — time, inches, reps):");
+  if(v){TRACK[id]={name,val:v,date:new Date().toLocaleDateString()};persist();toast("Logged — view it in My Week");if(location.hash.includes("myweek"))render();}
+}
+
+function addToWeek(pid,dayIdx){
+  const slot=Object.keys(WEEK).find(k=>!WEEK[k]);
+  const val=pid+"|"+dayIdx;
+  if(slot){WEEK[slot]=val;persist();toast("Added to "+slot+" — open My Week to rearrange");}
+  else toast("Week is full — manage days in My Week");
+}
+
+function vMyWeek(){
+  const dayOpts=cur=>{let o='<option value="">— Rest / practice —</option>';
+    PROGRAMS.forEach(p=>p.days.forEach((d,i)=>{const v=p.program_id+"|"+i;o+=`<option value="${v}" ${v===cur?"selected":""}>${esc(p.name)} · ${esc(d.name.split("—")[0].trim())}</option>`;}));return o;};
+  const favArr=[...FAVS].map(exById).filter(Boolean);
+  const trackRows=Object.entries(TRACK);
+  return `<section><div class="wrap">
+  <p class="eyebrow">My Week</p><h2>Build your training week</h2>
+  <p class="sub">Assign program days to weekdays, keep your favorite exercises handy, and log test results. Everything saves automatically in this browser.</p>
+  <div class="callout"><b>Guardrails</b>Keep 48 h between high-intensity speed days · don't stack two heavy lower days back-to-back · at least one full rest day · in-season, cap it at 2 lifts.</div>
+  <div class="hashrule"></div>
+  <h3>Weekly plan</h3>
+  <div class="grid g2" style="margin-top:.8rem">
+    ${Object.keys(WEEK).map(d=>{const v=WEEK[d];let detail="";
+      if(v){const [pid,di]=v.split("|");const p=pgById(pid);const day=p&&p.days[+di];
+        if(day)detail=`<p class="small" style="margin-top:.4rem">${esc(day.name)} — <a href="#/program/${pid}" style="color:var(--metal)">open program</a></p>`;}
+      return `<div class="card"><div class="block-label">${d}</div><select style="width:100%;background:var(--turf);border:1px solid var(--line);color:var(--chalk);border-radius:4px;padding:.5rem" onchange="WEEK['${d}']=this.value;persist();render()">${dayOpts(v)}</select>${detail}</div>`;}).join("")}
+  </div>
+  <div style="margin-top:1rem;display:flex;gap:.6rem;flex-wrap:wrap"><button class="btn btn-metal btn-sm" onclick="window.print()">🖨 Print my week</button><button class="btn btn-ghost btn-sm" onclick="Object.keys(WEEK).forEach(k=>WEEK[k]='');persist();render();toast('Week cleared')">Clear week</button></div>
+  <div class="hashrule"></div>
+  <h3>★ Favorite exercises (${favArr.length})</h3>
+  ${favArr.length?`<div class="grid g3" style="margin-top:.8rem">${favArr.map(exCard).join("")}</div>`:`<div class="empty" style="margin-top:.8rem"><b>No favorites yet</b>Tap the ☆ on any exercise in the <a href="#/exercises" style="color:var(--metal)">library</a> to save it here.</div>`}
+  <div class="hashrule"></div>
+  <h3>Progress tracker</h3>
+  <p class="small" style="margin:.4rem 0 .8rem">Log results from the <a href="#/testing" style="color:var(--metal)">Testing page</a> or add them here. Saved in this browser.</p>
+  ${trackRows.length?`<div class="tblwrap"><table class="tbl"><thead><tr><th>Test</th><th>Result</th><th>Date</th></tr></thead><tbody>${trackRows.map(([k,r])=>`<tr><td><b>${esc(r.name)}</b></td><td>${esc(r.val)}</td><td>${esc(r.date)}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty"><b>No results logged</b>Run a test, then hit "Log a result".</div>`}
+  <div style="margin-top:.8rem"><button class="btn btn-ghost btn-sm" onclick="logTest('t-custom-'+Date.now(),prompt('What are you logging? (e.g., Back squat 3RM)')||'Custom')">＋ Log a custom result</button></div>
+</div></section>`;}
+
+function vMethodology(){return `<section><div class="wrap">
+  <p class="eyebrow">Methodology &amp; Research</p><h2>Why we train this way</h2>
+  <p class="sub">Every principle on this site traces back to established strength &amp; conditioning practice. Here's the reasoning — and the sources to check our work.</p>
+  <div class="hashrule"></div>
+  <div class="split">
+    <div>
+      <h3>The core principles</h3>
+      <ul class="checklist" style="margin-top:.8rem">
+        <li><b>Progressive overload, patiently applied.</b> Small load or volume increases week to week, with planned deloads. Fast progress that ends in a strain is slow progress.</li>
+        <li><b>Periodization by season.</b> Offseason builds size and strength, preseason converts it to power and game fitness, in-season maintains it. Training the same way year-round trains nothing well.</li>
+        <li><b>Speed is a skill, trained fresh.</b> Maximal sprinting develops speed only when output is maximal — which means full recoveries and small volumes. Tired sprinting is conditioning wearing a costume.</li>
+        <li><b>Power = strength expressed fast.</b> Jumps, throws, and Olympic-lift variations convert weight-room force into field explosiveness. Both ends of the force-velocity curve get trained.</li>
+        <li><b>Position specificity on top of a general base.</b> Everyone squats, sprints, and braces. What differs is emphasis: a DB's week looks different from a guard's because their jobs do.</li>
+        <li><b>Eccentric hamstring work is non-negotiable</b> for sprinting positions — it's the best-supported soft-tissue insurance in the sport.</li>
+        <li><b>Conditioning is planned, tested, and never punitive.</b> Volumes ramp gradually, especially after breaks and in heat — the transition periods after time off are when catastrophic injuries cluster.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Sources</h3>
+      <div class="grid" style="margin-top:.8rem">${SOURCES.map(s=>`<div class="cite"><b>${esc(s.t)}</b><span>${esc(s.d)}</span><br><a href="${esc(s.u)}" target="_blank" rel="noopener">${esc(s.u)} ↗</a></div>`).join("")}</div>
+      <div class="callout" style="margin-top:1rem"><b>A note on honesty</b>This site presents general, widely accepted S&amp;C practice. It does not cite individual studies for specific set/rep claims, because programming is a synthesis of evidence and coaching practice — for the primary literature, start with the NSCA materials above.</div>
+    </div>
+  </div>
+</div></section>`;}
+
+function vSafety(){return `<section><div class="wrap">
+  <p class="eyebrow">Safety</p><h2>Read this before you train</h2>
+  <div class="hashrule"></div>
+  <div class="callout warn"><b>Disclaimer</b>Gridiron Performance Lab provides general educational content. It is not medical advice, and it is not individualized coaching. Consult a physician before beginning any training program, and work with a qualified coach for technique on loaded and explosive lifts. By using these programs you accept responsibility for training within your own abilities.</div>
+  <div class="grid g2" style="margin-top:1.4rem">
+    <div class="card"><h3>Ramp up after time off</h3><p class="small">The days and weeks after a break (holidays, injury, the start of camp) carry the highest risk of serious injury. Return at reduced volume and intensity and rebuild over 1–2 weeks minimum. The CSCCa/NSCA transition-period guidelines exist because athletes have died in first-week-back conditioning sessions. Take it seriously.</p></div>
+    <div class="card"><h3>Heat, hydration, acclimatization</h3><p class="small">Build heat tolerance gradually over 1–2 weeks. Modify or move sessions in high heat and humidity, hydrate before/during/after, and know the signs of heat illness (confusion, stumbling, cessation of sweating = emergency). See Korey Stringer Institute guidance on the Methodology page.</p></div>
+    <div class="card"><h3>Technique before load</h3><p class="small">Squats, deadlifts, cleans, and jumps are safe when learned properly and progressed patiently. Get coached, film your lifts, use safeties and spotters, and never chase a max alone or with breaking form.</p></div>
+    <div class="card"><h3>Youth athletes</h3><p class="small">Resistance training is safe and beneficial for young athletes with qualified supervision, appropriate loads, and technique-first progression (see NSCA youth position statements). Middle and high schoolers: lighter, crisper, more practice — the PRs will come.</p></div>
+    <div class="card"><h3>Pain is data</h3><p class="small">Sharp pain, joint pain, or anything that changes how you move means stop and get assessed by an athletic trainer or clinician. Training through soft-tissue warning signs is how 2-week problems become season-ending ones.</p></div>
+    <div class="card"><h3>Conditioning is never punishment</h3><p class="small">Punitive, open-ended conditioning — especially in heat or after time off — is a documented factor in catastrophic events. Every session needs planned volumes, target times, rest, and supervision. If you're an athlete in a program that uses exercise as punishment, that's worth a conversation with an adult you trust.</p></div>
+  </div>
+  <div class="callout" style="margin-top:1.4rem"><b>Modify for you</b>Every program here is a template. Age, training history, injuries, bodyweight, and schedule all change what's appropriate. When in doubt: less load, more technique, longer ramp.</div>
+</div></section>`;}
+
+/* ---------- quiz ---------- */
+const QUIZ=[
+ {q:"What position do you play?",k:"pos",opts:["QB","RB","WR","TE","OL","DL","EDGE","LB","CB","S","K/P/LS"]},
+ {q:"What's your training experience?",k:"level",opts:["New to lifting (<1 yr)","1–2 years consistent","3+ years / advanced","College or elite level"]},
+ {q:"Where are you in the season?",k:"phase",opts:["Offseason","Preseason (4–6 wks out)","In-season","Just ended / testing soon"]},
+ {q:"What's your #1 goal right now?",k:"goal",opts:["Get stronger","Get faster","More explosive","Add size","Game conditioning","Combine/testing prep"]},
+ {q:"How many days a week can you train?",k:"days",opts:["2","3","4","5+"]},
+ {q:"What equipment do you have?",k:"eq",opts:["Full gym","Limited gym","Field / bodyweight only"]},
+ {q:"Any current injuries or pain?",k:"inj",opts:["No, healthy","Minor aches","Recovering from injury"]}
+];
+let quizA={},quizI=0;
+function openQuiz(){quizA={};quizI=0;renderQuiz();$("#modalBg").classList.add("open");}
+function renderQuiz(){
+  if(quizI>=QUIZ.length)return quizResults();
+  const q=QUIZ[quizI];
+  $("#modalBox").innerHTML=`
+    <button class="x" onclick="closeModal()" aria-label="Close">✕</button>
+    <p class="eyebrow">Find My Program · ${quizI+1} of ${QUIZ.length}</p>
+    <div class="quiz-progress"><i style="width:${(quizI/QUIZ.length)*100}%"></i></div>
+    <div class="quiz-q"><p>${esc(q.q)}</p>
+    <div class="quiz-opts">${q.opts.map(o=>`<button onclick="quizA['${q.k}']='${esc(o)}';quizI++;renderQuiz()">${esc(o)}</button>`).join("")}</div></div>
+    ${quizI>0?`<button class="btn btn-ghost btn-sm" onclick="quizI--;renderQuiz()">← Back</button>`:""}`;
+}
+function quizResults(){
+  const a=quizA;
+  const posMap={"K/P/LS":"K"};
+  const pos=posMap[a.pos]||a.pos;
+  const goalMap={"Get stronger":"Strength","Get faster":"Speed","More explosive":"Power","Add size":"Size","Game conditioning":"Conditioning","Combine/testing prep":"Combine Prep"};
+  const levelMap={"New to lifting (<1 yr)":"Beginner","1–2 years consistent":"Intermediate","3+ years / advanced":"Advanced","College or elite level":"College/Elite"};
+  const phaseMap={"Offseason":"Offseason","Preseason (4–6 wks out)":"Preseason","In-season":"In-season","Just ended / testing soon":"Postseason"};
+  const eqOk=(p,e)=>e==="Full gym"?true:e==="Limited gym"?p.equipment!=="Full gym":p.equipment==="Field only";
+  const lvOrder=["Beginner","Intermediate","Advanced","College/Elite"];
+  const scored=PROGRAMS.map(p=>{let s=0;
+    if(p.positions.includes(pos))s+=3;else if(p.positions.includes("Multi"))s+=1.5;
+    if(p.goal===goalMap[a.goal])s+=3;
+    if(p.phase===phaseMap[a.phase])s+=2;
+    const li=lvOrder.indexOf(levelMap[a.level]),pi=lvOrder.indexOf(p.level);
+    if(li===pi)s+=2;else if(Math.abs(li-pi)===1)s+=1;else if(pi>li)s-=2;
+    if(p.days_per_week<=parseInt(a.days)||a.days==="5+")s+=2;else s-=1.5;
+    if(eqOk(p,a.eq))s+=2;else s-=3;
+    return {p,s};}).sort((x,y)=>y.s-x.s).slice(0,3);
+  const inj=a.inj!=="No, healthy";
+  $("#modalBox").innerHTML=`
+    <button class="x" onclick="closeModal()" aria-label="Close">✕</button>
+    <p class="eyebrow">Your matches</p>
+    <h3 style="font-size:1.5rem">Recommended programs</h3>
+    ${inj?`<div class="callout warn" style="margin-top:.6rem"><b>Heads up</b>You mentioned ${a.inj==="Recovering from injury"?"an injury":"aches"}. Get cleared by an athletic trainer or clinician before starting, and scale anything that provokes symptoms.</div>`:""}
+    <div class="grid" style="margin-top:.8rem">
+      ${scored.map(({p},i)=>`<div class="card" style="flex-direction:row;align-items:center;gap:1rem">
+        <span class="day-num" style="border:none;min-width:36px">${i+1}</span>
+        <div style="flex:1"><b>${esc(p.name)}</b><div class="small">${esc(p.length)} · ${p.days_per_week} d/wk · ${esc(p.level)} · ${esc(p.equipment)}</div></div>
+        <a class="btn btn-red btn-sm" href="#/program/${p.program_id}" onclick="closeModal()">Open</a>
+      </div>`).join("")}
+    </div>
+    <button class="btn btn-ghost btn-sm" style="margin-top:.9rem" onclick="openQuiz()">↻ Retake quiz</button>`;
+}
+
+/* ---------- router ---------- */
+function render(){
+  const h=location.hash.replace(/^#\/?/,"");
+  const [route,param]=h.split("/");
+  let html,nav=route||"home";
+  switch(route){
+    case "":case undefined:html=vHome();break;
+    case "programs":html=vPrograms();break;
+    case "program":html=vProgram(param);nav="programs";break;
+    case "positions":html=vPositions();break;
+    case "position":html=vPosition(param);nav="positions";break;
+    case "exercises":html=vExercises();break;
+    case "fieldwork":html=vFieldwork();break;
+    case "testing":html=vTesting();break;
+    case "myweek":html=vMyWeek();break;
+    case "methodology":html=vMethodology();break;
+    case "safety":html=vSafety();break;
+    default:html=vHome();nav="home";
+  }
+  VIEW.innerHTML=html;
+  document.querySelectorAll("nav.main a").forEach(a=>a.classList.toggle("on",a.dataset.nav===nav));
+  document.getElementById("mainnav").classList.remove("open");
+  reveal();countUp();
+}
+
+/* ---------- motion & polish ---------- */
+const io="IntersectionObserver" in window
+  ? new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}})},{rootMargin:"0px 0px -6% 0px",threshold:.04})
+  : null;
+function reveal(){
+  VIEW.querySelectorAll(".card,.day,.cite,.tblwrap,.callout,.empty").forEach((el,i)=>{
+    el.classList.add("rv");
+    el.style.transitionDelay=(i%6)*45+"ms";
+    if(io)io.observe(el);else el.classList.add("in");
+  });
+}
+function countUp(){
+  if(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  VIEW.querySelectorAll(".hstat b").forEach(el=>{
+    const n=parseInt(el.textContent,10);
+    if(!n||n<2)return;
+    const t0=performance.now(),dur=850;
+    const step=t=>{const p=Math.min(1,(t-t0)/dur);el.textContent=Math.round(n*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(step);};
+    requestAnimationFrame(step);
+  });
+}
+const hdr=document.querySelector("header.site"),sbar=document.getElementById("scrollbar");
+addEventListener("scroll",()=>{
+  hdr.classList.toggle("scrolled",scrollY>8);
+  const m=document.documentElement.scrollHeight-innerHeight;
+  sbar.style.width=(m>0?Math.min(100,(scrollY/m)*100):0)+"%";
+},{passive:true});
+
+window.addEventListener("hashchange",()=>{render();window.scrollTo({top:0});});
+render();
+</script>
+</body>
+</html>
