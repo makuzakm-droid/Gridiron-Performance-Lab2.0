@@ -329,6 +329,9 @@ tr.row-done .set-in{opacity:.55}
 .plan-item.selected{background:var(--volt-glow)}
 .s-high{background:var(--danger)} .s-mod{background:var(--warn)} .s-low{background:var(--volt)} .s-rest{background:var(--line-2)}
 .plan-empty{padding:9px 12px;border-top:1px solid var(--line);color:var(--ink-3);font-size:12px;font-style:italic}
+.plan-item[draggable="true"]{cursor:grab}
+.plan-item.dragging{opacity:.45}
+.plan-day.dragover{border-color:var(--volt);box-shadow:inset 0 0 0 1px var(--volt)}
 /* ---------- charts ---------- */
 .chart-card{padding:14px 10px 8px 6px}
 .chart-card .ch-head{display:flex;align-items:baseline;gap:8px;padding:0 8px 4px 10px}
@@ -2022,20 +2025,22 @@ function plannerConflicts(){
   return flags;
 }
 function viewPlanner(){
+  // prune items whose program no longer exists
+  for(let i=0;i<7;i++){ S.planner[i] = (S.planner[i]||[]).filter(it=>plannerItemInfo(it)); }
   const todayIdx = dowIdx(new Date());
-  let h = '<h1 class="view-title">Week Planner</h1><p class="view-sub">Assign program days and standalone work. The bar colors show training stress.</p>';
+  let h = '<h1 class="view-title">Week Planner</h1><p class="view-sub">Tap an item to move or remove it — or drag it to another day. Bar colors show training stress.</p>';
   plannerConflicts().forEach(f=>{ h += '<div class="banner warn"><div class="b-ic">'+icoFlag()+'</div><div><span class="banner-title">Stress collision</span>'+f+'</div></div>'; });
   h += '<div class="flex mb12" style="gap:14px;flex-wrap:wrap"><span class="small mut2 flex" style="gap:5px"><span class="stress-pip s-high" style="width:14px"></span>High</span><span class="small mut2 flex" style="gap:5px"><span class="stress-pip s-mod" style="width:14px"></span>Moderate</span><span class="small mut2 flex" style="gap:5px"><span class="stress-pip s-low" style="width:14px"></span>Low</span><span class="small mut2 flex" style="gap:5px"><span class="stress-pip s-rest" style="width:14px"></span>Rest</span></div>';
   for(let i=0;i<7;i++){
     const items = S.planner[i]||[];
-    h += '<div class="plan-day'+(i===todayIdx?' today':'')+'"><div class="pdy-head"><h4>'+DAY_NAMES[i]+'</h4><div class="pdy-stress">'+
+    h += '<div class="plan-day'+(i===todayIdx?' today':'')+'" ondragover="planDragOver(event,'+i+')" ondragleave="planDragLeave(event)" ondrop="planDrop(event,'+i+')"><div class="pdy-head"><h4>'+DAY_NAMES[i]+'</h4><div class="pdy-stress">'+
       items.map(it=>{ const inf=plannerItemInfo(it); return inf?'<span class="stress-pip '+stressCls(inf.focus)+'" style="width:22px"></span>':''; }).join('')+
       '</div><button class="pdy-add" onclick="openPlanAdd('+i+')" aria-label="Add to '+DAY_NAMES[i]+'">+</button></div>';
     if(!items.length) h += '<div class="plan-empty">Nothing planned</div>';
     items.forEach((it,ii)=>{
       const inf = plannerItemInfo(it);
       if(!inf){ return; }
-      h += '<button class="plan-item" onclick="openPlanItem('+i+','+ii+')"><span class="pi-bar '+stressCls(inf.focus)+'"></span>'+
+      h += '<button class="plan-item" draggable="true" ondragstart="planDragStart(event,'+i+','+ii+')" ondragend="planDragEnd(event)" onclick="openPlanItem('+i+','+ii+')"><span class="pi-bar '+stressCls(inf.focus)+'"></span>'+
         '<span class="pi-name">'+esc(inf.label)+'<br><span class="pi-sub">'+esc(inf.sub)+'</span></span></button>';
     });
     h += '</div>';
@@ -2082,6 +2087,30 @@ function planMove(from, ii, to){
 function planRemove(dayIdx, ii){
   S.planner[dayIdx].splice(ii,1);
   save(); closeModal(); render();
+}
+/* ---- planner drag & drop (desktop / stylus; tap flow covers touch) ---- */
+let PLAN_DRAG = null;
+function planDragStart(e, d, ii){
+  PLAN_DRAG = {d, ii};
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', d+':'+ii);
+  e.target.classList.add('dragging');
+}
+function planDragEnd(e){ e.target.classList.remove('dragging'); }
+function planDragOver(e, d){
+  if(!PLAN_DRAG) return;
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  e.currentTarget.classList.add('dragover');
+}
+function planDragLeave(e){ e.currentTarget.classList.remove('dragover'); }
+function planDrop(e, d){
+  e.preventDefault();
+  if(!PLAN_DRAG) return;
+  const it = S.planner[PLAN_DRAG.d].splice(PLAN_DRAG.ii, 1)[0];
+  if(it) S.planner[d].push(it);
+  PLAN_DRAG = null;
+  save(); render();
 }
 
 /* ============================================================
@@ -2320,6 +2349,7 @@ function openSettings(){
   h += '<p class="mut2 small mb12">Switching converts every stored weight, PR and volume figure.</p>';
   h += '<label class="flabel">Data</label>';
   h += '<button class="btn block mb6" onclick="exportData()">Export All Data (JSON)</button>';
+  h += '<button class="btn block mb6" onclick="importData()">Import Backup (JSON)</button>';
   h += '<button class="btn ghost block danger" onclick="confirmReset()">Reset All Data…</button>';
   h += '<div class="hr"></div><p class="mut2 small">The Athlete Standard · single-file training platform.<br>All data lives in this browser\'s local storage — nothing leaves your device. '+S.history.length+' sessions · '+EXERCISES.length+' exercises · '+PROGRAMS.length+' programs.</p>';
   h += '<div class="modal-actions"><button class="btn primary block" data-close="1">Done</button></div>';
@@ -2343,6 +2373,37 @@ function exportData(){
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
   toast('Exported','Full backup downloaded as JSON.');
+}
+let PENDING_IMPORT = null;
+function importData(){
+  const inp = document.createElement('input');
+  inp.type = 'file'; inp.accept = '.json,application/json';
+  inp.onchange = ()=>{
+    const f = inp.files && inp.files[0];
+    if(!f) return;
+    const rd = new FileReader();
+    rd.onload = ()=>{
+      let data = null;
+      try{ data = JSON.parse(rd.result); }catch(e){}
+      if(!data || typeof data!=='object' || !Array.isArray(data.history) || !('prs' in data)){
+        toast('Import failed','That file is not an Athlete Standard export.');
+        return;
+      }
+      PENDING_IMPORT = data;
+      openModal('<h2>Import backup?</h2><p class="mut small mb12">This replaces everything currently on this device with the backup: <b>'+data.history.length+' sessions</b>, '+Object.values(data.prs||{}).reduce((a,b)=>a+b.length,0)+' PRs, '+(data.readiness||[]).length+' check-ins.</p>'+
+        '<div class="modal-actions"><button class="btn ghost" data-close="1">Cancel</button><button class="btn primary block" onclick="doImport()">Replace &amp; Import</button></div>');
+    };
+    rd.readAsText(f);
+  };
+  inp.click();
+}
+function doImport(){
+  if(!PENDING_IMPORT) return;
+  S = Object.assign(DEFAULT_STATE(), PENDING_IMPORT);
+  S.planner = Object.assign({0:[],1:[],2:[],3:[],4:[],5:[],6:[]}, S.planner);
+  PENDING_IMPORT = null;
+  save(); closeModal(); switchTab('train');
+  toast('Import complete','Backup restored — '+S.history.length+' sessions loaded.');
 }
 function confirmReset(){
   openModal('<h2>Reset all data?</h2><p class="mut small mb12">This permanently erases <b>every</b> logged workout, PR, readiness check-in, test result, planner and program progress on this device. There is no undo. Export a backup first if in doubt.</p>'+
